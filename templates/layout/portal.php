@@ -36,7 +36,6 @@
     <?= $this->Html->script('daterangepicker.js') ?>
     <?= $this->Html->script('jquery.stickOnScroll.js') ?>
     <?= $this->Html->script('tinycolor-min.js') ?>
-    <?= $this->Html->script('config.js') ?>
     <?= $this->Html->script('d3.min.js') ?>
     <?= $this->Html->script('topojson.min.js') ?>
     <?= $this->Html->script('datamaps.all.min.js') ?>
@@ -46,8 +45,7 @@
 
     <?= $this->Html->script('gauge.min.js') ?>
     <?= $this->Html->script('jquery.sparkline.min.js') ?>
-    <?= $this->Html->script('apexcharts.min.js') ?>
-    <?= $this->Html->script('apexcharts.custom.js') ?>
+
     <?= $this->Html->script('jquery.mask.min.js') ?>
     <?= $this->Html->script('select2.min.js') ?>
     <?= $this->Html->script('jquery.steps.min.js') ?>
@@ -56,774 +54,124 @@
     <?= $this->Html->script('dropzone.min.js') ?>
     <?= $this->Html->script('uppy.min.js') ?>
     <?= $this->Html->script('quill.min.js') ?>
+    <style>
+        .link-active {
+            background: deepskyblue !important;
+            color:white !important;
+        }
+    </style>
 </head>
 
-<body class="horizontal light  ">
+
+<body class="vertical light  ">
     <div class="wrapper">
-        <nav class="navbar navbar-expand-lg navbar-light bg-white flex-row border-bottom shadow">
-            <div class="container-fluid px-0">
-                <a class="navbar-brand mx-lg-1 mr-0" href="./index.html">
-                    <?= $this->Html->image('jbm_logo.png', ['style' => 'width:30%']) ?>
-                </a>
-                <button class="navbar-toggler mt-2 mr-auto toggle-sidebar text-muted">
-                    <i class="fe fe-menu navbar-toggler-icon"></i>
-                </button>
-                <div class="navbar-slide bg-white ml-lg-4" id="navbarSupportedContent">
-                    <a href="#" class="btn toggle-sidebar d-lg-none text-muted ml-2 mt-3" data-toggle="toggle">
-                        <i class="fe fe-x"><span class="sr-only"></span></i>
+        <nav class="topnav navbar navbar-light shadow-sm" style="background-color: white;">
+            <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
+                <?= $this->Html->image('../assets/icons/menu-icon-64.png', ['alt' => 'Menu', 'style' => 'width:25px']) ?>
+            </button>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link text-muted my-2 d-none" href="#" id="modeSwitcher" data-mode="light">
+                        <i class="fe fe-sun fe-24"></i>
                     </a>
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">
-                                <span class="ml-lg-2">Dashboard</span>
-                                <!-- <span class="badge badge-pill badge-primary">New</span> -->
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">
-                                <span class="ml-lg-2">Requisitions</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">
-                                <span class="ml-lg-2">Events</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">
-                                <span class="ml-lg-2">Awards</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">
-                                <span class="ml-lg-2">Orders</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">
-                                <span class="ml-lg-2">Contracts</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">
-                                <span class="ml-lg-2">Supplier</span>
-                            </a>
-                        </li>
-                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-muted pr-0" href="./#" data-toggle="modal" data-target=".modal-notif">
+                        <div style="width: 40px;height: 40px;background-color: #f1f1f1; /* light grey */border-radius: 50%;display: flex;align-items: center;justify-content: center;cursor: pointer;">
+                            <?= $this->Html->image('../assets/icons/notification-icon-32.png', ['alt' => 'Notification', 'style' => 'width:20px']) ?>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-muted pr-0" href="#" role="button">
+                        <div style="width: 40px;height: 40px;background-color: #f1f1f1; /* light grey */border-radius: 50%;display: flex;align-items: center;justify-content: center;cursor: pointer;">
+                            <?= $this->Html->image('../assets/icons/person-icon-64.png', ['alt' => 'Notification', 'style' => 'width:20px']) ?>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <div class="my-2 ml-2">
+                        <span style="font-weight: bold;color:black;font-size:12px">Admin</span><br>
+                        <small style="font-size: 11px;">Admin</small>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <aside class="sidebar-left border-right bg-white shadow" id="leftSidebar" data-simplebar>
+            <a href="#" class="btn collapseSidebar toggle-btn d-lg-none text-muted ml-2 mt-3" data-toggle="toggle">
+                <i class="fe fe-x"><span class="sr-only"></span></i>
+            </a>
+            <nav class="vertnav navbar navbar-light d-flex flex-column vh-100">
+                <!-- nav bar -->
+                <div class="w-100 mb-4 d-flex">
+                    <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= $this->Url->build(['controller' => 'dashboard', 'action' => 'index']) ?>">
+                        <?= $this->Html->image('jbm_logo.png', ['style' => 'width:50%']) ?>
+                    </a>
                 </div>
-                <form class="form-inline ml-md-auto d-none d-lg-flex searchform text-muted">
-                    <input class="form-control mr-sm-2 bg-transparent border-0 pl-4 text-muted" type="search" placeholder="Type something..." aria-label="Search">
-                </form>
-                <ul class="navbar-nav d-flex flex-row">
-                    <li class="nav-item">
-                        <a class="nav-link text-muted my-2" href="./#" id="modeSwitcher" data-mode="light">
-                            <i class="fe fe-sun fe-16"></i>
+                <ul class="navbar-nav flex-fill w-100 mb-2">
+                    <li class="nav-item active">
+                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link link-active">
+                            <i class="fe fe-home fe-16"></i>
+                            <span class="ml-3 item-text">Home</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-shortcut">
-                            <i class="fe fe-grid fe-16"></i>
+                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                            <i class="fe fe-calendar fe-16"></i>
+                            <span class="ml-3 item-text">Events</span>
                         </a>
                     </li>
-                    <li class="nav-item nav-notif">
-                        <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-notif">
-                            <i class="fe fe-bell fe-16"></i>
-                            <span class="dot dot-md bg-success"></span>
+                    <li class="nav-item">
+                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trophy" viewBox="0 0 16 16">
+                                <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935M3.504 1q.01.775.056 1.469c.13 2.028.457 3.546.87 4.667C5.294 9.48 6.484 10 7 10a.5.5 0 0 1 .5.5v2.61a1 1 0 0 1-.757.97l-1.426.356a.5.5 0 0 0-.179.085L4.5 15h7l-.638-.479a.5.5 0 0 0-.18-.085l-1.425-.356a1 1 0 0 1-.757-.97V10.5A.5.5 0 0 1 9 10c.516 0 1.706-.52 2.57-2.864.413-1.12.74-2.64.87-4.667q.045-.694.056-1.469z" />
+                            </svg>
+                            <span class="ml-3 item-text">Awards</span>
                         </a>
                     </li>
-                    <li class="nav-item dropdown ml-lg-0">
-                        <a class="nav-link dropdown-toggle text-muted" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="avatar avatar-sm mt-2">
-                                <img src="./assets/avatars/face-1.jpg" alt="..." class="avatar-img rounded-circle">
-                            </span>
+                    <li class="nav-item">
+                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-range" viewBox="0 0 16 16">
+                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
+                                <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM9 8a1 1 0 0 1 1-1h5v2h-5a1 1 0 0 1-1-1m-8 2h4a1 1 0 1 1 0 2H1z" />
+                            </svg>
+                            <span class="ml-3 item-text">Orders</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                            <li class="nav-item">
-                                <a class="nav-link pl-3" href="<?= $this->Url->build(['controller' => 'users' , 'action' => 'logout']) ?>">Log Out</a>
-                            </li>
-                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
+                                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
+                                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+                            </svg>
+                            <span class="ml-3 item-text">Contacts</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-3" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5zM0 11.5A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
+                            </svg>
+                            <span class="ml-3 item-text">Supplier</span>
+                        </a>
                     </li>
                 </ul>
-            </div>
-        </nav>
 
-        <main role="main" class="main-content mt-3">
-            <div class="container-fluid">
-                <div class="row justify-content-center">
-                    <div class="col-12">
-                        <div class="row align-items-center mb-2">
-                            <div class="col">
-                                <h2 class="h5 page-title">Performance Dashboard!</h2>
-                            </div>
-                            <div class="col-auto">
-                                <form class="form-inline">
-                                    <div class="form-group">
-                                        <!-- <label for="custom-select">Custom Select</label> -->
-                                        <select class="custom-select" id="custom-select">
-                                            <option selected="">Select plant here</option>
-                                            <option value="1">Plant 1</option>
-                                            <option value="2">Plant 2</option>
-                                            <option value="3">Plant 3</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <!-- <label for="custom-select">Custom Select</label> -->
-                                        <select class="custom-select" id="custom-select">
-                                            <option selected="">Select buyer here</option>
-                                            <option value="1">Buyer 1</option>
-                                            <option value="2">Buyer 2</option>
-                                            <option value="3">Buyer 3</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group d-none d-lg-inline">
-                                        <label for="reportrange" class="sr-only">Date Ranges</label>
-                                        <div id="reportrange" class="px-2 py-2 text-muted">
-                                            <span class="small"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-sm"><span class="fe fe-refresh-ccw fe-16 text-muted"></span></button>
-                                        <button type="button" class="btn btn-sm mr-2"><span class="fe fe-filter fe-16 text-muted"></span></button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 col-xl-2 mb-3 pr-0">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <span class="card-title">Total Spend</span>
-                                        <a class="float-right small text-muted" href="#!"><i class="fe fe-more-vertical fe-12"></i></a>
-                                    </div>
-                                    <div class="card-body my-n2">
-                                        <div class="d-flex">
-                                            <div class="flex-fill">
-                                                <h4 class="h6 mb-0">Rs. 4,66,764.78L</h4>
-                                            </div>
-                                            <div class="flex-fill text-right">
-                                                <!-- <p class="mb-0 small">+20%</p> -->
-                                                <p class="mb-0 small">Till Now</p>
-                                            </div>
-                                        </div>
-                                    </div> <!-- .card-body -->
-                                </div> <!-- .card -->
-                            </div> <!-- .col -->
-                            <div class="col-md-6 col-xl-4 mb-3 pr-0">
-                                <div class="card d-flex flex-row shadow">
-                                    <div>
-                                        <div class="card-header">
-                                            <span class="card-title">Today's PR</span>
-                                        </div>
-                                        <div class="card-body my-n2">
-                                            <div class="d-flex">
-                                                <div class="flex-fill">
-                                                    <h4 class="h6 mb-0">0</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="card-header">
-                                            <span class="card-title">Total PR</span>
-                                        </div>
-                                        <div class="card-body my-n2">
-                                            <div class="d-flex">
-                                                <div class="flex-fill">
-                                                    <h4 class="h6 mb-0">32546</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="card-header">
-                                            <span class="card-title">PO Converted</span>
-                                        </div>
-                                        <div class="card-body my-n2">
-                                            <div class="d-flex">
-                                                <div class="flex-fill">
-                                                    <h4 class="h6 mb-0">31282</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-xl-2 mb-3 pr-0">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <span class="card-title">Savings @LPO</span>
-                                    </div>
-                                    <div class="card-body my-n2">
-                                        <div class="d-flex">
-                                            <div class="flex-fill">
-                                                <h4 class="h6 mb-0">Rs. 4,66,764.78L</h4>
-                                            </div>
-                                            <div class="flex-fill text-right">
-                                                <!-- <p class="mb-0 small">+20%</p> -->
-                                            </div>
-                                        </div>
-                                    </div> <!-- .card-body -->
-                                </div> <!-- .card -->
-                            </div> <!-- .col -->
-                            <div class="col-md-4 col-xl-2 mb-3 pr-0">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <span class="card-title">Cost Avoidance</span>
-                                    </div>
-                                    <div class="card-body my-n2">
-                                        <div class="d-flex">
-                                            <div class="flex-fill">
-                                                <h4 class="h6 mb-0">Rs. 4,66,764.78L</h4>
-                                            </div>
-                                            <div class="flex-fill text-right">
-                                                <!-- <p class="mb-0 small">+20%</p> -->
-                                            </div>
-                                        </div>
-                                    </div> <!-- .card-body -->
-                                </div> <!-- .card -->
-                            </div> <!-- .col -->
-                        </div>
-                        <div class="row">
-                            <div class="mb-2 card col-8">
-                                <div class="col-12 col-lg-3">
-                                    <div class="card shadow mb-4">
-                                        <div class="card-header">
-                                            <strong class="card-title mb-0">Donut Chart</strong>
-                                        </div>
-                                        <div class="card-body text-center">
-                                            <div id="donutChart"></div>
-                                        </div> <!-- /.card-body -->
-                                    </div> <!-- /.card -->
-                                </div> <!-- /. col -->
-                            </div>
-                            <div class="mb-2 col-4">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <strong class="card-title">Notification List</strong>
-                                        <a class="float-right small text-muted" href="#!">View all</a>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="list-group list-group-flush my-n3">
-                                            <div class="list-group-item">
-                                                <div class="row align-items-center">
-                                                    <div class="col-auto">
-                                                        <span class="fe fe-box fe-24"></span>
-                                                    </div>
-                                                    <div class="col">
-                                                        <small><strong>Package has uploaded successfull</strong></small>
-                                                        <div class="my-0 text-muted small">Package is zipped and uploaded</div>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <small class="badge badge-pill badge-light text-muted">1m ago</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="list-group-item">
-                                                <div class="row align-items-center">
-                                                    <div class="col-auto">
-                                                        <span class="fe fe-download fe-24"></span>
-                                                    </div>
-                                                    <div class="col">
-                                                        <small><strong>Widgets are updated successfull</strong></small>
-                                                        <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <small class="badge badge-pill badge-light text-muted">2m ago</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="list-group-item">
-                                                <div class="row align-items-center">
-                                                    <div class="col-auto">
-                                                        <span class="fe fe-inbox fe-24"></span>
-                                                    </div>
-                                                    <div class="col">
-                                                        <small><strong>Notifications have been sent</strong></small>
-                                                        <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <small class="badge badge-pill badge-light text-muted">30m ago</small>
-                                                    </div>
-                                                </div> <!-- / .row -->
-                                            </div>
-                                            <div class="list-group-item">
-                                                <div class="row align-items-center">
-                                                    <div class="col-auto">
-                                                        <span class="fe fe-link fe-24"></span>
-                                                    </div>
-                                                    <div class="col">
-                                                        <small><strong>Link was attached to menu</strong></small>
-                                                        <div class="my-0 text-muted small">New layout has been attached to the menu</div>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <small class="badge badge-pill badge-light text-muted">1h ago</small>
-                                                    </div>
-                                                </div>
-                                            </div> <!-- / .row -->
-                                        </div> <!-- / .list-group -->
-                                    </div> <!-- / .card-body -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 pr-0">
-                                <div class="card shadow mb-2">
-                                    <div class="card-header">
-                                        <strong>RFQ Status</strong>
-                                    </div>
-                                    <div class="card-body px-4">
-                                        <div class="row border-bottom">
-                                            <div class="col-3 text-center mb-3">
-
-                                                <span class="h4">5</span><br>
-                                                <span class="small ">8 PR's</span><br><br>
-                                                <p class="mb-1 ">Published</p>
-                                            </div>
-                                            <div class="col-3 text-center mb-3">
-
-                                                <span class="h4">260</span><br>
-                                                <span class="small ">592 PR's</span><br><br>
-                                                <p class="mb-1  ">Closed</p>
-                                            </div>
-                                            <div class="col-3 text-center mb-3">
-
-                                                <span class="h4">59</span><br>
-                                                <span class="small ">87 PR's</span><br><br>
-                                                <p class="mb-1  ">Technical Approval Pending</p>
-                                            </div>
-                                            <div class="col-3 text-center mb-3">
-
-                                                <span class="h4">128</span><br>
-                                                <span class="small ">276 PR's</span><br><br>
-                                                <p class="mb-1  ">Technically Approved - Action Pending</p>
-                                            </div>
-                                        </div>
-
-                                    </div> <!-- .card-body -->
-                                </div> <!-- .card -->
-                            </div> <!-- .col -->
-                            <div class="col-md-6">
-                                <div class="card shadow mb-2">
-                                    <div class="card-header">
-                                        <strong>Award Status</strong>
-                                    </div>
-                                    <div class="card-body px-4">
-                                        <div class="row border-bottom">
-                                            <div class="col-3 text-center mb-3">
-
-                                                <span class="h4">5</span><br>
-                                                <span class="small ">8 PR's</span><br><br>
-                                                <p class="mb-1 ">Published</p>
-                                            </div>
-                                            <div class="col-3 text-center mb-3">
-
-                                                <span class="h4">260</span><br>
-                                                <span class="small ">592 PR's</span><br><br>
-                                                <p class="mb-1  ">Closed</p>
-                                            </div>
-                                            <div class="col-3 text-center mb-3">
-
-                                                <span class="h4">59</span><br>
-                                                <span class="small ">87 PR's</span><br><br>
-                                                <p class="mb-1  ">Technical Approval Pending</p>
-                                            </div>
-                                            <div class="col-3 text-center mb-3">
-
-                                                <span class="h4">128</span><br>
-                                                <span class="small ">276 PR's</span><br><br>
-                                                <p class="mb-1  ">Technically Approved - Action Pending</p>
-                                            </div>
-                                        </div>
-
-                                    </div> <!-- .card-body -->
-                                </div> <!-- .card -->
-                            </div> <!-- .col -->
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-6 mb-4 pr-0">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <strong class="card-title mb-0">Cycle Time</strong>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="columnChart"></div>
-                                    </div> <!-- /.card-body -->
-                                </div> <!-- /.card -->
-                            </div> <!-- /. col -->
-                            <div class="col-12 col-lg-6 mb-4">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <strong class="card-title mb-0">Bar Chart</strong>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="barChart"></div>
-                                    </div> <!-- /.card-body -->
-                                </div> <!-- /.card -->
-                            </div> <!-- /. col -->
-
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 col-lg-8">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <strong class="card-title">Spend Visibility</strong>
-                                    </div>
-                                    <div class="card-body my-n2">
-                                        <table class="table table-striped table-hover table-borderless">
-
-                                            <tbody>
-                                                <tr>
-                                                    <td>2474</td>
-                                                    <th scope="col">Brown, Asher D.</th>
-                                                    <td>Ap #331-7123 Lobortis Avenue</td>
-                                                    <td>(958) 421-0798</td>
-                                                    <td>13/09/2020</td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>2786</td>
-                                                    <th scope="col">Leblanc, Yoshio V.</th>
-                                                    <td>287-8300 Nisl. St.</td>
-                                                    <td>(899) 881-3833</td>
-                                                    <td>04/05/2019</td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>2747</td>
-                                                    <th scope="col">Hester, Nissim L.</th>
-                                                    <td>4577 Cras St.</td>
-                                                    <td>(977) 220-6518</td>
-                                                    <td>04/06/2019</td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>2639</td>
-                                                    <th scope="col">Gardner, Leigh S.</th>
-                                                    <td>P.O. Box 228, 7512 Lectus Ave</td>
-                                                    <td>(537) 315-1481</td>
-                                                    <td>04/08/2019</td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>2238</td>
-                                                    <th scope="col">Higgins, Uriah L.</th>
-                                                    <td>Ap #377-5357 Sed Road</td>
-                                                    <td>(238) 386-0247</td>
-                                                    <td>04/01/2019</td>
-
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div> <!-- Striped rows -->
-                        </div>
-                    </div> <!-- .col-12 -->
-                </div> <!-- .row -->
-            </div> <!-- .container-fluid -->
-            <div class="modal fade modal-notif modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="list-group list-group-flush my-n3">
-                                <div class="list-group-item bg-transparent">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <span class="fe fe-box fe-24"></span>
-                                        </div>
-                                        <div class="col">
-                                            <small><strong>Package has uploaded successfull</strong></small>
-                                            <div class="my-0 text-muted small">Package is zipped and uploaded</div>
-                                            <small class="badge badge-pill badge-light text-muted">1m ago</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="list-group-item bg-transparent">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <span class="fe fe-download fe-24"></span>
-                                        </div>
-                                        <div class="col">
-                                            <small><strong>Widgets are updated successfull</strong></small>
-                                            <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
-                                            <small class="badge badge-pill badge-light text-muted">2m ago</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="list-group-item bg-transparent">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <span class="fe fe-inbox fe-24"></span>
-                                        </div>
-                                        <div class="col">
-                                            <small><strong>Notifications have been sent</strong></small>
-                                            <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
-                                            <small class="badge badge-pill badge-light text-muted">30m ago</small>
-                                        </div>
-                                    </div> <!-- / .row -->
-                                </div>
-                                <div class="list-group-item bg-transparent">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <span class="fe fe-link fe-24"></span>
-                                        </div>
-                                        <div class="col">
-                                            <small><strong>Link was attached to menu</strong></small>
-                                            <div class="my-0 text-muted small">New layout has been attached to the menu</div>
-                                            <small class="badge badge-pill badge-light text-muted">1h ago</small>
-                                        </div>
-                                    </div>
-                                </div> <!-- / .row -->
-                            </div> <!-- / .list-group -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
-                        </div>
-                    </div>
+                <div class="btn-box w-100 mt-auto mb-3 px-3">
+                    <a href="<?= $this->Url->build(['controller' => 'users', 'action' => 'logout']) ?>"
+                        class="btn btn-danger btn-lg w-100 d-flex align-items-center justify-content-center">
+                        <i class="fe fe-log-out fe-18 me-2 mx-3"></i>
+                        <span class="small mt-1" style="font-weight: bold;">Logout</span>
+                    </a>
                 </div>
-            </div>
-            <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body px-5">
-                            <div class="row align-items-center">
-                                <div class="col-6 text-center">
-                                    <div class="squircle bg-success justify-content-center">
-                                        <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
-                                    </div>
-                                    <p>Control area</p>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <div class="squircle bg-primary justify-content-center">
-                                        <i class="fe fe-activity fe-32 align-self-center text-white"></i>
-                                    </div>
-                                    <p>Activity</p>
-                                </div>
-                            </div>
-                            <div class="row align-items-center">
-                                <div class="col-6 text-center">
-                                    <div class="squircle bg-primary justify-content-center">
-                                        <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
-                                    </div>
-                                    <p>Droplet</p>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <div class="squircle bg-primary justify-content-center">
-                                        <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
-                                    </div>
-                                    <p>Upload</p>
-                                </div>
-                            </div>
-                            <div class="row align-items-center">
-                                <div class="col-6 text-center">
-                                    <div class="squircle bg-primary justify-content-center">
-                                        <i class="fe fe-users fe-32 align-self-center text-white"></i>
-                                    </div>
-                                    <p>Users</p>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <div class="squircle bg-primary justify-content-center">
-                                        <i class="fe fe-settings fe-32 align-self-center text-white"></i>
-                                    </div>
-                                    <p>Settings</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main> <!-- main -->
+            </nav>
+        </aside>
+        <main role="main" class="main-content">
+            <?= $this->fetch('content') ?>
+        </main>
     </div> <!-- .wrapper -->
 
-    <script>
-        /* defind global options */
-        Chart.defaults.global.defaultFontFamily = base.defaultFontFamily;
-        Chart.defaults.global.defaultFontColor = colors.mutedColor;
-    </script>
 
-    <script>
-        $('.select2').select2({
-            theme: 'bootstrap4',
-        });
-        $('.select2-multi').select2({
-            multiple: true,
-            theme: 'bootstrap4',
-        });
-        $('.drgpicker').daterangepicker({
-            singleDatePicker: true,
-            timePicker: false,
-            showDropdowns: true,
-            locale: {
-                format: 'MM/DD/YYYY'
-            }
-        });
-        $('.time-input').timepicker({
-            'scrollDefault': 'now',
-            'zindex': '9999' /* fix modal open */
-        });
-        /** date range picker */
-        if ($('.datetimes').length) {
-            $('.datetimes').daterangepicker({
-                timePicker: true,
-                startDate: moment().startOf('hour'),
-                endDate: moment().startOf('hour').add(32, 'hour'),
-                locale: {
-                    format: 'M/DD hh:mm A'
-                }
-            });
-        }
-        var start = moment().subtract(29, 'days');
-        var end = moment();
-
-        function cb(start, end) {
-            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        }
-        $('#reportrange').daterangepicker({
-            startDate: start,
-            endDate: end,
-            ranges: {
-                'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            }
-        }, cb);
-        cb(start, end);
-        $('.input-placeholder').mask("00/00/0000", {
-            placeholder: "__/__/____"
-        });
-        $('.input-zip').mask('00000-000', {
-            placeholder: "____-___"
-        });
-        $('.input-money').mask("#.##0,00", {
-            reverse: true
-        });
-        $('.input-phoneus').mask('(000) 000-0000');
-        $('.input-mixed').mask('AAA 000-S0S');
-        $('.input-ip').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
-            translation: {
-                'Z': {
-                    pattern: /[0-9]/,
-                    optional: true
-                }
-            },
-            placeholder: "___.___.___.___"
-        });
-        // editor
-        var editor = document.getElementById('editor');
-        if (editor) {
-            var toolbarOptions = [
-                [{
-                    'font': []
-                }],
-                [{
-                    'header': [1, 2, 3, 4, 5, 6, false]
-                }],
-                ['bold', 'italic', 'underline', 'strike'],
-                ['blockquote', 'code-block'],
-                [{
-                        'header': 1
-                    },
-                    {
-                        'header': 2
-                    }
-                ],
-                [{
-                        'list': 'ordered'
-                    },
-                    {
-                        'list': 'bullet'
-                    }
-                ],
-                [{
-                        'script': 'sub'
-                    },
-                    {
-                        'script': 'super'
-                    }
-                ],
-                [{
-                        'indent': '-1'
-                    },
-                    {
-                        'indent': '+1'
-                    }
-                ], // outdent/indent
-                [{
-                    'direction': 'rtl'
-                }], // text direction
-                [{
-                        'color': []
-                    },
-                    {
-                        'background': []
-                    }
-                ], // dropdown with defaults from theme
-                [{
-                    'align': []
-                }],
-                ['clean'] // remove formatting button
-            ];
-            var quill = new Quill(editor, {
-                modules: {
-                    toolbar: toolbarOptions
-                },
-                theme: 'snow'
-            });
-        }
-        // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                var forms = document.getElementsByClassName('needs-validation');
-                // Loop over them and prevent submission
-                var validation = Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-    </script>
-    <script>
-        var uptarg = document.getElementById('drag-drop-area');
-        if (uptarg) {
-            var uppy = Uppy.Core().use(Uppy.Dashboard, {
-                inline: true,
-                target: uptarg,
-                proudlyDisplayPoweredByUppy: false,
-                theme: 'dark',
-                width: 770,
-                height: 210,
-                plugins: ['Webcam']
-            }).use(Uppy.Tus, {
-                endpoint: 'https://master.tus.io/files/'
-            });
-            uppy.on('complete', (result) => {
-                console.log('Upload complete! We’ve uploaded these files:', result.successful)
-            });
-        }
-    </script>
-    <script src="js/apps.js"></script>
 </body>
 
 </html>
