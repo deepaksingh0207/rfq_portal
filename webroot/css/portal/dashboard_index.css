@@ -1,0 +1,47 @@
+.spend-card {
+    border-radius: 14px;
+    background: #fff;
+}
+
+.circle-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #1e88e5;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.spend-list li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+}
+
+.spend-list li:last-child {
+    border-bottom: none;
+}
+
+.spend-list .name {
+    font-size: 14px;
+    color: #111;
+}
+
+.spend-list .percent {
+    font-size: 14px;
+    color: #00c853;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.spend-list .amount {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}

@@ -1,3 +1,4 @@
+<?= $this->Html->css('portal/dashboard_index.css') ?>
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-12">
@@ -170,7 +171,7 @@
                                                                 <span class="my-0 text-muted small">(20)</span>
                                                             </div>
                                                         </div>
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -203,52 +204,168 @@
                                         <div class="col-md-12 col-lg-4">
                                             <div class="card shadow eq-card mb-4">
                                                 <div class="card-body">
-                                                    <div class="chart-widget mb-2">
-                                                        <div id="radialbar"></div>
-                                                    </div>
-                                                    <div class="row items-align-center">
-                                                        <div class="col-4 text-center">
-                                                            <p class="text-muted mb-1">Cost</p>
-                                                            <h6 class="mb-1">$1,823</h6>
-                                                            <p class="text-muted mb-0">+12%</p>
-                                                        </div>
-                                                        <div class="col-4 text-center">
-                                                            <p class="text-muted mb-1">Revenue</p>
-                                                            <h6 class="mb-1">$6,830</h6>
-                                                            <p class="text-muted mb-0">+8%</p>
-                                                        </div>
-                                                        <div class="col-4 text-center">
-                                                            <p class="text-muted mb-1">Earning</p>
-                                                            <h6 class="mb-1">$4,830</h6>
-                                                            <p class="text-muted mb-0">+8%</p>
-                                                        </div>
-                                                    </div>
+                                                    <div id="prAgingChart"></div>
                                                 </div> <!-- .card-body -->
                                             </div> <!-- .card -->
                                         </div>
                                         <div class="col-md-12 col-lg-4">
                                             <div class="card shadow eq-card mb-4">
                                                 <div class="card-body">
-                                                    <div class="d-flex mt-3 mb-4">
-                                                        <div class="flex-fill pt-2">
-                                                            <p class="mb-0 text-muted">Total</p>
-                                                            <h4 class="mb-0">108</h4>
-                                                            <span class="small text-muted">+37.7%</span>
+                                                    <h5 class="font-weight-bold mb-4">Award Status</h5>
+                                                    <!-- Under Approval -->
+                                                    <div class="mb-4">
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>Under Approval</span>
+                                                            <span class="font-weight-bold">₹ 6,192.90L</span>
                                                         </div>
-                                                        <div class="flex-fill chart-box mt-n2">
-                                                            <div id="barChartWidget"></div>
+
+                                                        <div class="progress my-2" style="height: 8px;">
+                                                            <div class="progress-bar bg-primary" style="width: 70%"></div>
                                                         </div>
-                                                    </div> <!-- .d-flex -->
-                                                    <div class="row border-top">
-                                                        <div class="col-md-6 pt-4">
-                                                            <h6 class="mb-0">108 <span class="small text-muted">+37.7%</span></h6>
-                                                            <p class="mb-0 text-muted">Cost</p>
+
+                                                        <div class="d-flex justify-content-between text-muted small">
+                                                            <span>1145</span>
+                                                            <span>1631 PRs</span>
                                                         </div>
-                                                        <div class="col-md-6 pt-4">
-                                                            <h6 class="mb-0">1168 <span class="small text-muted">-18.9%</span></h6>
-                                                            <p class="mb-0 text-muted">Revenue</p>
+                                                    </div>
+
+                                                    <!-- Pending for PO -->
+                                                    <div class="mb-4">
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>Pending for PO</span>
+                                                            <span class="font-weight-bold">₹ 827.88L</span>
                                                         </div>
-                                                    </div> <!-- .row -->
+
+                                                        <div class="progress my-2" style="height: 8px;">
+                                                            <div class="progress-bar bg-warning" style="width: 55%"></div>
+                                                        </div>
+
+                                                        <div class="d-flex justify-content-between text-muted small">
+                                                            <span>87</span>
+                                                            <span>157 PRs</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- PO Created -->
+                                                    <div>
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>PO Created</span>
+                                                            <span class="font-weight-bold">₹ 44,931.68L</span>
+                                                        </div>
+
+                                                        <div class="progress my-2" style="height: 8px;">
+                                                            <div class="progress-bar bg-success" style="width: 85%"></div>
+                                                        </div>
+
+                                                        <div class="d-flex justify-content-between text-muted small">
+                                                            <span>20006</span>
+                                                            <span>31,282 PRs</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row items-align-baseline">
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="card shadow eq-card mb-4">
+                                                <div class="card-body">
+                                                    <div class="container-fluid">
+                                                        <h6 class="mb-3 font-weight-bold">PO Created</h6>
+
+                                                        <div class="row">
+
+                                                            <!-- Card -->
+                                                            <div class="col-md-4 mb-3">
+                                                                <div class="card h-100 border-primary shadow-sm">
+                                                                    <div class="card-body">
+                                                                        <h6 class="font-weight-bold mb-3">Via ARC</h6>
+
+                                                                        <div class="d-flex justify-content-between">
+                                                                            <div>
+                                                                                <div class="h6 mb-0">1,606</div>
+                                                                                <small class="text-success">(5.13%)</small>
+                                                                            </div>
+
+                                                                            <div class="text-right">
+                                                                                <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
+                                                                                <small class="text-success">(10.06%)</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Repeat cards -->
+                                                            <div class="col-md-4 mb-3">
+                                                                <div class="card h-100 border-primary shadow-sm">
+                                                                    <div class="card-body">
+                                                                        <h6 class="font-weight-bold mb-3">Via RFx / Auction</h6>
+                                                                        <div class="d-flex justify-content-between">
+                                                                            <div>
+                                                                                <div class="h6 mb-0">1,606</div>
+                                                                                <small class="text-success">(5.13%)</small>
+                                                                            </div>
+                                                                            <div class="text-right">
+                                                                                <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
+                                                                                <small class="text-success">(10.06%)</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4 mb-3">
+                                                                <div class="card h-100 border-primary shadow-sm">
+                                                                    <div class="card-body">
+                                                                        <h6 class="font-weight-bold mb-3">Via ERP</h6>
+                                                                        <div>
+                                                                            <div class="h6 mb-0">1,606</div>
+                                                                            <small class="text-success">(5.13%)</small>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Second row -->
+                                                            <div class="col-md-4 mb-3">
+                                                                <div class="card h-100 border-primary shadow-sm">
+                                                                    <div class="card-body">
+                                                                        <h6 class="font-weight-bold mb-3">Via Repeat PO</h6>
+                                                                        <div class="d-flex justify-content-between">
+                                                                            <div>
+                                                                                <div class="h6 mb-0">1,606</div>
+                                                                                <small class="text-success">(5.13%)</small>
+                                                                            </div>
+                                                                            <div class="text-right">
+                                                                                <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
+                                                                                <small class="text-success">(10.06%)</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4 mb-3">
+                                                                <div class="card h-100 border-primary shadow-sm">
+                                                                    <div class="card-body">
+                                                                        <h6 class="font-weight-bold mb-3">Via Standalone</h6>
+                                                                        <div class="d-flex justify-content-between">
+                                                                            <div>
+                                                                                <div class="h6 mb-0">1,606</div>
+                                                                                <small class="text-success">(5.13%)</small>
+                                                                            </div>
+                                                                            <div class="text-right">
+                                                                                <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
+                                                                                <small class="text-success">(10.06%)</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
                                                 </div> <!-- .card-body -->
                                             </div> <!-- .card -->
                                         </div>
@@ -269,210 +386,198 @@
                             </div>
                             <div id="collapse3" class="collapse show" aria-labelledby="heading3" data-parent="#accordion1">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <!-- Recent Activity -->
-                                        <div class="col-md-12 col-lg-4 mb-4">
-                                            <div class="card timeline shadow">
-                                                <div class="card-header">
-                                                    <strong class="card-title">Recent Activity</strong>
-                                                    <a class="float-right small text-muted" href="#!">View all</a>
-                                                </div>
-                                                <div class="card-body" data-simplebar style="height:355px; overflow-y: auto; overflow-x: hidden;">
-                                                    <h6 class="text-uppercase text-muted mb-4">Today</h6>
-                                                    <div class="pb-3 timeline-item item-primary">
-                                                        <div class="pl-5">
-                                                            <div class="mb-1"><strong>@Brown Asher</strong><span class="text-muted small mx-2">Just create new layout Index, form, table</span><strong>Tiny Admin</strong></div>
-                                                            <p class="small text-muted">Creative Design <span class="badge badge-light">1h ago</span>
-                                                            </p>
+                                    <div class="row items-align-baseline">
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="card shadow eq-card mb-4">
+                                                <div class="card-body mb-n3">
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <h6 class="mb-0 font-weight-bold">Spend By Category</h6>
+                                                        <span class="circle circle-sm bg-primary text-white">
+                                                            <i class="fe fe-arrow-right"></i>
+                                                        </span>
+                                                    </div>
+
+                                                    <div id="spendCategoryTree" style="width:100%; height:420px;"></div>
+
+                                                </div> <!-- .card-body -->
+                                            </div> <!-- .card -->
+                                        </div>
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="card shadow eq-card mb-4">
+                                                <div class="card-body mb-n3">
+                                                    <div id="cycleTimeChart" style="width:100%; height:320px;"></div>
+                                                </div> <!-- .card-body -->
+                                            </div> <!-- .card -->
+                                        </div>
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="card shadow eq-card mb-4">
+                                                <div class="card-body mb-n3">
+                                                    <h6 class="font-weight-bold mb-3">RFQ Status</h6>
+
+                                                    <!-- Published -->
+                                                    <div class="mb-3">
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>Published</span>
+                                                        </div>
+                                                        <div class="progress mt-1">
+                                                            <div class="progress-bar bg-success" style="width: 62%"></div>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between mt-1 small font-weight-bold">
+                                                            <span>5</span>
+                                                            <span>8 PRs</span>
                                                         </div>
                                                     </div>
-                                                    <div class="pb-3 timeline-item item-warning">
-                                                        <div class="pl-5">
-                                                            <div class="mb-3"><strong>@Hester Nissim</strong><span class="text-muted small mx-2">has upload new files to</span><strong>Tiny Admin</strong></div>
-                                                            <div class="row mb-3">
-                                                                <div class="col"><img src="./assets/products/p1.jpg" alt="..." class="img-fluid rounded"></div>
-                                                                <div class="col"><img src="./assets/products/p2.jpg" alt="..." class="img-fluid rounded"></div>
-                                                                <div class="col"><img src="./assets/products/p3.jpg" alt="..." class="img-fluid rounded"></div>
-                                                                <div class="col"><img src="./assets/products/p4.jpg" alt="..." class="img-fluid rounded"></div>
-                                                            </div>
-                                                            <p class="small text-muted">Front-End Development <span class="badge badge-light">1h ago</span>
-                                                            </p>
+
+                                                    <!-- Closed -->
+                                                    <div class="mb-3">
+                                                        <span>Closed</span>
+                                                        <div class="progress mt-1">
+                                                            <div class="progress-bar bg-danger" style="width: 55%"></div>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between mt-1 small font-weight-bold">
+                                                            <span>323</span>
+                                                            <span>582 PRs</span>
                                                         </div>
                                                     </div>
-                                                    <div class="pb-3 timeline-item item-success">
-                                                        <div class="pl-5">
-                                                            <div class="mb-3"><strong>@Kelley Sonya</strong><span class="text-muted small mx-2">has commented on</span><strong>Advanced table</strong></div>
-                                                            <div class="card d-inline-flex mb-2">
-                                                                <div class="card-body bg-light py-2 px-3 small rounded"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim nulla eu quam cursus placerat. Vivamus non odio ullamcorper, lacinia ante nec, blandit leo. </div>
-                                                            </div>
-                                                            <p class="small text-muted">Back-End Development <span class="badge badge-light">1h ago</span>
-                                                            </p>
+
+                                                    <!-- Technical Approval Pending -->
+                                                    <div class="mb-3">
+                                                        <span>Technical Approval Pending</span>
+                                                        <div class="progress mt-1">
+                                                            <div class="progress-bar bg-primary" style="width: 68%"></div>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between mt-1 small font-weight-bold">
+                                                            <span>59</span>
+                                                            <span>87 PRs</span>
                                                         </div>
                                                     </div>
-                                                    <h6 class="text-uppercase text-muted mb-4">Yesterday</h6>
-                                                    <div class="pb-3 timeline-item item-warning">
-                                                        <div class="pl-5">
-                                                            <div class="mb-3"><strong>@Fletcher Everett</strong><span class="text-muted small mx-2">created new group for</span><strong>Tiny Admin</strong></div>
-                                                            <ul class="avatars-list mb-3">
-                                                                <li>
-                                                                    <a href="#!" class="avatar avatar-sm">
-                                                                        <img alt="..." class="avatar-img rounded-circle" src="./assets/avatars/face-1.jpg">
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#!" class="avatar avatar-sm">
-                                                                        <img alt="..." class="avatar-img rounded-circle" src="./assets/avatars/face-4.jpg">
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#!" class="avatar avatar-sm">
-                                                                        <img alt="..." class="avatar-img rounded-circle" src="./assets/avatars/face-3.jpg">
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                            <p class="small text-muted">Front-End Development <span class="badge badge-light">1h ago</span>
-                                                            </p>
+
+                                                    <!-- Technically Approved -->
+                                                    <div>
+                                                        <span>Technically Approved - Action Pending</span>
+                                                        <div class="progress mt-1">
+                                                            <div class="progress-bar bg-warning" style="width: 78%"></div>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between mt-1 small font-weight-bold">
+                                                            <span>128</span>
+                                                            <span>226 PRs</span>
                                                         </div>
                                                     </div>
-                                                    <div class="pb-3 timeline-item item-success">
-                                                        <div class="pl-5">
-                                                            <div class="mb-3"><strong>@Bertha Ball</strong><span class="text-muted small mx-2">has commented on</span><strong>Advanced table</strong></div>
-                                                            <div class="card d-inline-flex mb-2">
-                                                                <div class="card-body bg-light py-2 px-3"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim nulla eu quam cursus placerat. Vivamus non odio ullamcorper, lacinia ante nec, blandit leo. </div>
-                                                            </div>
-                                                            <p class="small text-muted">Back-End Development <span class="badge badge-light">1h ago</span>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pb-3 timeline-item item-danger">
-                                                        <div class="pl-5">
-                                                            <div class="mb-3"><strong>@Lillith Joseph</strong><span class="text-muted small mx-2">has upload new files to</span><strong>Tiny Admin</strong></div>
-                                                            <div class="row mb-3">
-                                                                <div class="col"><img src="./assets/products/p4.jpg" alt="..." class="img-fluid rounded"></div>
-                                                                <div class="col"><img src="./assets/products/p1.jpg" alt="..." class="img-fluid rounded"></div>
-                                                                <div class="col"><img src="./assets/products/p2.jpg" alt="..." class="img-fluid rounded"></div>
-                                                            </div>
-                                                            <p class="small text-muted">Front-End Development <span class="badge badge-light">1h ago</span>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div> <!-- / .card-body -->
-                                            </div> <!-- / .card -->
-                                        </div> <!-- / .col-md-6 -->
-                                        <!-- Striped rows -->
-                                        <div class="col-md-12 col-lg-8">
-                                            <div class="card shadow">
-                                                <div class="card-header">
-                                                    <strong class="card-title">Recent Data</strong>
-                                                    <a class="float-right small text-muted" href="#!">View all</a>
-                                                </div>
-                                                <div class="card-body my-n2">
-                                                    <table class="table table-striped table-hover table-borderless">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>Name</th>
-                                                                <th>Address</th>
-                                                                <th>Date</th>
-                                                                <th>Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>2474</td>
-                                                                <th scope="col">Brown, Asher D.</th>
-                                                                <td>Ap #331-7123 Lobortis Avenue</td>
-                                                                <td>13/09/2020</td>
-                                                                <td>
-                                                                    <div class="dropdown">
-                                                                        <button class="btn btn-sm dropdown-toggle more-vertical" type="button" id="dr1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <span class="text-muted sr-only">Action</span>
-                                                                        </button>
-                                                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dr1">
-                                                                            <a class="dropdown-item" href="#">Edit</a>
-                                                                            <a class="dropdown-item" href="#">Remove</a>
-                                                                            <a class="dropdown-item" href="#">Assign</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>2786</td>
-                                                                <th scope="col">Leblanc, Yoshio V.</th>
-                                                                <td>287-8300 Nisl. St.</td>
-                                                                <td>04/05/2019</td>
-                                                                <td>
-                                                                    <div class="dropdown">
-                                                                        <button class="btn btn-sm dropdown-toggle more-vertical" type="button" id="dr2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <span class="text-muted sr-only">Action</span>
-                                                                        </button>
-                                                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dr2">
-                                                                            <a class="dropdown-item" href="#">Edit</a>
-                                                                            <a class="dropdown-item" href="#">Remove</a>
-                                                                            <a class="dropdown-item" href="#">Assign</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>2747</td>
-                                                                <th scope="col">Hester, Nissim L.</th>
-                                                                <td>4577 Cras St.</td>
-                                                                <td>04/06/2019</td>
-                                                                <td>
-                                                                    <div class="dropdown">
-                                                                        <button class="btn btn-sm dropdown-toggle more-vertical" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <span class="text-muted sr-only">Action</span>
-                                                                        </button>
-                                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                                            <a class="dropdown-item" href="#">Edit</a>
-                                                                            <a class="dropdown-item" href="#">Remove</a>
-                                                                            <a class="dropdown-item" href="#">Assign</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>2639</td>
-                                                                <th scope="col">Gardner, Leigh S.</th>
-                                                                <td>P.O. Box 228, 7512 Lectus Ave</td>
-                                                                <td>04/08/2019</td>
-                                                                <td>
-                                                                    <div class="dropdown">
-                                                                        <button class="btn btn-sm dropdown-toggle more-vertical" type="button" id="dr4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <span class="text-muted sr-only">Action</span>
-                                                                        </button>
-                                                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dr4">
-                                                                            <a class="dropdown-item" href="#">Edit</a>
-                                                                            <a class="dropdown-item" href="#">Remove</a>
-                                                                            <a class="dropdown-item" href="#">Assign</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>2238</td>
-                                                                <th scope="col">Higgins, Uriah L.</th>
-                                                                <td>Ap #377-5357 Sed Road</td>
-                                                                <td>04/01/2019</td>
-                                                                <td>
-                                                                    <div class="dropdown">
-                                                                        <button class="btn btn-sm dropdown-toggle more-vertical" type="button" id="dr5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <span class="text-muted sr-only">Action</span>
-                                                                        </button>
-                                                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dr5">
-                                                                            <a class="dropdown-item" href="#">Edit</a>
-                                                                            <a class="dropdown-item" href="#">Remove</a>
-                                                                            <a class="dropdown-item" href="#">Assign</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+
                                                 </div>
                                             </div>
-                                        </div> <!-- Striped rows -->
+                                        </div>
+                                    </div>
+                                    <div class="row items-align-baseline">
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="card shadow eq-card mb-4">
+                                                <div class="card-body mb-n3">
+                                                    <h6 class="font-weight-bold mb-3">Contract Expiry</h6>
+                                                    <div id="contractExpiryChart"></div>
+                                                </div> <!-- .card-body -->
+                                            </div> <!-- .card -->
+                                        </div>
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="card shadow eq-card mb-4">
+                                                <div class="card-body mb-n3">
+                                                    <h6 class="font-weight-bold mb-3">Spend By Award Type</h6>
+                                                    <div id="awardTypeChart"></div>
+                                                </div> <!-- .card-body -->
+                                            </div> <!-- .card -->
+                                        </div>
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="card shadow eq-card mb-4">
+                                                <div class="card-body mb-n3">
+                                                    <h6 class="font-weight-bold mb-3">Spend By Award Category</h6>
+                                                    <div id="awardCategoryChart"></div>
+                                                </div> <!-- .card-body -->
+                                            </div> <!-- .card -->
+                                        </div>
+                                    </div>
+                                    <div class="row row items-align-baseline">
+                                        <!-- Spend by Supplier -->
+                                        <div class="col-md-12 col-lg-6">
+                                            <div class="card shadow spend-card h-100">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <h6 class="font-weight-bold mb-0">Spend by Supplier</h6>
+                                                        <span class="circle-icon">
+                                                            <i class="fe fe-arrow-right"></i>
+                                                        </span>
+                                                    </div>
+
+                                                    <ul class="list-unstyled spend-list">
+                                                        <li>
+                                                            <span class="name">5000085 - VEEASSURE PRIVATE LIMITED</span>
+                                                            <span class="percent">7.07%</span>
+                                                            <span class="amount">₹3,176.09 L</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="name">3000762 - ALLIANZ ELASTOMER</span>
+                                                            <span class="percent">5.71%</span>
+                                                            <span class="amount">₹2,564.58 L</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="name">3000735 - KOTHARI METSOL PVT. LTD.</span>
+                                                            <span class="percent">5.20%</span>
+                                                            <span class="amount">₹2,335.94 L</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="name">3020649 - MIVAAN STEELS LIMITED</span>
+                                                            <span class="percent">3.54%</span>
+                                                            <span class="amount">₹1,591.43 L</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="name">3020750 - ELECTROSTEEL CASTINGS LTD</span>
+                                                            <span class="percent">3.11%</span>
+                                                            <span class="amount">₹1,398.66 L</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Spend by Items -->
+                                        <div class="col-md-12 col-lg-6">
+                                            <div class="card shadow spend-card h-100">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <h6 class="font-weight-bold mb-0">Spend by Items</h6>
+                                                        <span class="circle-icon">
+                                                            <i class="fe fe-arrow-right"></i>
+                                                        </span>
+                                                    </div>
+
+                                                    <ul class="list-unstyled spend-list">
+                                                        <li>
+                                                            <span class="name">11120090001 - ZINC WIRE-THICKNESS 4MM</span>
+                                                            <span class="percent">7.07%</span>
+                                                            <span class="amount">₹2,579.11 L</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="name">11120080001 - FERRO SILICON</span>
+                                                            <span class="percent">5.71%</span>
+                                                            <span class="amount">₹1,824.58 L</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="name">121800020097 - SILICO MANGANESE; 60-65%</span>
+                                                            <span class="percent">5.20%</span>
+                                                            <span class="amount">₹1,591.43 L</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="name">11120050003 - QUARTZITE</span>
+                                                            <span class="percent">3.54%</span>
+                                                            <span class="amount">₹510.80 L</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="name">132080010202 - RESIN; MUDGUN MASS</span>
+                                                            <span class="percent">3.11%</span>
+                                                            <span class="amount">₹500.55 L</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -554,5 +659,6 @@
 <?= $this->Html->script('config.js') ?>
 <?= $this->Html->script('apexcharts.min.js') ?>
 <?= $this->Html->script('apexcharts.custom.js') ?>
+<?= $this->Html->script("echarts.min.js") ?>
 <?= $this->Html->script('portal/dashboard_index.js') ?>
 
