@@ -57,7 +57,7 @@
     <style>
         .link-active {
             background: deepskyblue !important;
-            color:white !important;
+            color: white !important;
         }
     </style>
 </head>
@@ -67,7 +67,9 @@
     <div class="wrapper">
         <nav class="topnav navbar navbar-light shadow-sm" style="background-color: white;">
             <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
-                <?= $this->Html->image('../assets/icons/menu-icon-64.png', ['alt' => 'Menu', 'style' => 'width:25px']) ?>
+                <span class="navbar-toggler-icon">
+                    <?= $this->Html->image('../assets/icons/menu-icon-64.png', ['alt' => 'Menu', 'style' => 'width:25px']) ?>
+                </span>
             </button>
             <ul class="nav">
                 <li class="nav-item">
@@ -113,6 +115,15 @@
                         <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link link-active">
                             <i class="fe fe-home fe-16"></i>
                             <span class="ml-3 item-text">Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-layout-text-sidebar-reverse" viewBox="0 0 16 16">
+                                <path d="M12.5 3a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zm0 3a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zm.5 3.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 .5-.5m-.5 2.5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1z" />
+                                <path d="M16 2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zM4 1v14H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm1 0h9a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5z" />
+                            </svg>
+                            <span class="ml-3 item-text">Requisitions</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -172,6 +183,7 @@
     </div> <!-- .wrapper -->
 
 
+    <?= $this->Html->script('apps.js') ?>
 </body>
 
 </html>

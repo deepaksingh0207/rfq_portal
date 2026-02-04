@@ -353,11 +353,16 @@ $(document).ready(function () {
         ],
         colors: ["#42A5F5"],
         xaxis: {
+            labels:{
+                style:{
+                    fontSize:'10px'
+                }
+            },
             categories: [
-                "September - 2025",
-                "October - 2025",
-                "November - 2025",
-                "December - 2025",
+                "Sept - 2025",
+                "Oct - 2025",
+                "Nov - 2025",
+                "Dec - 2025",
                 "March - 2026",
                 "June - 2026",
             ],
@@ -380,6 +385,11 @@ $(document).ready(function () {
         ],
         colors: ["#38E760"],
         xaxis: {
+            labels:{
+                style:{
+                    fontSize:'10px'
+                }
+            },
             categories: ["Regular", "Repeat PO", "RC PO", "Standalone"],
         },
         grid: { strokeDashArray: 4 },
@@ -400,6 +410,11 @@ $(document).ready(function () {
         ],
         colors: ["#7E7CE3"],
         xaxis: {
+            labels:{
+                style:{
+                    fontSize:'8px'
+                }
+            },
             categories: [
                 "Authorized Dealer",
                 "Inter Company",

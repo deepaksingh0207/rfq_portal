@@ -276,7 +276,7 @@
                                                         <div class="row">
 
                                                             <!-- Card -->
-                                                            <div class="col-md-4 mb-3">
+                                                            <div class="col-md-3 mb-3">
                                                                 <div class="card h-100 border-primary shadow-sm">
                                                                     <div class="card-body">
                                                                         <h6 class="font-weight-bold mb-3">Via ARC</h6>
@@ -297,7 +297,7 @@
                                                             </div>
 
                                                             <!-- Repeat cards -->
-                                                            <div class="col-md-4 mb-3">
+                                                            <div class="col-md-3 mb-3">
                                                                 <div class="card h-100 border-primary shadow-sm">
                                                                     <div class="card-body">
                                                                         <h6 class="font-weight-bold mb-3">Via RFx / Auction</h6>
@@ -315,20 +315,26 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-4 mb-3">
+                                                            <!-- <div class="col-md-3 mb-3">
                                                                 <div class="card h-100 border-primary shadow-sm">
                                                                     <div class="card-body">
                                                                         <h6 class="font-weight-bold mb-3">Via ERP</h6>
-                                                                        <div>
-                                                                            <div class="h6 mb-0">1,606</div>
-                                                                            <small class="text-success">(5.13%)</small>
+                                                                        <div class="d-flex justify-content-between">
+                                                                            <div>
+                                                                                <div class="h6 mb-0">1,606</div>
+                                                                                <small class="text-success">(5.13%)</small>
+                                                                            </div>
+                                                                            <div class="text-right">
+                                                                                <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
+                                                                                <small class="text-success">(10.06%)</small>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
 
                                                             <!-- Second row -->
-                                                            <div class="col-md-4 mb-3">
+                                                            <div class="col-md-3 mb-3">
                                                                 <div class="card h-100 border-primary shadow-sm">
                                                                     <div class="card-body">
                                                                         <h6 class="font-weight-bold mb-3">Via Repeat PO</h6>
@@ -346,7 +352,7 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-4 mb-3">
+                                                            <div class="col-md-3 mb-3">
                                                                 <div class="card h-100 border-primary shadow-sm">
                                                                     <div class="card-body">
                                                                         <h6 class="font-weight-bold mb-3">Via Standalone</h6>
@@ -661,4 +667,3 @@
 <?= $this->Html->script('apexcharts.custom.js') ?>
 <?= $this->Html->script("echarts.min.js") ?>
 <?= $this->Html->script('portal/dashboard_index.js') ?>
-
