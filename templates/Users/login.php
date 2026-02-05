@@ -104,9 +104,9 @@
           <div class="card-body p-5 text-center">
             <form action="<?= $this->Url->build(['controller' => 'users', 'action' => 'login']) ?>" method="POST">
               <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= $this->Url->build('/') ?>">
-                <?= $this->Html->image('jbm_logo.png', ['style' => 'width:50%']) ?>
+                <?= $this->Html->image('jbm_logo.png', ['style' => 'width:70%']) ?>
               </a>
-              <h1 class="h4 mb-3">Sign in</h1>
+              <h1 class="h4 mb-3">RFQ - Sign in</h1>
               <input type="hidden" name="_csrfToken" value="<?= h($this->request->getAttribute('csrfToken')) ?>">
               <div class="form-group">
                 <label for="inputEmail" class="sr-only">Email address</label>
@@ -120,7 +120,7 @@
                 <label><input type="checkbox" value="remember-me"> Stay logged in </label>
               </div> -->
               <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-              <p class="mt-5 mb-3 text-muted">© <?= date('Y') ?></p>
+              <p class="h5 mt-5 mb-3 text-muted">© <?= date('Y') ?></p>
             </form>
           </div>
         </div>
