@@ -1,4 +1,10 @@
 $(document).ready(function () {
+    /***********select2**************** */
+    $(".select2").select2({
+        theme: "bootstrap4",
+    });
+
+    /********** date range picker ************* */
     var start = moment().subtract(29, "days");
     var end = moment();
 
@@ -33,8 +39,8 @@ $(document).ready(function () {
     );
     cb(start, end);
 
-    let seriesData = [5517, 15689, 20254]; // Pending, In-Progress, PO Created
-    let labels = ["Pending", "In-Progress", "PO Created"];
+    let seriesData = series_data_for_pr_status_chart; // Pending, In-Progress, PO Created
+    let labels = labels_for_pr_status_chart;
 
     let prStatusoptions = {
         series: seriesData,
@@ -43,7 +49,7 @@ $(document).ready(function () {
             height: 260,
         },
         labels: labels,
-        colors: ["#BFE4FF", "#6EC1FF", "#1495FF"],
+        colors: ["#BFE4FF", "#6EC1FF", "#1a98ff" ,"#0e89ed" , "#1495FF"],
         stroke: {
             width: 0,
         },
@@ -94,8 +100,8 @@ $(document).ready(function () {
 
     chart.render();
 
-    seriesData = [986, 665, 200]; // >60d, 31–60d, 0–30d
-    labels = [">60d", "31–60d", "0–30d"];
+    seriesData = series_data_for_pr_aging_chart; // >60d, 31–60d, 0–30d
+    labels = labels_for_pr_aging_chart;
 
     let prAgingoptions = {
         series: seriesData,
@@ -353,10 +359,10 @@ $(document).ready(function () {
         ],
         colors: ["#42A5F5"],
         xaxis: {
-            labels:{
-                style:{
-                    fontSize:'10px'
-                }
+            labels: {
+                style: {
+                    fontSize: "10px",
+                },
             },
             categories: [
                 "Sept - 2025",
@@ -385,10 +391,10 @@ $(document).ready(function () {
         ],
         colors: ["#38E760"],
         xaxis: {
-            labels:{
-                style:{
-                    fontSize:'10px'
-                }
+            labels: {
+                style: {
+                    fontSize: "10px",
+                },
             },
             categories: ["Regular", "Repeat PO", "RC PO", "Standalone"],
         },
@@ -410,10 +416,10 @@ $(document).ready(function () {
         ],
         colors: ["#7E7CE3"],
         xaxis: {
-            labels:{
-                style:{
-                    fontSize:'8px'
-                }
+            labels: {
+                style: {
+                    fontSize: "8px",
+                },
             },
             categories: [
                 "Authorized Dealer",

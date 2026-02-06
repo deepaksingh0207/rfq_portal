@@ -9,17 +9,17 @@
                 <div class="col-auto">
                     <select class="form-control select2" id="plant-select">
                         <option value="">-- Select Plant Here --</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <?php foreach($plant_list as $plant_code => $plant_name) : ?>
+                            <option value="<?= $plant_code ?>"><?= $plant_code ?> - <?= $plant_name ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="col-auto">
                     <select class="form-control select2" id="buyer-select">
                         <option value="">-- Select Buyer Here --</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <?php foreach($buyer_list as $buyer_code => $buyer_name) : ?>
+                            <option value="<?= $buyer_code ?>"><?= $buyer_name ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="col-auto">
@@ -69,14 +69,13 @@
 
                                                         <!-- BOTTOM ROW -->
                                                         <div class="d-flex justify-content-between align-items-end">
-                                                            <h6 class="mb-0">₹44,931.68L</h6>
+                                                            <h6 class="mb-0">₹ <?= $total_spend ?? 0 ?></h6>
                                                             <i class="fe fe-24 fe-arrow-right"></i>
                                                         </div>
 
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div class="col-md-6 col-xl-4 mb-4">
                                                 <div class="card shadow h-100">
                                                     <div class="card-body d-flex flex-column justify-content-between">
@@ -95,9 +94,9 @@
 
                                                         <!-- BOTTOM ROW -->
                                                         <div class="d-flex justify-content-between align-items-end">
-                                                            <h4 class="mb-0">0</h4>
-                                                            <h4 class="mb-0 ml-4">34,944</h4>
-                                                            <h4 class="mb-0">31,282</h4>
+                                                            <h6 class="mb-0"><?= $today_pr_count ?? 0 ?></h6>
+                                                            <h6 class="mb-0 ml-4"><?= $total_pr_count ?? 0 ?></h6>
+                                                            <h6 class="mb-0"><?= $po_converted_from_pr ?? 0 ?></h6>
                                                             <i class="fe fe-24 fe-arrow-right"></i>
                                                         </div>
 
@@ -197,6 +196,7 @@
                                         <div class="col-md-12 col-lg-4">
                                             <div class="card shadow eq-card mb-4">
                                                 <div class="card-body mb-n3">
+                                                    <h5 class="font-weight-bold mb-4">PR Status</h5>
                                                     <div id="prStatusChart"></div>
                                                 </div> <!-- .card-body -->
                                             </div> <!-- .card -->
@@ -204,6 +204,7 @@
                                         <div class="col-md-12 col-lg-4">
                                             <div class="card shadow eq-card mb-4">
                                                 <div class="card-body">
+                                                    <h5 class="font-weight-bold mb-4">Pending - PR Aging</h5>
                                                     <div id="prAgingChart"></div>
                                                 </div> <!-- .card-body -->
                                             </div> <!-- .card -->
@@ -661,6 +662,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    let series_data_for_pr_status_chart = [<?= implode(",",array_values($pr_status)) ?>];
+    let labels_for_pr_status_chart = [<?= implode(",", array_map(function($val){return "'$val'";} , array_keys($pr_status))) ?>];
+
+    let series_data_for_pr_aging_chart = [<?= implode(",",array_values($pr_aging)) ?>];
+    let labels_for_pr_aging_chart = [<?= implode(",", array_map(function($val){return "'$val'";} , array_keys($pr_aging))) ?>];
+
+</script>
 
 <?= $this->Html->script('config.js') ?>
 <?= $this->Html->script('apexcharts.min.js') ?>
