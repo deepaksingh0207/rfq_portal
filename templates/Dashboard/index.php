@@ -217,16 +217,16 @@
                                                     <div class="mb-4">
                                                         <div class="d-flex justify-content-between">
                                                             <span>Under Approval</span>
-                                                            <span class="font-weight-bold">₹ 6,192.90L</span>
+                                                            <span class="font-weight-bold">₹ <?= $underApproval->amount ?? 0 ?>L</span>
                                                         </div>
 
                                                         <div class="progress my-2" style="height: 8px;">
-                                                            <div class="progress-bar bg-primary" style="width: 70%"></div>
+                                                            <div class="progress-bar bg-primary" style="width: <?= $under_approval_pct ?? 0 ?>%"></div>
                                                         </div>
 
                                                         <div class="d-flex justify-content-between text-muted small">
-                                                            <span>1145</span>
-                                                            <span>1631 PRs</span>
+                                                            <span><?= $underApproval->count ?></span>
+                                                            <span><?= $total_count ?> PRs</span>
                                                         </div>
                                                     </div>
 
@@ -234,16 +234,16 @@
                                                     <div class="mb-4">
                                                         <div class="d-flex justify-content-between">
                                                             <span>Pending for PO</span>
-                                                            <span class="font-weight-bold">₹ 827.88L</span>
+                                                            <span class="font-weight-bold">₹ <?= $pendingPo->amount ?? 0 ?>L</span>
                                                         </div>
 
                                                         <div class="progress my-2" style="height: 8px;">
-                                                            <div class="progress-bar bg-warning" style="width: 55%"></div>
+                                                            <div class="progress-bar bg-warning" style="width: <?= $pending_po_pct ?>%"></div>
                                                         </div>
 
                                                         <div class="d-flex justify-content-between text-muted small">
-                                                            <span>87</span>
-                                                            <span>157 PRs</span>
+                                                            <span><?= $pendingPo->count ?></span>
+                                                            <span><?= $total_count ?> PRs</span>
                                                         </div>
                                                     </div>
 
@@ -251,16 +251,16 @@
                                                     <div>
                                                         <div class="d-flex justify-content-between">
                                                             <span>PO Created</span>
-                                                            <span class="font-weight-bold">₹ 44,931.68L</span>
+                                                            <span class="font-weight-bold">₹ <?= $poCreated->amount ?? 0 ?>L</span>
                                                         </div>
 
                                                         <div class="progress my-2" style="height: 8px;">
-                                                            <div class="progress-bar bg-success" style="width: 85%"></div>
+                                                            <div class="progress-bar bg-success" style="width: <?= $po_created_pct ?>%"></div>
                                                         </div>
 
                                                         <div class="d-flex justify-content-between text-muted small">
-                                                            <span>20006</span>
-                                                            <span>31,282 PRs</span>
+                                                            <span><?= $poCreated->count ?></span>
+                                                            <span><?= $total_count ?> PRs</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -285,12 +285,12 @@
                                                                         <div class="d-flex justify-content-between">
                                                                             <div>
                                                                                 <div class="h6 mb-0">1,606</div>
-                                                                                <small class="text-success">(5.13%)</small>
+                                                                                <!-- <small class="text-success">(5.13%)</small> -->
                                                                             </div>
 
                                                                             <div class="text-right">
                                                                                 <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
-                                                                                <small class="text-success">(10.06%)</small>
+                                                                                <!-- <small class="text-success">(10.06%)</small> -->
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -305,11 +305,11 @@
                                                                         <div class="d-flex justify-content-between">
                                                                             <div>
                                                                                 <div class="h6 mb-0">1,606</div>
-                                                                                <small class="text-success">(5.13%)</small>
+                                                                                <!-- <small class="text-success">(5.13%)</small> -->
                                                                             </div>
                                                                             <div class="text-right">
                                                                                 <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
-                                                                                <small class="text-success">(10.06%)</small>
+                                                                                <!-- <small class="text-success">(10.06%)</small> -->
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -342,11 +342,11 @@
                                                                         <div class="d-flex justify-content-between">
                                                                             <div>
                                                                                 <div class="h6 mb-0">1,606</div>
-                                                                                <small class="text-success">(5.13%)</small>
+                                                                                <!-- <small class="text-success">(5.13%)</small> -->
                                                                             </div>
                                                                             <div class="text-right">
                                                                                 <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
-                                                                                <small class="text-success">(10.06%)</small>
+                                                                                <!-- <small class="text-success">(10.06%)</small> -->
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -359,12 +359,12 @@
                                                                         <h6 class="font-weight-bold mb-3">Via Standalone</h6>
                                                                         <div class="d-flex justify-content-between">
                                                                             <div>
-                                                                                <div class="h6 mb-0">1,606</div>
-                                                                                <small class="text-success">(5.13%)</small>
+                                                                                <div class="h6 mb-0"><?= $poCreated->count ?></div>
+                                                                                <!-- <small class="text-success">(5.13%)</small> -->
                                                                             </div>
                                                                             <div class="text-right">
-                                                                                <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
-                                                                                <small class="text-success">(10.06%)</small>
+                                                                                <div class="h6 text-primary mb-0">₹ <?= $poCreated->amount ?>L</div>
+                                                                                <!-- <small class="text-success">(10.06%)</small> -->
                                                                             </div>
                                                                         </div>
                                                                     </div>
