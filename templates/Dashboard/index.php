@@ -2,14 +2,14 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-12">
-            <div class="row align-items-center mb-2">
+            <div class="row align-items-center mb-1">
                 <div class="col">
                     <h2 class="h5 page-title">Performance Dashboard</h2>
                 </div>
                 <div class="col-auto">
                     <select class="form-control select2" id="plant-select">
                         <option value="">-- Select Plant Here --</option>
-                        <?php foreach($plant_list as $plant_code => $plant_name) : ?>
+                        <?php foreach ($plant_list as $plant_code => $plant_name) : ?>
                             <option value="<?= $plant_code ?>"><?= $plant_code ?> - <?= $plant_name ?></option>
                         <?php endforeach; ?>
                     </select>
@@ -17,7 +17,7 @@
                 <div class="col-auto">
                     <select class="form-control select2" id="buyer-select">
                         <option value="">-- Select Buyer Here --</option>
-                        <?php foreach($buyer_list as $buyer_code => $buyer_name) : ?>
+                        <?php foreach ($buyer_list as $buyer_code => $buyer_name) : ?>
                             <option value="<?= $buyer_code ?>"><?= $buyer_name ?></option>
                         <?php endforeach; ?>
                     </select>
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 mb-4">
+                <div class="col-md-12 mb-1">
                     <div class="accordion w-100" id="accordion1">
                         <div class="card shadow">
                             <div class="card-header" id="heading1">
@@ -49,11 +49,11 @@
                             </div>
                             <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordion1">
                                 <div class="card-body">
-                                    <div class="mb-2 align-items-center">
+                                    <div class="align-items-center">
                                         <div class="row">
-                                            <div class="col-md-6 col-xl-2 mb-4">
-                                                <div class="card shadow h-100">
-                                                    <div class="card-body d-flex flex-column justify-content-between">
+                                            <div class="col-md-6 col-xl-2">
+                                                <div class="card shadow">
+                                                    <div class="card-body">
 
                                                         <!-- TOP ROW -->
                                                         <div class="d-flex justify-content-between align-items-start">
@@ -65,8 +65,6 @@
                                                             </span>
                                                         </div>
 
-                                                        <br>
-
                                                         <!-- BOTTOM ROW -->
                                                         <div class="d-flex justify-content-between align-items-end">
                                                             <h6 class="mb-0">₹ <?= $total_spend ?? 0 ?></h6>
@@ -76,9 +74,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-xl-4 mb-4">
-                                                <div class="card shadow h-100">
-                                                    <div class="card-body d-flex flex-column justify-content-between">
+                                            <div class="col-md-6 col-xl-4">
+                                                <div class="card shadow">
+                                                    <div class="card-body">
 
                                                         <!-- TOP ROW -->
                                                         <div class="d-flex justify-content-between align-items-start">
@@ -89,8 +87,6 @@
                                                                 <i class="fe fe-16 fe-edit text-white"></i>
                                                             </span>
                                                         </div>
-
-                                                        <br>
 
                                                         <!-- BOTTOM ROW -->
                                                         <div class="d-flex justify-content-between align-items-end">
@@ -103,9 +99,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-xl-2 mb-4">
-                                                <div class="card shadow h-100">
-                                                    <div class="card-body d-flex flex-column justify-content-between">
+                                            <div class="col-md-6 col-xl-2">
+                                                <div class="card shadow">
+                                                    <div class="card-body">
 
                                                         <!-- TOP ROW -->
                                                         <div class="d-flex justify-content-between align-items-start">
@@ -114,8 +110,6 @@
                                                                 <i class="fe fe-16 fe-dollar-sign text-white"></i>
                                                             </span>
                                                         </div>
-
-                                                        <br>
 
                                                         <!-- BOTTOM ROW -->
                                                         <div class="d-flex justify-content-between align-items-end">
@@ -126,9 +120,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-xl-2 mb-4">
-                                                <div class="card shadow h-100">
-                                                    <div class="card-body d-flex flex-column justify-content-between">
+                                            <div class="col-md-6 col-xl-2">
+                                                <div class="card shadow">
+                                                    <div class="card-body">
 
                                                         <!-- TOP ROW -->
                                                         <div class="d-flex justify-content-between align-items-start">
@@ -137,8 +131,6 @@
                                                                 <i class="fe fe-16 fe-file-text text-white"></i>
                                                             </span>
                                                         </div>
-
-                                                        <br>
 
                                                         <!-- BOTTOM ROW -->
                                                         <div class="d-flex justify-content-between align-items-end">
@@ -149,14 +141,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-xl-2 mb-4">
-                                                <div class="card shadow h-100">
-                                                    <div class="row mt-4">
+                                            <div class="col-md-6 col-xl-2">
+                                                <div class="card shadow">
+                                                    <div class="row">
                                                         <div class="col-6 text-center">
                                                             <div class="circle circle-md bg-light">
                                                                 <span class="fe fe-monitor fe-24 text-muted"></span>
                                                             </div>
-                                                            <div class="mt-2">
+                                                            <div class="">
                                                                 <strong style="font-size: 10px;">Alerts</strong><br>
                                                                 <span class="my-0 text-muted small">(5)</span>
                                                             </div>
@@ -165,7 +157,7 @@
                                                             <div class="circle circle-md bg-light">
                                                                 <span class="fe fe-alert-triangle fe-24 text-muted"></span>
                                                             </div>
-                                                            <div class="mt-2">
+                                                            <div class="">
                                                                 <strong style="font-size: 10px;">Notifications</strong><br>
                                                                 <span class="my-0 text-muted small">(20)</span>
                                                             </div>
@@ -193,104 +185,47 @@
                             <div id="collapse2" class="collapse show" aria-labelledby="heading2" data-parent="#accordion1">
                                 <div class="card-body">
                                     <div class="row items-align-baseline">
-                                        <div class="col-md-12 col-lg-4">
-                                            <div class="card shadow eq-card mb-4">
-                                                <div class="card-body mb-n3">
-                                                    <h5 class="font-weight-bold mb-4">PR Status</h5>
+                                        <div class="col-md-12 col-lg-2 col-padding">
+                                            <div class="card shadow">
+                                                <div class="card-body">
+                                                    <h6 class="font-weight-bold">PR Status</h6>
                                                     <div id="prStatusChart"></div>
-                                                </div> <!-- .card-body -->
-                                            </div> <!-- .card -->
-                                        </div>
-                                        <div class="col-md-12 col-lg-4">
-                                            <div class="card shadow eq-card mb-4">
-                                                <div class="card-body">
-                                                    <h5 class="font-weight-bold mb-4">Pending - PR Aging</h5>
-                                                    <div id="prAgingChart"></div>
-                                                </div> <!-- .card-body -->
-                                            </div> <!-- .card -->
-                                        </div>
-                                        <div class="col-md-12 col-lg-4">
-                                            <div class="card shadow eq-card mb-4">
-                                                <div class="card-body">
-                                                    <h5 class="font-weight-bold mb-4">Award Status</h5>
-                                                    <!-- Under Approval -->
-                                                    <div class="mb-4">
-                                                        <div class="d-flex justify-content-between">
-                                                            <span>Under Approval</span>
-                                                            <span class="font-weight-bold">₹ <?= $underApproval->amount ?? 0 ?>L</span>
-                                                        </div>
-
-                                                        <div class="progress my-2" style="height: 8px;">
-                                                            <div class="progress-bar bg-primary" style="width: <?= $under_approval_pct ?? 0 ?>%"></div>
-                                                        </div>
-
-                                                        <div class="d-flex justify-content-between text-muted small">
-                                                            <span><?= $underApproval->count ?></span>
-                                                            <span><?= $total_count ?> PRs</span>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Pending for PO -->
-                                                    <div class="mb-4">
-                                                        <div class="d-flex justify-content-between">
-                                                            <span>Pending for PO</span>
-                                                            <span class="font-weight-bold">₹ <?= $pendingPo->amount ?? 0 ?>L</span>
-                                                        </div>
-
-                                                        <div class="progress my-2" style="height: 8px;">
-                                                            <div class="progress-bar bg-warning" style="width: <?= $pending_po_pct ?>%"></div>
-                                                        </div>
-
-                                                        <div class="d-flex justify-content-between text-muted small">
-                                                            <span><?= $pendingPo->count ?></span>
-                                                            <span><?= $total_count ?> PRs</span>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- PO Created -->
-                                                    <div>
-                                                        <div class="d-flex justify-content-between">
-                                                            <span>PO Created</span>
-                                                            <span class="font-weight-bold">₹ <?= $poCreated->amount ?? 0 ?>L</span>
-                                                        </div>
-
-                                                        <div class="progress my-2" style="height: 8px;">
-                                                            <div class="progress-bar bg-success" style="width: <?= $po_created_pct ?>%"></div>
-                                                        </div>
-
-                                                        <div class="d-flex justify-content-between text-muted small">
-                                                            <span><?= $poCreated->count ?></span>
-                                                            <span><?= $total_count ?> PRs</span>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row items-align-baseline">
-                                        <div class="col-md-12 col-lg-12">
-                                            <div class="card shadow eq-card mb-4">
+
+                                        <div class="col-md-12 col-lg-2 col-padding">
+                                            <div class="card shadow">
+                                                <div class="card-body">
+                                                    <h6 class="font-weight-bold">PR Aging</h6>
+                                                    <div id="prAgingChart"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 col-lg-5 col-padding">
+                                            <div class="card shadow">
                                                 <div class="card-body">
                                                     <div class="container-fluid">
-                                                        <h6 class="mb-3 font-weight-bold">PO Created</h6>
+                                                        <h6 class="font-weight-bold">PO Created</h6>
 
                                                         <div class="row">
 
                                                             <!-- Card -->
-                                                            <div class="col-md-3 mb-3">
+                                                            <div class="col-md-6">
                                                                 <div class="card h-100 border-primary shadow-sm">
                                                                     <div class="card-body">
-                                                                        <h6 class="font-weight-bold mb-3">Via ARC</h6>
+                                                                        <h6 class="font-weight-bold">Via ARC</h6>
 
                                                                         <div class="d-flex justify-content-between">
                                                                             <div>
-                                                                                <div class="h6 mb-0">1,606</div>
-                                                                                <!-- <small class="text-success">(5.13%)</small> -->
+                                                                                <div class="h6 mb-0" id="via_arc_count">1,606</div>
+                                                                                <small class="h6 text-success" id="via_arc_percentage">(5.13%)</small>
                                                                             </div>
 
                                                                             <div class="text-right">
-                                                                                <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
-                                                                                <!-- <small class="text-success">(10.06%)</small> -->
+                                                                                <div class="h6 text-primary mb-0" id="via_arc_total_value">₹ 4,519.72L</div>
+                                                                                <small class="h6 text-success" id="via_arc_total_value_percentage">(10.06%)</small>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -298,73 +233,55 @@
                                                             </div>
 
                                                             <!-- Repeat cards -->
-                                                            <div class="col-md-3 mb-3">
+                                                            <div class="col-md-6">
                                                                 <div class="card h-100 border-primary shadow-sm">
                                                                     <div class="card-body">
-                                                                        <h6 class="font-weight-bold mb-3">Via RFx / Auction</h6>
+                                                                        <h6 class="font-weight-bold">Via RFx / Auction</h6>
                                                                         <div class="d-flex justify-content-between">
                                                                             <div>
-                                                                                <div class="h6 mb-0">1,606</div>
-                                                                                <!-- <small class="text-success">(5.13%)</small> -->
+                                                                                <div class="h6 mb-0" id="via_rfx_count">1,606</div>
+                                                                                <small class="h6 text-success" id="via_rfx_percentage">(5.13%)</small>
                                                                             </div>
                                                                             <div class="text-right">
-                                                                                <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
-                                                                                <!-- <small class="text-success">(10.06%)</small> -->
+                                                                                <div class="h6 text-primary mb-0" id="via_rfx_total_value">₹ 4,519.72L</div>
+                                                                                <small class="h6 text-success" id="via_rfx_total_value_percentage">(10.06%)</small>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
-                                                            <!-- <div class="col-md-3 mb-3">
-                                                                <div class="card h-100 border-primary shadow-sm">
-                                                                    <div class="card-body">
-                                                                        <h6 class="font-weight-bold mb-3">Via ERP</h6>
-                                                                        <div class="d-flex justify-content-between">
-                                                                            <div>
-                                                                                <div class="h6 mb-0">1,606</div>
-                                                                                <small class="text-success">(5.13%)</small>
-                                                                            </div>
-                                                                            <div class="text-right">
-                                                                                <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
-                                                                                <small class="text-success">(10.06%)</small>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div> -->
 
                                                             <!-- Second row -->
-                                                            <div class="col-md-3 mb-3">
+                                                            <div class="col-md-6 mt-1">
                                                                 <div class="card h-100 border-primary shadow-sm">
                                                                     <div class="card-body">
-                                                                        <h6 class="font-weight-bold mb-3">Via Repeat PO</h6>
+                                                                        <h6 class="font-weight-bold">Via Repeat PO</h6>
                                                                         <div class="d-flex justify-content-between">
                                                                             <div>
-                                                                                <div class="h6 mb-0">1,606</div>
-                                                                                <!-- <small class="text-success">(5.13%)</small> -->
+                                                                                <div class="h6 mb-0" id="via_repeat_po_count">1,606</div>
+                                                                                <small class="h6 text-success" id="via_repeat_po_percentage">(5.13%)</small>
                                                                             </div>
                                                                             <div class="text-right">
-                                                                                <div class="h6 text-primary mb-0">₹ 4,519.72L</div>
-                                                                                <!-- <small class="text-success">(10.06%)</small> -->
+                                                                                <div class="h6 text-primary mb-0" id="via_repeat_po_total_value">₹ 4,519.72L</div>
+                                                                                <small class="h6 text-success" id="via_repeat_po_total_value_percentage">(10.06%)</small>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-3 mb-3">
+                                                            <div class="col-md-6 mt-1">
                                                                 <div class="card h-100 border-primary shadow-sm">
                                                                     <div class="card-body">
-                                                                        <h6 class="font-weight-bold mb-3">Via Standalone</h6>
+                                                                        <h6 class="font-weight-bold">Via Standalone</h6>
                                                                         <div class="d-flex justify-content-between">
                                                                             <div>
-                                                                                <div class="h6 mb-0"><?= $poCreated->count ?></div>
-                                                                                <!-- <small class="text-success">(5.13%)</small> -->
+                                                                                <div class="h6 mb-0" id="via_standalone_count">1,606</div>
+                                                                                <small class="h6 text-success" id="via_standalone_percentage">(5.13%)</small>
                                                                             </div>
                                                                             <div class="text-right">
-                                                                                <div class="h6 text-primary mb-0">₹ <?= $poCreated->amount ?>L</div>
-                                                                                <!-- <small class="text-success">(10.06%)</small> -->
+                                                                                <div class="h6 text-primary mb-0" id="via_standalone_total_value">₹ 4,519.72L</div>
+                                                                                <small class="h6 text-success" id="via_standalone_total_value_percentage">(10.06%)</small>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -376,7 +293,66 @@
                                                 </div> <!-- .card-body -->
                                             </div> <!-- .card -->
                                         </div>
+
+                                        <div class="col-md-12 col-lg-3 col-padding">
+                                            <div class="card shadow">
+                                                <div class="card-body">
+                                                    <h6 class="font-weight-bold ">Award Status</h6>
+                                                    <!-- Under Approval -->
+                                                    <div class="mb-0">
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6>Under Approval</h6>
+                                                            <h6 class="font-weight-bold" id="award_status_under_approval_h_tag">₹ 6,192.90L</h6>
+                                                        </div>
+
+                                                        <div class="progress my-2" style="height: 8px;">
+                                                            <div class="progress-bar bg-primary" style="width: 70%" id="award_status_under_approval_progress_bar"></div>
+                                                        </div>
+
+                                                        <div class="d-flex justify-content-between text-muted small">
+                                                            <h6 id="award_status_under_approval_pr_count">1145</h6>
+                                                            <h6 id="award_status_under_approval_total_pr_count">1631 PRs</h6>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Pending for PO -->
+                                                    <div class="mb-0">
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6>Pending for PO</h6>
+                                                            <h6 class="font-weight-bold" id="pending_po_h_tag">₹ 827.88L</h6>
+                                                        </div>
+
+                                                        <div class="progress my-2" style="height: 8px;">
+                                                            <div class="progress-bar bg-warning" style="width: 55%" id="pending_po_progress_bar"></div>
+                                                        </div>
+
+                                                        <div class="d-flex justify-content-between text-muted small">
+                                                            <h6 id="pending_po_pr_count">87</h6>
+                                                            <h6 id="pending_po_total_pr_count">157 PRs</h6>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- PO Created -->
+                                                    <div class="mb-0">
+                                                        <div class="d-flex justify-content-between">
+                                                            <h6>PO Created</h6>
+                                                            <h6 class="font-weight-bold" id="po_created_h_tag">₹ 44,931.68L</h6>
+                                                        </div>
+
+                                                        <div class="progress my-2" style="height: 8px;">
+                                                            <div class="progress-bar bg-success" style="width: 85%" id="po_created_progress_bar"></div>
+                                                        </div>
+
+                                                        <div class="d-flex justify-content-between text-muted small">
+                                                            <h6 id="po_created_pr_count">20006</h6>
+                                                            <h6 id="po_created_total_pr_count">31,282 PRs</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -393,81 +369,81 @@
                             </div>
                             <div id="collapse3" class="collapse show" aria-labelledby="heading3" data-parent="#accordion1">
                                 <div class="card-body">
-                                    <div class="row items-align-baseline">
-                                        <div class="col-md-12 col-lg-4">
-                                            <div class="card shadow eq-card mb-4">
-                                                <div class="card-body mb-n3">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-4 h-80 col-padding">
+                                            <div class="card shadow mb-0">
+                                                <div class="card-body">
                                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                                         <h6 class="mb-0 font-weight-bold">Spend By Category</h6>
-                                                        <span class="circle circle-sm bg-primary text-white">
-                                                            <i class="fe fe-arrow-right"></i>
+                                                        <span class="circle-icon">
+                                                            <i class="fa fa-arrow-right"></i>
                                                         </span>
                                                     </div>
 
-                                                    <div id="spendCategoryTree" style="width:100%; height:420px;"></div>
+                                                    <div id="spendCategoryTree" style="height:300px;"></div>
 
                                                 </div> <!-- .card-body -->
                                             </div> <!-- .card -->
                                         </div>
-                                        <div class="col-md-12 col-lg-4">
-                                            <div class="card shadow eq-card mb-4">
-                                                <div class="card-body mb-n3">
-                                                    <div id="cycleTimeChart" style="width:100%; height:320px;"></div>
+                                        <div class="col-md-12 col-lg-4 h-80 col-padding">
+                                            <div class="card shadow mb-0">
+                                                <div class="card-body">
+                                                    <div id="cycleTimeChart" style="height:300px;"></div>
                                                 </div> <!-- .card-body -->
                                             </div> <!-- .card -->
                                         </div>
-                                        <div class="col-md-12 col-lg-4">
-                                            <div class="card shadow eq-card mb-4">
-                                                <div class="card-body mb-n3">
-                                                    <h6 class="font-weight-bold mb-3">RFQ Status</h6>
+                                        <div class="col-md-12 col-lg-4 h-80 col-padding">
+                                            <div class="card shadow mb-0">
+                                                <div class="card-body">
+                                                    <h6 class="font-weight-bold">RFQ Status</h6>
 
                                                     <!-- Published -->
-                                                    <div class="mb-3">
+                                                    <div class="">
                                                         <div class="d-flex justify-content-between">
-                                                            <span>Published</span>
+                                                            <h6>Published</h6>
                                                         </div>
-                                                        <div class="progress mt-1">
-                                                            <div class="progress-bar bg-success" style="width: 62%"></div>
+                                                        <div class="progress">
+                                                            <div class="progress-bar mt-1 bg-success" style="width: 62%"></div>
                                                         </div>
-                                                        <div class="d-flex justify-content-between mt-1 small font-weight-bold">
-                                                            <span>5</span>
-                                                            <span>8 PRs</span>
+                                                        <div class="d-flex mt-1 justify-content-between small font-weight-bold">
+                                                            <h6>5</h6>
+                                                            <h6>8 RFQs</h6>
                                                         </div>
                                                     </div>
 
                                                     <!-- Closed -->
-                                                    <div class="mb-3">
-                                                        <span>Closed</span>
-                                                        <div class="progress mt-1">
+                                                    <div class="">
+                                                        <h6>Closed</h6>
+                                                        <div class="progress">
                                                             <div class="progress-bar bg-danger" style="width: 55%"></div>
                                                         </div>
-                                                        <div class="d-flex justify-content-between mt-1 small font-weight-bold">
-                                                            <span>323</span>
-                                                            <span>582 PRs</span>
+                                                        <div class="d-flex mt-1 justify-content-between small font-weight-bold">
+                                                            <h6>323</h6>
+                                                            <h6>582 RFQs</h6>
                                                         </div>
                                                     </div>
 
                                                     <!-- Technical Approval Pending -->
-                                                    <div class="mb-3">
-                                                        <span>Technical Approval Pending</span>
-                                                        <div class="progress mt-1">
-                                                            <div class="progress-bar bg-primary" style="width: 68%"></div>
+                                                    <div class="">
+                                                        <h6>Under Approval</h6>
+                                                        <div class="progress">
+                                                            <div class="progress-bar mt-1 bg-primary" style="width: 68%"></div>
                                                         </div>
-                                                        <div class="d-flex justify-content-between mt-1 small font-weight-bold">
-                                                            <span>59</span>
-                                                            <span>87 PRs</span>
+                                                        <div class="d-flex mt-1 justify-content-between small font-weight-bold">
+                                                            <h6>59</h6>
+                                                            <h6>87 RFQs</h6>
                                                         </div>
                                                     </div>
 
                                                     <!-- Technically Approved -->
                                                     <div>
-                                                        <span>Technically Approved - Action Pending</span>
-                                                        <div class="progress mt-1">
-                                                            <div class="progress-bar bg-warning" style="width: 78%"></div>
+                                                        <h6>Draft</h6>
+                                                        <div class="progress">
+                                                            <div class="progress-bar mt-1 bg-warning" style="width: 78%"></div>
                                                         </div>
-                                                        <div class="d-flex justify-content-between mt-1 small font-weight-bold">
-                                                            <span>128</span>
-                                                            <span>226 PRs</span>
+                                                        <div class="d-flex mt-1 justify-content-between small font-weight-bold">
+                                                            <h6>128</h6>
+                                                            <h6>226 RFQs</h6>
                                                         </div>
                                                     </div>
 
@@ -475,41 +451,41 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row items-align-baseline">
-                                        <div class="col-md-12 col-lg-4">
-                                            <div class="card shadow eq-card mb-4">
-                                                <div class="card-body mb-n3">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-4 col-padding">
+                                            <div class="card shadow h-100">
+                                                <div class="card-body">
                                                     <h6 class="font-weight-bold mb-3">Contract Expiry</h6>
                                                     <div id="contractExpiryChart"></div>
                                                 </div> <!-- .card-body -->
                                             </div> <!-- .card -->
                                         </div>
-                                        <div class="col-md-12 col-lg-4">
-                                            <div class="card shadow eq-card mb-4">
-                                                <div class="card-body mb-n3">
+                                        <div class="col-md-12 col-lg-4 col-padding">
+                                            <div class="card shadow h-100">
+                                                <div class="card-body">
                                                     <h6 class="font-weight-bold mb-3">Spend By Award Type</h6>
                                                     <div id="awardTypeChart"></div>
                                                 </div> <!-- .card-body -->
                                             </div> <!-- .card -->
                                         </div>
-                                        <div class="col-md-12 col-lg-4">
-                                            <div class="card shadow eq-card mb-4">
-                                                <div class="card-body mb-n3">
+                                        <div class="col-md-12 col-lg-4 col-padding">
+                                            <div class="card shadow h-100">
+                                                <div class="card-body">
                                                     <h6 class="font-weight-bold mb-3">Spend By Award Category</h6>
                                                     <div id="awardCategoryChart"></div>
                                                 </div> <!-- .card-body -->
                                             </div> <!-- .card -->
                                         </div>
                                     </div>
-                                    <div class="row row items-align-baseline">
+                                    <div class="row mt-2">
                                         <!-- Spend by Supplier -->
-                                        <div class="col-md-12 col-lg-6">
+                                        <div class="col-md-12 col-lg-6 col-padding">
                                             <div class="card shadow spend-card h-100">
                                                 <div class="card-body">
                                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                                         <h6 class="font-weight-bold mb-0">Spend by Supplier</h6>
                                                         <span class="circle-icon">
-                                                            <i class="fe fe-arrow-right"></i>
+                                                            <i class="fa fa-arrow-right"></i>
                                                         </span>
                                                     </div>
 
@@ -545,13 +521,13 @@
                                         </div>
 
                                         <!-- Spend by Items -->
-                                        <div class="col-md-12 col-lg-6">
+                                        <div class="col-md-12 col-lg-6 col-padding">
                                             <div class="card shadow spend-card h-100">
                                                 <div class="card-body">
                                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                                         <h6 class="font-weight-bold mb-0">Spend by Items</h6>
                                                         <span class="circle-icon">
-                                                            <i class="fe fe-arrow-right"></i>
+                                                            <i class="fa fa-arrow-right"></i>
                                                         </span>
                                                     </div>
 
@@ -664,12 +640,15 @@
 </div>
 
 <script>
-    let series_data_for_pr_status_chart = [<?= implode(",",array_values($pr_status)) ?>];
-    let labels_for_pr_status_chart = [<?= implode(",", array_map(function($val){return "'$val'";} , array_keys($pr_status))) ?>];
+    let series_data_for_pr_status_chart = [<?= implode(",", array_values($pr_status)) ?>];
+    let labels_for_pr_status_chart = [<?= implode(",", array_map(function ($val) {
+                                            return "'$val'";
+                                        }, array_keys($pr_status))) ?>];
 
-    let series_data_for_pr_aging_chart = [<?= implode(",",array_values($pr_aging)) ?>];
-    let labels_for_pr_aging_chart = [<?= implode(",", array_map(function($val){return "'$val'";} , array_keys($pr_aging))) ?>];
-
+    let series_data_for_pr_aging_chart = [<?= implode(",", array_values($pr_aging)) ?>];
+    let labels_for_pr_aging_chart = [<?= implode(",", array_map(function ($val) {
+                                            return "'$val'";
+                                        }, array_keys($pr_aging))) ?>];
 </script>
 
 <?= $this->Html->script('config.js') ?>

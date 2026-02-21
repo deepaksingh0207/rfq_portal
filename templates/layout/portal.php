@@ -59,11 +59,58 @@
             background: deepskyblue !important;
             color: white !important;
         }
+
+        #leftSidebar {
+            width: 200px !important;   /* change to your desired width */
+            min-width: 200px !important;
+        }
+
+        .main-content,
+        .content,
+        main {
+            margin-left: 200px !important;
+        }
+
+        @media (min-width: 992px) {
+            #leftSidebar {
+                width: 200px !important;
+            }
+        }
+
+        @media (max-width: 991px) {
+            #leftSidebar {
+                width: 0 !important;
+                overflow: hidden;
+            }
+        }
+
+        #leftSidebar .navbar-nav .nav-link {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        #leftSidebar .item-text {
+            font-size: 13px;
+        }
+
+        .vertical .topnav, .vertical.hover .topnav, .narrow.open .topnav {
+            margin-left: 13rem;
+            padding-left: 2.2rem;
+            padding-right: 2.2rem;
+        }
+
+        .navbar {
+            padding: 0px 10px!important;
+        }
+
+        .main-content, .container-fluid {
+            padding: 5px!important;
+        }
     </style>
 </head>
 
 
-<body class="vertical light  ">
+<body class="vertical light">
     <div class="wrapper">
         <nav class="topnav navbar navbar-light shadow-sm" style="background-color: white;">
             <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
