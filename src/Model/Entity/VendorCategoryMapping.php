@@ -6,21 +6,18 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Supplier Entity
+ * VendorCategoryMapping Entity
  *
  * @property int $id
- * @property string $supplier_code
- * @property string $supplier_name
- * @property string $email
- * @property int $is_active
+ * @property int $vendor_id
+ * @property int $category_id
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
  *
- * @property \App\Model\Entity\PoHeader[] $po_headers
- * @property \App\Model\Entity\RfqSupplierQuote[] $rfq_supplier_quotes
- * @property \App\Model\Entity\RfqSupplier[] $rfq_suppliers
+ * @property \App\Model\Entity\Vendor $vendor
+ * @property \App\Model\Entity\Category $category
  */
-class Supplier extends Entity
+class VendorCategoryMapping extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -32,14 +29,11 @@ class Supplier extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'supplier_code' => true,
-        'supplier_name' => true,
-        'email' => true,
-        'is_active' => true,
+        'vendor_id' => true,
+        'category_id' => true,
         'created' => true,
         'modified' => true,
-        'po_headers' => true,
-        'rfq_supplier_quotes' => true,
-        'rfq_suppliers' => true,
+        'vendor' => true,
+        'category' => true,
     ];
 }

@@ -640,15 +640,7 @@
 </div>
 
 <script>
-    let series_data_for_pr_status_chart = [<?= implode(",", array_values($pr_status)) ?>];
-    let labels_for_pr_status_chart = [<?= implode(",", array_map(function ($val) {
-                                            return "'$val'";
-                                        }, array_keys($pr_status))) ?>];
-
-    let series_data_for_pr_aging_chart = [<?= implode(",", array_values($pr_aging)) ?>];
-    let labels_for_pr_aging_chart = [<?= implode(",", array_map(function ($val) {
-                                            return "'$val'";
-                                        }, array_keys($pr_aging))) ?>];
+    
 </script>
 
 <?= $this->Html->script('config.js') ?>

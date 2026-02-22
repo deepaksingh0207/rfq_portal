@@ -6,21 +6,15 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * RfqSupplier Entity
+ * UserGroup Entity
  *
  * @property int $id
- * @property int $rfq_header_id
- * @property int $supplier_id
- * @property \Cake\I18n\DateTime $invited_at
- * @property \Cake\I18n\DateTime $responded_at
- * @property string $response_status
+ * @property string $name
+ * @property string $description
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
- *
- * @property \App\Model\Entity\RfqHeader $rfq_header
- * @property \App\Model\Entity\Supplier $supplier
  */
-class RfqSupplier extends Entity
+class UserGroup extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -32,14 +26,9 @@ class RfqSupplier extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'rfq_header_id' => true,
-        'supplier_id' => true,
-        'invited_at' => true,
-        'responded_at' => true,
-        'response_status' => true,
+        'name' => true,
+        'description' => true,
         'created' => true,
         'modified' => true,
-        'rfq_header' => true,
-        'supplier' => true,
     ];
 }

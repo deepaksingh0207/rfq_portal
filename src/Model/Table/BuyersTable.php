@@ -11,6 +11,8 @@ use Cake\Validation\Validator;
 /**
  * Buyers Model
  *
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ *
  * @method \App\Model\Entity\Buyer newEmptyEntity()
  * @method \App\Model\Entity\Buyer newEntity(array $data, array $options = [])
  * @method array<\App\Model\Entity\Buyer> newEntities(array $data, array $options = [])
@@ -24,6 +26,8 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\Buyer>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Buyer> saveManyOrFail(iterable $entities, array $options = [])
  * @method iterable<\App\Model\Entity\Buyer>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Buyer>|false deleteMany(iterable $entities, array $options = [])
  * @method iterable<\App\Model\Entity\Buyer>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Buyer> deleteManyOrFail(iterable $entities, array $options = [])
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class BuyersTable extends Table
 {
@@ -40,6 +44,13 @@ class BuyersTable extends Table
         $this->setTable('buyers');
         $this->setDisplayField('buyer_code');
         $this->setPrimaryKey('id');
+
+        $this->addBehavior('Timestamp');
+
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER',
+        ]);
     }
 
     /**
@@ -51,43 +62,55 @@ class BuyersTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->scalar('buyer_code')
-            ->maxLength('buyer_code', 10)
-            ->requirePresence('buyer_code', 'create')
-            ->notEmptyString('buyer_code');
+            ->integer('user_id')
+            ->notEmptyString('user_id')
+            ->add('user_id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->scalar('first_name')
-            ->maxLength('first_name', 50)
-            ->requirePresence('first_name', 'create')
-            ->notEmptyString('first_name');
+            ->scalar('sap_code')
+            ->maxLength('sap_code', 50)
+            ->allowEmptyString('sap_code')
+            ->add('sap_code', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->scalar('last_name')
-            ->maxLength('last_name', 50)
-            ->requirePresence('last_name', 'create')
-            ->notEmptyString('last_name');
+            ->scalar('buyer_name')
+            ->maxLength('buyer_name', 500)
+            ->allowEmptyString('buyer_name');
 
         $validator
-            ->email('email')
-            ->requirePresence('email', 'create')
-            ->notEmptyString('email');
+            ->scalar('buyer_email')
+            ->maxLength('buyer_email', 150)
+            ->allowEmptyString('buyer_email');
 
         $validator
-            ->boolean('is_active')
-            ->notEmptyString('is_active');
+            ->scalar('department')
+            ->maxLength('department', 100)
+            ->allowEmptyString('department');
 
         $validator
-            ->boolean('is_deleted')
-            ->notEmptyString('is_deleted');
+            ->scalar('cost_center')
+            ->maxLength('cost_center', 50)
+            ->allowEmptyString('cost_center');
 
         $validator
-            ->dateTime('created_on')
-            ->notEmptyDateTime('created_on');
+            ->scalar('purchasing_group')
+            ->maxLength('purchasing_group', 50)
+            ->allowEmptyString('purchasing_group');
 
         $validator
-            ->dateTime('updated_on')
-            ->notEmptyDateTime('updated_on');
+            ->scalar('phone')
+            ->maxLength('phone', 20)
+            ->allowEmptyString('phone');
+
+        $validator
+            ->scalar('mobile')
+            ->maxLength('mobile', 20)
+            ->allowEmptyString('mobile');
+
+        $validator
+            ->scalar('signature_path')
+            ->maxLength('signature_path', 255)
+            ->allowEmptyString('signature_path');
 
         return $validator;
     }
@@ -101,7 +124,9 @@ class BuyersTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->isUnique(['buyer_code', 'email']), ['errorField' => 'buyer_code', 'message' => __('This combination of buyer_code and email already exists')]);
+        $rules->add($rules->isUnique(['user_id']), ['errorField' => 'user_id']);
+        $rules->add($rules->isUnique(['sap_code'], ['allowMultipleNulls' => true]), ['errorField' => 'sap_code']);
+        $rules->add($rules->existsIn(['user_id'], 'Users'), ['errorField' => 'user_id']);
 
         return $rules;
     }

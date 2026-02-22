@@ -6,25 +6,22 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Buyer Entity
+ * Approver Entity
  *
  * @property int $id
  * @property int $user_id
  * @property string|null $sap_code
- * @property string|null $buyer_name
- * @property string|null $buyer_email
  * @property string|null $department
- * @property string|null $cost_center
- * @property string|null $purchasing_group
- * @property string|null $phone
- * @property string|null $mobile
- * @property string|null $signature_path
+ * @property string|null $position
+ * @property string|null $approval_limit
+ * @property bool|null $can_approve_above_limit
+ * @property bool|null $requires_second_approval
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
  *
  * @property \App\Model\Entity\User $user
  */
-class Buyer extends Entity
+class Approver extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -38,14 +35,11 @@ class Buyer extends Entity
     protected array $_accessible = [
         'user_id' => true,
         'sap_code' => true,
-        'buyer_name' => true,
-        'buyer_email' => true,
         'department' => true,
-        'cost_center' => true,
-        'purchasing_group' => true,
-        'phone' => true,
-        'mobile' => true,
-        'signature_path' => true,
+        'position' => true,
+        'approval_limit' => true,
+        'can_approve_above_limit' => true,
+        'requires_second_approval' => true,
         'created' => true,
         'modified' => true,
         'user' => true,

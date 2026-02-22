@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <?= $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken')); ?>
     <link rel="icon" href="favicon.ico">
     <title>Dashboard</title>
     <!-- Simple bar CSS -->
-    <link rel="stylesheet" href="css/simplebar.css">
+    <!-- <link rel="stylesheet" href="css/simplebar.css"> -->
     <!-- Fonts CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- Icons CSS -->
@@ -54,6 +55,19 @@
     <?= $this->Html->script('dropzone.min.js') ?>
     <?= $this->Html->script('uppy.min.js') ?>
     <?= $this->Html->script('quill.min.js') ?>
+
+    <?= $this->Html->css('dataTables.bootstrap4.css') ?>
+    <?= $this->Html->script('jquery.dataTables.min.js') ?>
+    <?= $this->Html->script('dataTables.bootstrap4.min.js') ?>
+
+    <!-- Bootstrap4 Toggle -->
+    <?= $this->Html->css("bootstrap4-toggle.min.css") ?>
+    <?= $this->Html->script("bootstrap4-toggle.min.js") ?>
+
+    <!-- Toastr Notification -->
+    <?= $this->Html->css('toastr.min.css') ?>
+    <?= $this->Html->script('toastr.min.js') ?>
+
     <style>
         .link-active {
             background: deepskyblue !important;
@@ -63,6 +77,7 @@
         #leftSidebar {
             width: 200px !important;   /* change to your desired width */
             min-width: 200px !important;
+            overflow-y: hidden;
         }
 
         .main-content,

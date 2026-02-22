@@ -11,6 +11,10 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
+ * @property \App\Model\Table\ApproversTable&\Cake\ORM\Association\HasOne $Approvers
+ * @property \App\Model\Table\BuyersTable&\Cake\ORM\Association\HasOne $Buyers
+ * @property \App\Model\Table\VendorsTable&\Cake\ORM\Association\HasOne $Vendors
+ *
  * @method \App\Model\Entity\User newEmptyEntity()
  * @method \App\Model\Entity\User newEntity(array $data, array $options = [])
  * @method array<\App\Model\Entity\User> newEntities(array $data, array $options = [])
@@ -68,6 +72,19 @@ class UsersTable extends Table
             ->maxLength('password', 255)
             ->allowEmptyString('password');
 
+        $validator
+            ->integer('group_id')
+            ->requirePresence('group_id', 'create')
+            ->notEmptyString('group_id');
+
+        $validator
+            ->notEmptyString('is_active');
+
+        $validator
+            ->dateTime('last_login')
+            ->requirePresence('last_login', 'create')
+            ->notEmptyDateTime('last_login');
+
         return $validator;
     }
 
@@ -83,5 +100,29 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
 
         return $rules;
+    }
+
+     // Custom finder for buyers with their details
+    public function findBuyers(\Cake\ORM\Query $query, array $options)
+    {
+        return $query
+            ->contain(['Groups', 'Buyers'])
+            ->where(['Groups.name' => 'Buyer']);
+    }
+    
+    // Custom finder for vendors with their details
+    public function findVendors(\Cake\ORM\Query $query, array $options)
+    {
+        return $query
+            ->contain(['Groups', 'Vendors'])
+            ->where(['Groups.name' => 'Vendor']);
+    }
+    
+    // Custom finder for approvers with their details
+    public function findApprovers(\Cake\ORM\Query $query, array $options)
+    {
+        return $query
+            ->contain(['Groups', 'Approvers'])
+            ->where(['Groups.name' => 'Approver']);
     }
 }
