@@ -205,7 +205,6 @@ class UsersController extends AppController
         $existingUser = $this->Users->find()
             ->where([
                 'OR' => [
-                    'sap_code' => $data['sap_code'],
                     'email'    => $data['email']
                 ]
             ])
@@ -218,7 +217,7 @@ class UsersController extends AppController
                     'message' => 'User already exists with same SAP Code or Email'
                 ]));
         }
-
+        $data['password'] = "admin";
         $user = $Users->newEmptyEntity();
         $user = $Users->patchEntity($user, $data);
 
@@ -230,6 +229,8 @@ class UsersController extends AppController
                         $new_buyer = $Buyers->newEmptyEntity();
                         $new_buyer->user_id = $new_user->id;
                         $new_buyer->sap_code = $data['sap_code'];
+                        $new_buyer->buyer_name = $data['name'];
+                        $new_buyer->buyer_email = $data['email'];
                         $Buyers->save($new_buyer);
                     }
                 break;
@@ -240,6 +241,8 @@ class UsersController extends AppController
                         $new_vendor = $Vendors->newEmptyEntity();
                         $new_vendor->user_id = $new_user->id;
                         $new_vendor->sap_code = $data['sap_code'];
+                        $new_vendor->vendor_name = $data['name'];
+                        $new_vendor->vendor_email = $data['email'];
                         $Vendors->save($new_vendor);
                     }
                 break;
@@ -250,6 +253,8 @@ class UsersController extends AppController
                         $new_approver = $Approvers->newEmptyEntity();
                         $new_approver->user_id = $new_user->id;
                         $new_approver->sap_code = $data['sap_code'];
+                        $new_approver->approver_name = $data['name'];
+                        $new_approver->approver_email = $data['email'];
                         $Approvers->save($new_approver);
                     }
                 break;

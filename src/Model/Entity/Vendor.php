@@ -40,6 +40,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\DateTime|null $modified
  *
  * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\VendorCategoryMapping[] $vendor_category_mapping
  */
 class Vendor extends Entity
 {
@@ -83,5 +84,6 @@ class Vendor extends Entity
         'created' => true,
         'modified' => true,
         'user' => true,
+        'vendor_category_mapping' => true,
     ];
 }

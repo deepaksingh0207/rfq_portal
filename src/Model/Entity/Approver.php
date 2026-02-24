@@ -11,6 +11,8 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $user_id
  * @property string|null $sap_code
+ * @property string|null $approver_name
+ * @property string|null $approver_email
  * @property string|null $department
  * @property string|null $position
  * @property string|null $approval_limit
@@ -35,6 +37,8 @@ class Approver extends Entity
     protected array $_accessible = [
         'user_id' => true,
         'sap_code' => true,
+        'approver_name' => true,
+        'approver_email' => true,
         'department' => true,
         'position' => true,
         'approval_limit' => true,

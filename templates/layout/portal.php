@@ -8,9 +8,10 @@
     <meta name="author" content="">
     <?= $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken')); ?>
     <link rel="icon" href="favicon.ico">
-    <title>Dashboard</title>
+    <title>RFQ</title>
     <!-- Simple bar CSS -->
-    <!-- <link rel="stylesheet" href="css/simplebar.css"> -->
+    <?= $this->Html->css("simplebar.css") ?>
+
     <!-- Fonts CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- Icons CSS -->
@@ -123,7 +124,9 @@
         }
     </style>
 </head>
-
+<?php
+    $currentController = strtolower($this->request->getParam('controller'));
+?>
 
 <body class="vertical light">
     <div class="wrapper">
@@ -174,13 +177,13 @@
                 </div>
                 <ul class="navbar-nav flex-fill w-100 mb-2">
                     <li class="nav-item active">
-                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link link-active">
+                        <a href="<?= $this->Url->build(['controller' => 'dashboard' , 'action' => 'index']) ?>" class="nav-link <?= $currentController == 'dashboard' ? 'link-active' : '' ?>">
                             <i class="fe fe-home fe-16"></i>
-                            <span class="ml-3 item-text">Home</span>
+                            <span class="ml-3 item-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                        <a href="<?= $this->Url->build(['controller' => 'purchase-requisitions' , 'action' => 'index']) ?>" class="nav-link <?= $currentController == 'purchaserequisitions' ? 'link-active' : '' ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-layout-text-sidebar-reverse" viewBox="0 0 16 16">
                                 <path d="M12.5 3a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zm0 3a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zm.5 3.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 .5-.5m-.5 2.5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1z" />
                                 <path d="M16 2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zM4 1v14H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm1 0h9a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5z" />
@@ -189,13 +192,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                        <a href="<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'index']) ?>" class="nav-link <?= $currentController == 'rfq' ? 'link-active' : '' ?>">
                             <i class="fe fe-calendar fe-16"></i>
-                            <span class="ml-3 item-text">Events</span>
+                            <span class="ml-3 item-text">RFQs</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                    <!-- <li class="nav-item">
+                        <a href="#dashboard" class="nav-link">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trophy" viewBox="0 0 16 16">
                                 <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935M3.504 1q.01.775.056 1.469c.13 2.028.457 3.546.87 4.667C5.294 9.48 6.484 10 7 10a.5.5 0 0 1 .5.5v2.61a1 1 0 0 1-.757.97l-1.426.356a.5.5 0 0 0-.179.085L4.5 15h7l-.638-.479a.5.5 0 0 0-.18-.085l-1.425-.356a1 1 0 0 1-.757-.97V10.5A.5.5 0 0 1 9 10c.516 0 1.706-.52 2.57-2.864.413-1.12.74-2.64.87-4.667q.045-.694.056-1.469z" />
                             </svg>
@@ -203,7 +206,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                        <a href="#dashboard" class="nav-link">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-range" viewBox="0 0 16 16">
                                 <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
                                 <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM9 8a1 1 0 0 1 1-1h5v2h-5a1 1 0 0 1-1-1m-8 2h4a1 1 0 1 1 0 2H1z" />
@@ -212,20 +215,20 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                        <a href="#dashboard" class="nav-link">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
                                 <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5" />
                                 <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
                             </svg>
                             <span class="ml-3 item-text">Contacts</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
-                        <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="nav-link">
+                        <a href="<?= $this->Url->build(['controller' => 'users' , 'action' => 'index']) ?>" class="nav-link <?= $currentController == 'users' ? 'link-active' : '' ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-3" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5zM0 11.5A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
                             </svg>
-                            <span class="ml-3 item-text">Supplier</span>
+                            <span class="ml-3 item-text">Users</span>
                         </a>
                     </li>
                 </ul>
@@ -240,6 +243,7 @@
             </nav>
         </aside>
         <main role="main" class="main-content">
+            <?= $this->Flash->render() ?>
             <?= $this->fetch('content') ?>
         </main>
     </div> <!-- .wrapper -->

@@ -51,7 +51,7 @@ class VendorsTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
         ]);
-        $this->hasMany('VendorCategoryMapping', [
+        $this->hasMany('VendorCategoryMappings', [
             'foreignKey' => 'vendor_id',
         ]);
     }

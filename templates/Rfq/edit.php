@@ -1,24 +1,14 @@
 <?php
-    $uom_option_html = '';
-    $categories_option_html = '';
-    
-    foreach($uoms as $key => $uom) {
-        if($key == $rfqDetail->id) {
-            $uom_option_html .= '<option value = "'.$key.'" selected>'.$uom.'</option>';
-        }
-        else {
-            $uom_option_html .= '<option value = "'.$key.'">'.$uom.'</option>';
-        }
-    }
+$uom_option_html = '';
+$categories_option_html = '';
 
-    foreach($products as $key => $category_name) {
-        if($key == $rfqDetail->product_id) {
-            $categories_option_html .= "<option value = '$key' selected>$category_name</option>";
-        }
-        else {
-            $categories_option_html .= "<option value = '$key'>$category_name</option>";
-        }
-    }
+foreach ($uoms as $key => $uom) {
+    $uom_option_html .= '<option value = "' . $key . '">' . $uom . '</option>';
+}
+
+foreach ($categories as $key => $category_name) {
+    $categories_option_html .= "<option value = '$key'>$category_name</option>";
+}
 ?>
 <style>
     .btn-sm {
@@ -70,18 +60,6 @@
         font-size: 1.0rem !important;
     }
 
-    .btn-link {
-        font-weight: 400 !important;
-        color: #000000 !important;
-        text-decoration: none !important;
-        background-color: #fff !important;
-    }
-
-    .btn-link:hover {
-        color: #f1f1f1 !important;
-        background-color: #6c6c6c !important;
-    }
-
     .text-primary {
         color: #004985 !important;
     }
@@ -124,139 +102,162 @@
         display: none;
     }
 </style>
+
 <div class="container-fluid bg-white p-2 shadow-sm rounded">
     <div class="row align-items-center">
-        <div class="col-md-6">
-            <h5 class="text-primary font-weight-bold mb-0">Edit Product Details</h5>
+        <div class="col-md-5">
+            <h5 class="text-primary font-weight-bold mb-0">Edit RFQ - <?= $rfq_header_data->rfq_number ?? 'N/A' ?></h5>
         </div>
-        <div class="col-md-6 text-right">
+        <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control drgpicker" id="quotation_deadline" placeholder="Select Quotation Deadline" value = "<?= date("Y-m-d" , strtotime($rfq_header_data->quotation_deadline)) ?>">
+                <div class="input-group-append">
+                    <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-right">
+            <button class="btn btn-sm btn-outline-primary px-4 mr-2" id="add_product_btn">Add Product</button>
             <button class="btn btn-sm btn-outline-primary px-4 mr-2" id="save_as_draft_btn">Save as Draft</button>
             <button class="btn btn-sm btn-outline-primary px-4" id="published_rfq_btn">Publish RFQ</button>
         </div>
     </div>
 
     <hr>
+    <div class="row">
+        <div class="col-md-12 mb-0">
+            <form action="<?= $this->Url->build(['controller' => 'rfq', 'action' => 'add']) ?>" method="post" enctype="multipart/form-data" id="add_rfq_form">
+                <input type="hidden" name="_csrfToken" value="<?= $this->request->getAttribute('csrfToken'); ?>">
+                <input type="hidden" name="rfq_status" id="rfq_status">
+                <input type="hidden" name="quotation_deadline" id="hidden_quotation_deadline">
+                <div class="accordion w-100" id="accordion1">
+                    <?php $count = 1; foreach($rfq_footer_data as $rfd) : ?>
+                        <div class="card shadow custom-card-shadow">
+                            <div class="card-header" id="heading1">
+                                <button type="button" class="btn btn-link w-100 text-start d-flex align-items-center justify-content-between collapsed"
+                                    data-toggle="collapse"
+                                    data-target="#collapse1"
+                                    aria-expanded="false"
+                                    aria-controls="collapse1">
+                                    <strong>Product Details #<?= $count ?></strong>
+                                    <div class="action-icons d-flex align-items-center">
+                                        <i class="fe fe-trash-2 text-danger mr-3 cursor-pointer d-none"></i>
+                                        <i class="fe fe-chevron-down accordion-icon"></i>
+                                    </div>
+                                </button>
 
-    <form action="<?=  $this->Url->build(['controller' => 'rfq-details' , 'action' => 'edit']) ?>" method="post" enctype="multipart/form-data" id="edit_rfq_form">
-        <input type="hidden" name="_csrfToken" value="<?= $this->request->getAttribute('csrfToken'); ?>">
-        <input type="hidden" name="rfq_status" id="rfq_status">
-        <div id="product_container">
-            <div class="card border-0 custom-card-shadow mb-4">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center py-2 border-bottom-0 shadow-sm">
-                    <span class="font-weight-bold">Product Details #1</span>
-                    <div class="col-md-10"></div>
-                    <div class="action-icons d-flex align-items-center">
-                        <i class="far fa-trash-alt text-danger mr-3 cursor-pointer d-none"></i>
-                        <button type="button" class="btn btn-link p-0" data-toggle="collapse" data-target="#product_details_1">
-                            <i class="fas fa-chevron-down text-dark"></i>
-                        </button>
-                    </div>
-                </div>
-    
-                <div class="collapse show" id="product_details_1">
-                    <div class="card-body pt-0">
-                        <div class="row">
-                            <div class="col-md-4 form-group">
-                                <label class="font-weight-bold custom-label" for="0-product_id">Category<span class="text-danger">*</span></label>
-                                <select name = "0[product_id]" id="0-product_id" class="form-control input-field shadow-sm dropdown1" data-id = "0" required>
-                                    <option>Select Category</option>
-                                    <?= $categories_option_html ?>
-                                </select>
                             </div>
-                            <div class="col-md-4 form-group">
-                                <label class="font-weight-bold mb-2 custom-label" for="0-material_code">
-                                    Material Code<span class="text-danger">*</span>
-                                </label>
-                                <input type="text" name="0[material_code]" id="0-material_code" class="form-control input-field shadow-sm" placeholder="Enter Material Code Here" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label class="font-weight-bold mb-2 custom-label" for="0-seller">
-                                    Supplier<span class="text-danger">*</span>
-                                </label>
-                                
-                                <select name="0[seller][]" id="0-seller" class="form-control input-field shadow-sm seller-dropdown" id="0-seller" required>
-                                    
-                                </select>
-                            </div>
-    
-                            <div class="col-md-4 form-group">
-                                <label for="0-model" class="font-weight-bold mb-2 custom-label">
-                                    Model<span class="text-danger">*</span>
-                                </label>
-                                <input type="text" name="0[model]" id="0-model" class="form-control input-field shadow-sm" placeholder="Enter Model Here" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="0-part_name" class="font-weight-bold mb-2 custom-label">
-                                    Part Name<span class="text-danger">*</span>
-                                </label>
-                                <input type="text" name="0[part_name]" id="0-part_name" class="form-control input-field shadow-sm" placeholder="Enter Part Name Here" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="0-make" class="font-weight-bold mb-2 custom-label">
-                                    Make<span class="text-danger">*</span>
-                                </label>
-                                <input type="text" name="0[make]" id="0-make" class="form-control input-field shadow-sm" placeholder="Enter Make Here" required>
-                            </div>
-    
-                            <div class="col-md-4 form-group">
-                                <label for="0-qty" class="font-weight-bold mb-2 custom-label">
-                                    Quantity<span class="text-danger">*</span>
-                                </label>
-                                <input type="number" name="0[qty]" id="0-qty" class="form-control input-field shadow-sm" placeholder="Enter Quantity Here" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="0-uom_id" class="font-weight-bold mb-2 custom-label">
-                                    UOM<span class="text-danger">*</span>
-                                </label>
-                                <select name="0[uom_id]" id="0-uom_id" class="form-control  input-field shadow-sm" required>
-                                    <option selected disabled>Select UOM</option>
-                                    <?= $uom_option_html ?>
-                                </select>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="0-delivery_date" class="font-weight-bold mb-2 custom-label">
-                                    Delivery Date<span class="text-danger">*</span>
-                                </label>
-                                <input type="date" name="0[delivery_date]" id="0-delivery_date" class="form-control input-field shadow-sm" required>
-                            </div>
-    
-                            <div class="col-md-4 form-group">
-                                <label for="0-specification" class="font-weight-bold mb-2 custom-label">
-                                    Specification<span class="text-danger">*</span>
-                                </label>
-                                <input type="text" name="0[specification]" id="0-specification" class="form-control input-field shadow-sm" placeholder="Enter Specifications Here" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <label for="0-files" class="font-weight-bold mb-2 custom-label">
-                                    Specification Attachment <small class="text-danger">(MAX 2 MB)</small>
-                                </label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <label class="custom-file-label" for="0-files" id="0-file-label">
-                                            <i class="fas fa-upload text-primary mr-2"></i>
-                                            Upload Files
-                                        </label>
-                                        <input type="file" name="0[files][]" id="0-files" accept="image/*" class="custom-file-input" data-id = '0'>
+                            <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordion1">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 form-group">
+                                            <label class="font-weight-bold custom-label" for="<?= $count ?>-category_id">Category<span class="text-danger">*</span></label>
+                                            <select name="items[<?= $count ?>][category_id]" id="<?= $count ?>-category_id" class="form-control input-field shadow-sm dropdown1" data-id="<?= $count ?>" data-rfq-footer-id = "<?= $rfd->id ?>" required>
+                                                <option>Select Category</option>
+                                                <?php foreach ($categories as $key => $category_name)  : ?>
+                                                    <option value="<?= $key ?>" <?= ($key == $rfd->category_id) ? 'selected' : '' ?>><?= $category_name ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <label class="font-weight-bold mb-2 custom-label" for="<?= $count ?>-material_code">
+                                                Material Code<span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" name="items[<?= $count ?>][material_code]" id="<?= $count ?>-material_code" class="form-control input-field shadow-sm" placeholder="Enter Material Code Here" value="<?= $rfd->material_code ?>" required>
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <label class="font-weight-bold mb-2 custom-label" for="<?= $count ?>-seller">
+                                                Supplier<span class="text-danger">*</span>
+                                            </label>
+
+                                            <select name="items[<?= $count ?>][seller][]" id="<?= $count ?>-seller" class="form-control input-field shadow-sm seller-dropdown" id="<?= $count ?>-seller" required>
+
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-4 form-group">
+                                            <label for="<?= $count ?>-model" class="font-weight-bold mb-2 custom-label">
+                                                Model<span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" name="items[<?= $count ?>][model]" id="<?= $count ?>-model" class="form-control input-field shadow-sm" placeholder="Enter Model Here" value="<?= $rfd->model ?>" required>
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <label for="<?= $count ?>-part_name" class="font-weight-bold mb-2 custom-label">
+                                                Part Name<span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" name="items[<?= $count ?>][part_name]" id="<?= $count ?>-part_name" class="form-control input-field shadow-sm" placeholder="Enter Part Name Here" value="<?= $rfd->part_name ?>" required>
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <label for="<?= $count ?>-make" class="font-weight-bold mb-2 custom-label">
+                                                Make<span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" name="items[<?= $count ?>][make]" id="<?= $count ?>-make" class="form-control input-field shadow-sm" placeholder="Enter Make Here" value="<?= $rfd->make ?>" required>
+                                        </div>
+
+                                        <div class="col-md-4 form-group">
+                                            <label for="<?= $count ?>-qty" class="font-weight-bold mb-2 custom-label">
+                                                Quantity<span class="text-danger">*</span>
+                                            </label>
+                                            <input type="number" name="items[<?= $count ?>][qty]" id="<?= $count ?>-qty" class="form-control input-field shadow-sm" placeholder="Enter Quantity Here" value="<?= $rfd->quantity ?>" required>
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <label for="<?= $count ?>-uom_id" class="font-weight-bold mb-2 custom-label">
+                                                UOM<span class="text-danger">*</span>
+                                            </label>
+                                            <select name="items[<?= $count ?>][uom_id]" id="<?= $count ?>-uom_id" class="form-control  input-field shadow-sm" required>
+                                                <option selected disabled>Select UOM</option>
+                                                <?php foreach($uoms as $key=>$uom) : ?>
+                                                    <option value="<?= $key ?>" <?= ($uom == $rfd->uom) ? 'selected' : '' ?>><?= $uom ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <label for="<?= $count ?>-delivery_date" class="font-weight-bold mb-2 custom-label">
+                                                Delivery Date<span class="text-danger">*</span>
+                                            </label>
+                                            <input type="date" name="items[<?= $count ?>][delivery_date]" id="<?= $count ?>-delivery_date" class="form-control input-field shadow-sm" value="<?= date("Y-m-d" ,strtotime($rfd->delivery_date)) ?>" required>
+                                        </div>
+
+                                        <div class="col-md-4 form-group">
+                                            <label for="<?= $count ?>-specification" class="font-weight-bold mb-2 custom-label">
+                                                Specification<span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" name="items[<?= $count ?>][specification]" id="<?= $count ?>-specification" class="form-control input-field shadow-sm" placeholder="Enter Specifications Here" value="<?= $rfd->specification ?>" required>
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <label for="<?= $count ?>-files" class="font-weight-bold mb-2 custom-label">
+                                                Specification Attachment <small class="text-danger">(MAX 2 MB)</small>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="custom-file">
+                                                    <label class="custom-file-label" for="<?= $count ?>-files" id="<?= $count ?>-file-label">
+                                                        <i class="fas fa-upload text-primary mr-2"></i>
+                                                        Upload Files
+                                                    </label>
+                                                    <input type="file" name="items[<?= $count ?>][files][]" id="<?= $count ?>-files" accept="image/*" class="custom-file-input" data-id='<?= $count ?>'>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <label for="<?= $count ?>-remarks" class="font-weight-bold mb-2 custom-label">
+                                                Remark<span class="text-danger">*</span>
+                                            </label>
+                                            <textarea class="form-control input-field shadow-sm" name="items[<?= $count ?>][remarks]" id="<?= $count ?>-remarks" rows="1" placeholder="Enter Remarks Here"><?= $rfd->remark ?></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 form-group">
-                                <label for="0-remarks" class="font-weight-bold mb-2 custom-label">
-                                    Remark<span class="text-danger">*</span>
-                                </label>
-                                <textarea class="form-control input-field shadow-sm" name="0[remarks]" id="0-remarks" rows="1" placeholder="Enter Remarks Here"></textarea>
-                            </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
 
 </div>
 <script>
     let uom_option_html = '<?= $uom_option_html ?>';
     let categories_option_html = "<?= $categories_option_html ?>";
-    let get_vendor_by_cateogry_url = "<?= $this->Url->build(['controller' => 'rfq-details','action' => 'getVendorByCategory']); ?>"
+    let get_vendor_by_cateogry_url = "<?= $this->Url->build(['controller' => 'rfq', 'action' => 'getVendorByCategory']); ?>"
 </script>
 <?= $this->Html->script("portal/rfq_details_edit.js") ?>

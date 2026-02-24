@@ -69,12 +69,14 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (response.status === "success") {
+                    toastr.success(response.message);
                     $("#addUserModal").modal("hide");
                     $("#addUserForm")[0].reset();
 
                     // Reload DataTable
                     $("#usersTable").DataTable().ajax.reload(null, false);
                 } else {
+                    toastr.error(response.message);
                     let errors = "";
                     $.each(response.errors, function (field, messages) {
                         errors += messages[Object.keys(messages)[0]] + "<br>";

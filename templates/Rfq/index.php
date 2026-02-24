@@ -131,12 +131,12 @@
     }
 </style>
 
-<div class="container-fluid mt-4">
+<div class="container-fluid">
     <div class="row mb-3 align-items-end">
         <div class="col-md-4">
             <label class="font-weight-bold">Search</label>
             <div class="input-group">
-                <input type="text" class="form-control search-bar" placeholder="Search by RFQ NO, Material Code, Vendor" id="customSearchInput">
+                <input type="text" class="form-control search-bar bg-white" placeholder="Search by RFQ NO, Material Code, Vendor" id="customSearchInput">
             </div>
         </div>
         <div class="col-md-2">
@@ -157,18 +157,14 @@
     </div>
 
     <div class="table-responsive shadow-sm bg-white">
-        <table class="table table-hover mb-0" id="example1">
+        <table class="table table-hover mb-0" id="rfq_list_table">
             <thead>
                 <tr>
                     <th>RFQ NO.</th>
-                    <th>Category</th>
-                    <th>Material Code</th>
-                    <th>Make</th>
-                    <th>Model</th>
-                    <th>Part</th>
-                    <th>QTY UOM</th>
+                    <th>RFQ Type</th>
                     <th>Status</th>
-                    <th>Delivery Date</th>
+                    <th>Quotation Deadline</th>
+                    <th>Created By</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -1059,3 +1055,12 @@
         });
     });
 </script>
+
+<script>
+    let get_rfq_list_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'index']) ?>";
+    let edit_rfq_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'edit']) ?>";
+    let view_rfq_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'view']) ?>";
+    let copy_rfq_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'copy']) ?>";
+</script>
+
+<?= $this->Html->script('portal/rfq_index.js') ?>

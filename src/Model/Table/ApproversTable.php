@@ -73,6 +73,16 @@ class ApproversTable extends Table
             ->add('sap_code', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
+            ->scalar('approver_name')
+            ->maxLength('approver_name', 255)
+            ->allowEmptyString('approver_name');
+
+        $validator
+            ->scalar('approver_email')
+            ->maxLength('approver_email', 255)
+            ->allowEmptyString('approver_email');
+
+        $validator
             ->scalar('department')
             ->maxLength('department', 100)
             ->allowEmptyString('department');

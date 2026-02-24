@@ -60,18 +60,6 @@ foreach ($categories as $key => $category_name) {
         font-size: 1.0rem !important;
     }
 
-    .btn-link {
-        font-weight: 400 !important;
-        color: #000000 !important;
-        text-decoration: none !important;
-        background-color: #fff !important;
-    }
-
-    .btn-link:hover {
-        color: #f1f1f1 !important;
-        background-color: #6c6c6c !important;
-    }
-
     .text-primary {
         color: #004985 !important;
     }
@@ -117,10 +105,18 @@ foreach ($categories as $key => $category_name) {
 
 <div class="container-fluid bg-white p-2 shadow-sm rounded">
     <div class="row align-items-center">
-        <div class="col-md-6">
-            <h5 class="text-primary font-weight-bold mb-0">Add Product Details</h5>
+        <div class="col-md-5">
+            <h5 class="text-primary font-weight-bold mb-0">Create RFQ</h5>
         </div>
-        <div class="col-md-6 text-right">
+        <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control drgpicker" id="quotation_deadline" placeholder="Select Quotation Deadline">
+                <div class="input-group-append">
+                    <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-right">
             <button class="btn btn-sm btn-outline-primary px-4 mr-2" id="add_product_btn">Add Product</button>
             <button class="btn btn-sm btn-outline-primary px-4 mr-2" id="save_as_draft_btn">Save as Draft</button>
             <button class="btn btn-sm btn-outline-primary px-4" id="published_rfq_btn">Publish RFQ</button>
@@ -130,31 +126,32 @@ foreach ($categories as $key => $category_name) {
     <hr>
     <div class="row">
         <div class="col-md-12 mb-0">
-            <div class="accordion w-100" id="accordion1">
-                <form action="<?= $this->Url->build(['controller' => 'rfq-details', 'action' => 'add']) ?>" method="post" enctype="multipart/form-data" id="add_rfq_form">
-                    <input type="hidden" name="_csrfToken" value="<?= $this->request->getAttribute('csrfToken'); ?>">
-                    <input type="hidden" name="rfq_status" id="rfq_status">
-                    <div class="card shadow">
+            <form action="<?= $this->Url->build(['controller' => 'rfq', 'action' => 'add']) ?>" method="post" enctype="multipart/form-data" id="add_rfq_form">
+                <input type="hidden" name="_csrfToken" value="<?= $this->request->getAttribute('csrfToken'); ?>">
+                <input type="hidden" name="rfq_status" id="rfq_status">
+                <input type="hidden" name="quotation_deadline" id="hidden_quotation_deadline">
+                <div class="accordion w-100" id="accordion1">
+                    <div class="card shadow custom-card-shadow">
                         <div class="card-header" id="heading1">
-                            <a role="button" href="#collapse1" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
-                                <div class="card-header bg-white d-flex justify-content-between align-items-center py-2 border-bottom-0 shadow-sm">
-                                    <span class="font-weight-bold">Product Details #1</span>
-                                    <div class="col-md-10"></div>
-                                    <div class="action-icons d-flex align-items-center">
-                                        <i class="far fa-trash-alt text-danger mr-3 cursor-pointer d-none"></i>
-                                        <button type="button" class="btn btn-link p-0" data-toggle="collapse" data-target="#product_details_1">
-                                            <i class="fas fa-chevron-down text-dark"></i>
-                                        </button>
-                                    </div>
+                            <button type="button" class="btn btn-link w-100 text-start d-flex align-items-center justify-content-between collapsed"
+                                data-toggle="collapse"
+                                data-target="#collapse1"
+                                aria-expanded="false"
+                                aria-controls="collapse1">
+                                <strong>Product Details #1</strong>
+                                <div class="action-icons d-flex align-items-center">
+                                    <i class="fe fe-trash-2 text-danger mr-3 cursor-pointer d-none"></i>
+                                    <i class="fe fe-chevron-down accordion-icon"></i>
                                 </div>
-                            </a>
+                            </button>
+
                         </div>
                         <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordion1">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4 form-group">
-                                        <label class="font-weight-bold custom-label" for="0-product_id">Category<span class="text-danger">*</span></label>
-                                        <select name="0[product_id]" id="0-product_id" class="form-control input-field shadow-sm dropdown1" data-id="0" required>
+                                        <label class="font-weight-bold custom-label" for="0-category_id">Category<span class="text-danger">*</span></label>
+                                        <select name="items[0][category_id]" id="0-category_id" class="form-control input-field shadow-sm dropdown1" data-id="0" required>
                                             <option>Select Category</option>
                                             <?= $categories_option_html ?>
                                         </select>
@@ -163,14 +160,14 @@ foreach ($categories as $key => $category_name) {
                                         <label class="font-weight-bold mb-2 custom-label" for="0-material_code">
                                             Material Code<span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="0[material_code]" id="0-material_code" class="form-control input-field shadow-sm" placeholder="Enter Material Code Here" required>
+                                        <input type="text" name="items[0][material_code]" id="0-material_code" class="form-control input-field shadow-sm" placeholder="Enter Material Code Here" required>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <label class="font-weight-bold mb-2 custom-label" for="0-seller">
                                             Supplier<span class="text-danger">*</span>
                                         </label>
 
-                                        <select name="0[seller][]" id="0-seller" class="form-control input-field shadow-sm seller-dropdown" id="0-seller" required>
+                                        <select name="items[0][seller][]" id="0-seller" class="form-control input-field shadow-sm seller-dropdown" id="0-seller" required>
 
                                         </select>
                                     </div>
@@ -179,32 +176,32 @@ foreach ($categories as $key => $category_name) {
                                         <label for="0-model" class="font-weight-bold mb-2 custom-label">
                                             Model<span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="0[model]" id="0-model" class="form-control input-field shadow-sm" placeholder="Enter Model Here" required>
+                                        <input type="text" name="items[0][model]" id="0-model" class="form-control input-field shadow-sm" placeholder="Enter Model Here" required>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <label for="0-part_name" class="font-weight-bold mb-2 custom-label">
                                             Part Name<span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="0[part_name]" id="0-part_name" class="form-control input-field shadow-sm" placeholder="Enter Part Name Here" required>
+                                        <input type="text" name="items[0][part_name]" id="0-part_name" class="form-control input-field shadow-sm" placeholder="Enter Part Name Here" required>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <label for="0-make" class="font-weight-bold mb-2 custom-label">
                                             Make<span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="0[make]" id="0-make" class="form-control input-field shadow-sm" placeholder="Enter Make Here" required>
+                                        <input type="text" name="items[0][make]" id="0-make" class="form-control input-field shadow-sm" placeholder="Enter Make Here" required>
                                     </div>
 
                                     <div class="col-md-4 form-group">
                                         <label for="0-qty" class="font-weight-bold mb-2 custom-label">
                                             Quantity<span class="text-danger">*</span>
                                         </label>
-                                        <input type="number" name="0[qty]" id="0-qty" class="form-control input-field shadow-sm" placeholder="Enter Quantity Here" required>
+                                        <input type="number" name="items[0][qty]" id="0-qty" class="form-control input-field shadow-sm" placeholder="Enter Quantity Here" required>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <label for="0-uom_id" class="font-weight-bold mb-2 custom-label">
                                             UOM<span class="text-danger">*</span>
                                         </label>
-                                        <select name="0[uom_id]" id="0-uom_id" class="form-control  input-field shadow-sm" required>
+                                        <select name="items[0][uom_id]" id="0-uom_id" class="form-control  input-field shadow-sm" required>
                                             <option selected disabled>Select UOM</option>
                                             <?= $uom_option_html ?>
                                         </select>
@@ -213,14 +210,14 @@ foreach ($categories as $key => $category_name) {
                                         <label for="0-delivery_date" class="font-weight-bold mb-2 custom-label">
                                             Delivery Date<span class="text-danger">*</span>
                                         </label>
-                                        <input type="date" name="0[delivery_date]" id="0-delivery_date" class="form-control input-field shadow-sm" required>
+                                        <input type="date" name="items[0][delivery_date]" id="0-delivery_date" class="form-control input-field shadow-sm" required>
                                     </div>
 
                                     <div class="col-md-4 form-group">
                                         <label for="0-specification" class="font-weight-bold mb-2 custom-label">
                                             Specification<span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" name="0[specification]" id="0-specification" class="form-control input-field shadow-sm" placeholder="Enter Specifications Here" required>
+                                        <input type="text" name="items[0][specification]" id="0-specification" class="form-control input-field shadow-sm" placeholder="Enter Specifications Here" required>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <label for="0-files" class="font-weight-bold mb-2 custom-label">
@@ -232,7 +229,7 @@ foreach ($categories as $key => $category_name) {
                                                     <i class="fas fa-upload text-primary mr-2"></i>
                                                     Upload Files
                                                 </label>
-                                                <input type="file" name="0[files][]" id="0-files" accept="image/*" class="custom-file-input" data-id='0'>
+                                                <input type="file" name="items[0][files][]" id="0-files" accept="image/*" class="custom-file-input" data-id='0'>
                                             </div>
                                         </div>
                                     </div>
@@ -240,15 +237,14 @@ foreach ($categories as $key => $category_name) {
                                         <label for="0-remarks" class="font-weight-bold mb-2 custom-label">
                                             Remark<span class="text-danger">*</span>
                                         </label>
-                                        <textarea class="form-control input-field shadow-sm" name="0[remarks]" id="0-remarks" rows="1" placeholder="Enter Remarks Here"></textarea>
+                                        <textarea class="form-control input-field shadow-sm" name="items[0][remarks]" id="0-remarks" rows="1" placeholder="Enter Remarks Here"></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
-
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -256,6 +252,6 @@ foreach ($categories as $key => $category_name) {
 <script>
     let uom_option_html = '<?= $uom_option_html ?>';
     let categories_option_html = "<?= $categories_option_html ?>";
-    let get_vendor_by_cateogry_url = "<?= $this->Url->build(['controller' => 'rfq-details', 'action' => 'getVendorByCategory']); ?>"
+    let get_vendor_by_cateogry_url = "<?= $this->Url->build(['controller' => 'rfq', 'action' => 'getVendorByCategory']); ?>"
 </script>
 <?= $this->Html->script("portal/rfq_details_add.js") ?>
