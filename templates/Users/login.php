@@ -107,6 +107,7 @@
                 <?= $this->Html->image('jbm_logo.png', ['style' => 'width:70%']) ?>
               </a>
               <h1 class="h4 mb-3">RFQ - Sign in</h1>
+              <?= $this->Flash->render(); ?>
               <input type="hidden" name="_csrfToken" value="<?= h($this->request->getAttribute('csrfToken')) ?>">
               <div class="form-group">
                 <label for="inputEmail" class="sr-only">Email address</label>

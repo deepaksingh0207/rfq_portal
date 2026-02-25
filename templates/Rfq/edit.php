@@ -126,12 +126,13 @@ foreach ($categories as $key => $category_name) {
     <hr>
     <div class="row">
         <div class="col-md-12 mb-0">
-            <form action="<?= $this->Url->build(['controller' => 'rfq', 'action' => 'add']) ?>" method="post" enctype="multipart/form-data" id="add_rfq_form">
+            <form action="<?= $this->Url->build(['controller' => 'rfq', 'action' => 'edit' , $rfq_header_data->id]) ?>" method="post" enctype="multipart/form-data" id="add_rfq_form">
                 <input type="hidden" name="_csrfToken" value="<?= $this->request->getAttribute('csrfToken'); ?>">
                 <input type="hidden" name="rfq_status" id="rfq_status">
                 <input type="hidden" name="quotation_deadline" id="hidden_quotation_deadline">
                 <div class="accordion w-100" id="accordion1">
                     <?php $count = 1; foreach($rfq_footer_data as $rfd) : ?>
+                        <input type="hidden" name="items[<?= $count ?>][rfq_footer_id]" value="<?= $rfd->id ?>">
                         <div class="card shadow custom-card-shadow">
                             <div class="card-header" id="heading1">
                                 <button type="button" class="btn btn-link w-100 text-start d-flex align-items-center justify-content-between collapsed"
@@ -227,6 +228,9 @@ foreach ($categories as $key => $category_name) {
                                         <div class="col-md-4 form-group">
                                             <label for="<?= $count ?>-files" class="font-weight-bold mb-2 custom-label">
                                                 Specification Attachment <small class="text-danger">(MAX 2 MB)</small>
+                                                <a class = "btn btn-link" target="_blank" href="<?= $this->Url->build( ['controller' => 'rfq' , 'action' => 'view-attachments' , $rfd->id ] ) ?>">
+                                                    <i class="fe fe-external-link" data-toggle="tooltip" data-placement="top" title="View Existing Attachments"></i>
+                                                </a>
                                             </label>
                                             <div class="input-group">
                                                 <div class="custom-file">
@@ -248,7 +252,7 @@ foreach ($categories as $key => $category_name) {
                                 </div>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                    <?php $count++; endforeach; ?>
                 </div>
             </form>
         </div>

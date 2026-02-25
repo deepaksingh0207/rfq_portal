@@ -10,6 +10,10 @@ class RfqController extends AppController
     {
         if ($this->request->isAjax()) {
 
+            $session = $this->getRequest()->getSession();
+            $session_user_group = strtolower($session->read('Auth.user.group'));
+            $current_user_id = $session->read('Auth.user.id');
+
             // 1. Get DataTable parameters
             $params = $this->request->getQueryParams();
             $limit = (int)$params['length'] ?? 10;
@@ -17,7 +21,7 @@ class RfqController extends AppController
             $search = $params['search']['value'] ?? '';
             $orderColumnIndex = $params['order'][0]['column'] ?? 0;
             $orderDirection = $params['order'][0]['dir'] ?? 'asc';
-    
+
             // 2. Build the base query
             $RfqHeaders = $this->fetchTable('RfqHeaders');
             
@@ -29,41 +33,111 @@ class RfqController extends AppController
                 'RfqHeaders.status',
                 'RfqHeaders.quotation_deadline',
                 'RfqHeaders.created_by_user_id',
+                'created_by_user_name' => 'Users.name',
             ]);
-    
+
+            $join_conditions = [];
+            $where_conditions = [];
+
+            // Join with Users table for created_by user name
+            $join_conditions['Users'] = [
+                'table' => 'users',
+                'type' => 'left',
+                'conditions' => 'RfqHeaders.created_by_user_id = Users.id'
+            ];
+
+            if($session_user_group == "buyer") {
+                $where_conditions [] = ['RfqHeaders.created_by_user_id' => $current_user_id];
+            }
+
+            // Vendor-specific logic
+            if($session_user_group == 'vendor') {
+                $where_conditions [] = ['RfqHeaders.status IN' => ['PUBLISHED' , 'OPEN']];
+
+                // Join with rfq_footers to get footer details
+                $join_conditions['RfqFooters'] = [
+                    'table' => 'rfq_footers',
+                    'type' => 'inner',
+                    'conditions' => 'RfqFooters.rfq_header_id = RfqHeaders.id'
+                ];
+
+                // Left join with rfq_footer_vendor to check vendor mappings
+                $join_conditions['RfqFooterVendors'] = [
+                    'table' => 'rfq_footer_vendors',
+                    'type' => 'left',
+                    'conditions' => [
+                        'RfqFooterVendors.rfq_footer_id = RfqFooters.id',
+                        'RfqFooterVendors.vendor_user_id' => $current_user_id
+                    ]
+                ];
+
+                // Where condition: Show RFQs that either:
+                // 1. Have no vendor mappings at all for any footer item in this RFQ (all footer items are unmapped)
+                // 2. OR have at least one footer item mapped to the current vendor
+                
+                // Subquery to find RFQ headers that have ANY footer items mapped to ANY vendor
+                $subquery = $RfqHeaders->find();
+                $subquery->select(['RfqHeaders.id'])
+                    ->innerJoin(['RfqFooters' => 'rfq_footers'], ['RfqFooters.rfq_header_id = RfqHeaders.id'])
+                    ->innerJoin(['RfqFooterVendors' => 'rfq_footer_vendors'], ['RfqFooterVendors.rfq_footer_id = RfqFooters.id'])
+                    ->groupBy('RfqHeaders.id');
+
+                // Apply the main condition
+                $where_conditions['OR'] = [
+                    // Condition 1: RFQ headers NOT IN the list of RFQs that have ANY vendor mappings
+                    'RfqHeaders.id NOT IN' => $subquery,
+                    
+                    // Condition 2: RFQ headers that HAVE mappings for the current vendor
+                    // (this will be true when the left join with RfqFooterVendors found a match)
+                    'RfqFooterVendors.vendor_user_id IS NOT NULL'
+                ];
+            }
+
             // 4. Handle Searching
             if(!empty($search)) {
-                $query->join([
-                    'RfqFooters' => [
+                // Ensure RfqFooters join exists for search
+                if (!isset($join_conditions['RfqFooters'])) {
+                    $join_conditions['RfqFooters'] = [
                         'table' => 'rfq_footers',
                         'type' => 'inner',
                         'conditions' => 'RfqFooters.rfq_header_id = RfqHeaders.id'
-                    ]
-                ]);
-    
-                $query->where([
-                    'OR' => [
-                        'RfqHeaders.rfq_number LIKE' => "%$search%",
-                        'RfqFooters.material_code LIKE' => "%$search%",
-                        'RfqFooters.part_name LIKE' => "%$search%",
-                        'RfqFooters.material_description LIKE' => "%$search%",
-                    ]
-                ]);
+                    ];
+                }
+
+                $where_conditions['OR'] = [
+                    'RfqHeaders.rfq_number LIKE' => "%$search%",
+                    'RfqFooters.material_code LIKE' => "%$search%",
+                    'RfqFooters.part_name LIKE' => "%$search%",
+                    'RfqFooters.material_description LIKE' => "%$search%",
+                ];
             }
-    
+
+            // Apply joins
+            if(count($join_conditions) > 0) {
+                $query->join($join_conditions);
+            }
+
+            // Apply where conditions
+            if(count($where_conditions) > 0) {
+                $query->where($where_conditions);
+            }
+
+            // Add GROUP BY to avoid duplicate rows due to multiple joins
+            $query->groupBy('RfqHeaders.id');
+
             // 5. Get Totals
             $totalRecords = $RfqHeaders->find()->count();
-    
+
             // Clone query for filtered count
             $filteredQuery = clone $query;
             $filteredRecords = $filteredQuery->count();
-    
+
             // 7. Apply pagination and get data
             $data = $query
-            ->limit($limit)
-            ->offset($offset)
-            ->toArray();
-            
+                ->limit($limit)
+                ->offset($offset)
+                ->toArray();
+
             // 9. Prepare JSON response
             $result = [
                 "draw" => intval($params['draw']),
@@ -71,7 +145,7 @@ class RfqController extends AppController
                 "recordsFiltered" => $filteredRecords,
                 "data" => $data
             ];
-    
+
             return $this->response->withType('application/json')->withStringBody(json_encode($result));
         }
     }
@@ -116,6 +190,7 @@ class RfqController extends AppController
                             $new_rfq_footer->material_code = $item['material_code'];
                             $new_rfq_footer->model = $item['model'];
                             $new_rfq_footer->part_name = $item['part_name'];
+                            $new_rfq_footer->make = $item['make'];
                             $new_rfq_footer->material_description = $item['part_name'];
                             $new_rfq_footer->category_id = $item['category_id'];
                             $new_rfq_footer->quantity = $item['qty'];
@@ -193,6 +268,89 @@ class RfqController extends AppController
                 $rfd->selected_vendor_user_ids = $RfqFooterVendors->find('list')->where(['rfq_footer_id' => $rfd->id])->toArray();
             }
 
+            if($this->request->is('post')) {
+                $request_data = $this->request->getData();
+                // dd($request_data);
+
+                $connection = $RfqHeaders->getConnection();
+                $result = $connection->transactional(
+                    function () use($rfq_header_id , $request_data , $RfqHeaders , $RfqFooters , $RfqFooterVendors) {
+                        $current_rfq_header = $RfqHeaders->get($rfq_header_id);
+                        $current_rfq_header->status = $request_data['rfq_status'];
+                        $current_rfq_header->quotation_deadline = $request_data['quotation_deadline'];
+
+                        $RfqHeaders->save($current_rfq_header);
+                        
+                        foreach($request_data['items'] as $item) {
+                            if(!empty($item['rfq_footer_id'])) {
+                                $rfq_footer = $RfqFooters->get($item['rfq_footer_id']);
+                                $uploads["files"] = json_decode($rfq_footer->specification_attachment , true);
+                            }
+                            else {
+                                $rfq_footer = $RfqFooters->newEmptyEntity();
+                                $rfq_footer->rfq_header_id = $rfq_header_id;
+                                $rfq_footer->source_type = 'manual';
+                                $uploads["files"] = array();
+                            }
+
+                            $rfq_footer->material_code = $item['material_code'];
+                            $rfq_footer->model = $item['model'];
+                            $rfq_footer->part_name = $item['part_name'];
+                            $rfq_footer->make = $item['make'];
+                            $rfq_footer->material_description = $item['part_name'];
+                            $rfq_footer->category_id = $item['category_id'];
+                            $rfq_footer->quantity = $item['qty'];
+                            $rfq_footer->uom = $uom_data->code ?? null;
+                            $rfq_footer->delivery_date = date("Y-m-d", strtotime($item['delivery_date']));
+                            $rfq_footer->specification = $item['specification'];
+                            $rfq_footer->remark = $item['remarks'];
+
+                            if (isset($item["files"]) && is_array($item["files"])) {
+        
+                                $productImages = $item["files"];
+        
+                                foreach ($productImages as $productImage) {
+                                    $fileName = time() . '_' . $productImage->getClientFilename();
+                                    $fileType = $productImage->getClientMediaType();
+                                    if ($fileName && ($fileType === "application/pdf" || strpos($fileType, 'image/') === 0)) {
+                                        $imagePath = WWW_ROOT . "uploads/" . $fileName;
+                                        $productImage->moveTo($imagePath);
+                                        $uploads["files"][] = "uploads/" . $fileName;
+                                    }
+                                }
+        
+                                $uploadedFiles = json_encode($uploads['files']);
+                            }
+        
+                            $rfq_footer->specification_attachment = $uploadedFiles ?? null;
+        
+                            $RfqFooters->save($rfq_footer);
+
+                            if (!empty($rfq_footer->id) && !empty($item['seller']) && is_array($item['seller']) && count($item['seller']) > 0) {
+                                $RfqFooterVendors = $this->fetchTable('RfqFooterVendors');
+                                foreach ($item['seller'] as $vendor_user_id) {
+                                    $rfq_footer_vendor = $RfqFooterVendors->find()->where(['rfq_footer_id' => $rfq_footer->id , 'vendor_user_id' => $vendor_user_id])->first();
+                                    if(empty($rfq_footer_vendor->id)) {
+                                        $rfq_footer_vendor = $RfqFooterVendors->newEmptyEntity();
+                                    }
+                                    $rfq_footer_vendor->rfq_footer_id = $rfq_footer->id;
+                                    $rfq_footer_vendor->vendor_user_id = $vendor_user_id;
+                                    $RfqFooterVendors->save($rfq_footer_vendor);
+                                }
+                            }
+                        }
+                    }
+                );
+                
+                if($result !== false) {
+                    $this->Flash->success("RFQ Edited Successfully");    
+                }
+                else {
+                    $this->Flash->error("RFQ Data Updated Failed. Please contact Support");
+                }
+                $this->redirect(['controller' => 'rfq' , 'action' => 'index']);
+            }
+
             $this->set(compact('rfq_header_data' , 'rfq_footer_data' , 'categories', 'uoms'));
         }
         else {
@@ -250,16 +408,31 @@ class RfqController extends AppController
             $RfqHeaders = $this->fetchTable('RfqHeaders');
             $RfqFooters = $this->fetchTable('RfqFooters');
             $Categories = $this->fetchTable('Categories');
-
+            $Users = $this->fetchTable('Users');
+            
             $single_rfq_footer_data = $RfqFooters->get($rfq_footer_id);
             $rfq_header_data = $RfqHeaders->get($single_rfq_footer_data->rfq_header_id);
+            $created_by_user_data = $Users->get($rfq_header_data->created_by_user_id);
             $category_data = $Categories->get($single_rfq_footer_data->category_id);
 
-            $this->set(compact('rfq_header_data' , 'single_rfq_footer_data' , 'category_data'));
+            $this->set(compact('rfq_header_data' , 'single_rfq_footer_data' , 'created_by_user_data' , 'category_data'));
 
         }
         else {
             exit("Rfq Item Data Not Found");
+        }
+    }
+
+    public function viewAttachments($rfq_footer_id) {
+        if(!empty($rfq_footer_id)) {    
+            $RfqFooters = $this->fetchTable('RfqFooters');
+            $rfq_footer_data = $RfqFooters->get($rfq_footer_id);
+
+            $files = json_decode($rfq_footer_data->specification_attachment , true);
+            $this->set(compact('files'));
+        }
+        else {
+            exit("Rfq Footer Item Not Found");
         }
     }
 

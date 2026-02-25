@@ -44,6 +44,11 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsTo('UserGroups', [
+            'foreignKey' => 'group_id',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**

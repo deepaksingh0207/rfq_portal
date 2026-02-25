@@ -1,3 +1,8 @@
+<?php
+    $session = $this->getRequest()->getSession();
+    $session_user_group = strtolower($session->read('Auth.user.group'));
+?>
+
 <style>
     .modal-dialog {
         max-width: 960px;
@@ -143,7 +148,9 @@
             <label class="font-weight-bold">Status</label>
             <select class="form-control custom-select" id="statusFilter">
                 <option selected>All</option>
+                <?php if(strtolower($session_user_group) == 'admin'): ?>
                 <option value="DRAFT">DRAFT</option>
+                <?php endif; ?>
                 <option value="UNDER_APPROVAL">UNDER_APPROVAL</option>
                 <option value="PUBLISHED">PUBLISHED</option>
                 <option value="REJECTED">REJECTED</option>
@@ -1061,6 +1068,7 @@
     let edit_rfq_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'edit']) ?>";
     let view_rfq_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'view']) ?>";
     let copy_rfq_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'copy']) ?>";
+    let session_user_group = "<?= $session_user_group ?>";
 </script>
 
 <?= $this->Html->script('portal/rfq_index.js') ?>

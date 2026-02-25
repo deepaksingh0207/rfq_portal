@@ -126,6 +126,9 @@
 </head>
 <?php
     $currentController = strtolower($this->request->getParam('controller'));
+    $session = $this->getRequest()->getSession();
+    $session_user_name = $session->read('Auth.user.name');
+    $session_user_group = strtolower($session->read('Auth.user.group'));
 ?>
 
 <body class="vertical light">
@@ -158,8 +161,8 @@
                 </li>
                 <li class="nav-item">
                     <div class="my-2 ml-2">
-                        <span style="font-weight: bold;color:black;font-size:12px">Admin</span><br>
-                        <small style="font-size: 11px;">Admin</small>
+                        <span style="font-weight: bold;color:black;font-size:12px"><?= $session_user_name ?></span><br>
+                        <small style="font-size: 11px;"><?= ucwords($session_user_group) ?></small>
                     </div>
                 </li>
             </ul>
@@ -182,6 +185,7 @@
                             <span class="ml-3 item-text">Dashboard</span>
                         </a>
                     </li>
+                    <?php if(in_array($session_user_group , ['admin' , 'buyer'])) : ?>
                     <li class="nav-item">
                         <a href="<?= $this->Url->build(['controller' => 'purchase-requisitions' , 'action' => 'index']) ?>" class="nav-link <?= $currentController == 'purchaserequisitions' ? 'link-active' : '' ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-layout-text-sidebar-reverse" viewBox="0 0 16 16">
@@ -191,12 +195,15 @@
                             <span class="ml-3 item-text">Requisitions</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+                    <?php if(in_array($session_user_group , ['admin' , 'buyer' , 'vendor'])) : ?>
                     <li class="nav-item">
                         <a href="<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'index']) ?>" class="nav-link <?= $currentController == 'rfq' ? 'link-active' : '' ?>">
                             <i class="fe fe-calendar fe-16"></i>
                             <span class="ml-3 item-text">RFQs</span>
                         </a>
                     </li>
+                    <?php endif; ?>
                     <!-- <li class="nav-item">
                         <a href="#dashboard" class="nav-link">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trophy" viewBox="0 0 16 16">
@@ -223,6 +230,8 @@
                             <span class="ml-3 item-text">Contacts</span>
                         </a>
                     </li> -->
+                    
+                    <?php if(in_array($session_user_group , ['admin'])) : ?>
                     <li class="nav-item">
                         <a href="<?= $this->Url->build(['controller' => 'users' , 'action' => 'index']) ?>" class="nav-link <?= $currentController == 'users' ? 'link-active' : '' ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-3" viewBox="0 0 16 16">
@@ -231,6 +240,8 @@
                             <span class="ml-3 item-text">Users</span>
                         </a>
                     </li>
+                    <?php endif; ?>
+
                 </ul>
 
                 <div class="btn-box w-100 mt-auto mb-3 px-3">

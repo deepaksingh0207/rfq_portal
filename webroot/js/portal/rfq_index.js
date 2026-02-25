@@ -26,17 +26,23 @@ $(document).ready(function () {
             { data: "rfq_type" },
             { data: "status" },
             { data: "quotation_deadline" },
-            { data: "created_by_user_id" },
+            { data: "created_by_user_name" },
             {
                 data: "is_active",
                 render: function (data, type, row) {
-                    return (
-                        `
-                            <a class = 'btn btn-link' href = '${edit_rfq_url}/${row.id}'><i class="fe fe-edit-2"></i></a>
-                            <a class = 'btn btn-link' href = '${view_rfq_url}/${row.id}'><i class="fe fe-eye"></i></a>
-                            <a class = 'btn btn-link' href = '${view_rfq_url}/${row.id}'><i class="fe fe-file"></i></a>
-                        `
-                    );
+                    let html = '';
+
+                    if(session_user_group != "vendor") {
+                        html += `<a class = 'btn btn-link' target = "_blank" href = '${edit_rfq_url}/${row.id}'><i class="fe fe-edit-2"></i></a>`
+                    }
+
+                    html += `<a class = 'btn btn-link' target = "_blank" href = '${view_rfq_url}/${row.id}'><i class="fe fe-eye"></i></a>`;
+
+                    if(session_user_group != "vendor") {
+                        html += `<a class = 'btn btn-link' href = '${view_rfq_url}/${row.id}'><i class="fe fe-file"></i></a>`
+                    }
+
+                    return html;
                 },
             },
         ],

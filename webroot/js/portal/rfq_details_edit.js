@@ -15,6 +15,7 @@ $(document).ready(function () {
             var id = $(this).data("id");
             let rfq_footer_id = $(this).data('rfq-footer-id');
             console.log({ id, value ,rfq_footer_id });
+            $(this).select2(seller_select2_options);
             getSupplierList(id, value , rfq_footer_id);
         }
     });
@@ -63,9 +64,9 @@ $(document).ready(function () {
                     <div class="row">
                         <div class="col-md-4 form-group">
                             <label class="font-weight-bold custom-label" for="${productCount}-category_id">Category<span class="text-danger">*</span></label>
-                            <select name="items[${[productCount]}][category_id]" id="${productCount}-category_id" class="form-control input-field shadow-sm dropdown1" data-id="0" required>
+                            <select name="items[${[productCount]}][category_id]" id="${productCount}-category_id" class="form-control input-field shadow-sm dropdown1" data-id="${productCount}" required>
                                 <option>Select Category</option>
-                                <?= $categories_option_html ?>
+                                ${categories_option_html}
                             </select>
                         </div>
                         <div class="col-md-4 form-group">
@@ -115,7 +116,7 @@ $(document).ready(function () {
                             </label>
                             <select name="items[${[productCount]}][uom_id]" id="${productCount}-uom_id" class="form-control  input-field shadow-sm" required>
                                 <option selected disabled>Select UOM</option>
-                                <?= $uom_option_html ?>
+                                ${uom_option_html}
                             </select>
                         </div>
                         <div class="col-md-4 form-group">
@@ -141,7 +142,7 @@ $(document).ready(function () {
                                         <i class="fas fa-upload text-primary mr-2"></i>
                                         Upload Files
                                     </label>
-                                    <input type="file" name="items[${[productCount]}][files][]" id="${productCount}-files" accept="image/*" class="custom-file-input" data-id='0'>
+                                    <input type="file" name="items[${[productCount]}][files][]" id="${productCount}-files" accept="image/*" class="custom-file-input" data-id='${productCount}'>
                                 </div>
                             </div>
                         </div>
@@ -212,7 +213,11 @@ function submitAddRfqForm(status) {
 }
 
 function getSupplierList(rowId, category , rfq_footer_id) {
-    // if select2 multiple, it may send an array → convert to CSV
+    console.log({rowId,category,rfq_footer_id});
+    if(rfq_footer_id == undefined || rfq_footer_id == null || rfq_footer_id == "") {
+        rfq_footer_id = 0;
+    }
+
     if (Array.isArray(category)) {
         category = category.join(",");
     }
@@ -227,7 +232,7 @@ function getSupplierList(rowId, category , rfq_footer_id) {
         url: get_vendor_by_cateogry_url + "/" + category + "/" + rfq_footer_id,
         dataType: "json",
         beforeSend: function () {
-            $(".seller-dropdown").select2("destroy");
+            dropdown.select2("destroy");
         },
         success: function (res) {
             dropdown.empty(); // clear loading text

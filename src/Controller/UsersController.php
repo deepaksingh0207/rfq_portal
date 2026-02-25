@@ -24,20 +24,30 @@ class UsersController extends AppController
         $this->viewBuilder()->disableAutoLayout();
         $this->request->allowMethod(['get', 'post']);
 
+        // Check if Authentication service is available
+        if (!$this->Authentication) {
+            $this->log('Authentication component not loaded', 'error');
+            $this->Flash->error(__('Authentication system error'));
+            return;
+        }
+
         $result = $this->Authentication->getResult();
 
-        // regardless of POST or GET, redirect if user is logged in
+        // Regardless of POST or GET, redirect if user is logged in
         if ($result && $result->isValid()) {
-            $user = $result->getData();
+            $user = $this->request->getAttribute('identity');
+
+            if (!$user) {
+                $this->Flash->error(__('User identity not found'));
+                return $this->redirect(['action' => 'login']);
+            }
 
             // Load the Users table
             $usersTable = $this->fetchTable('Users');
 
             try {
                 // Get the full user record with associated data
-                $current_user = $usersTable->get($user->id, [
-                    'contain' => ['Groups', 'Buyers', 'Vendors', 'Approvers']
-                ]);
+                $current_user = $this->Users->get($user->id, contain: ['UserGroups']);
 
                 // Check if user is active
                 if (!$current_user->is_active) {
@@ -53,16 +63,21 @@ class UsersController extends AppController
                 if ($usersTable->save($current_user)) {
                     // Store role-specific data in session if needed
                     $session = $this->request->getSession();
-                    $session->write('Auth.role', $current_user->group->name);
+                    $session->write("Auth.user" , $current_user);
+                    $session->write('Auth.user.group', $current_user->user_group->name ?? 'Unknown');
 
-                    $this->Flash->success(__('Welcome back, {0}!', $current_user->username));
+                    $this->Flash->success(__('Welcome back, {0}!', $current_user->name));
+                } else {
+                    // Log error but still allow login
+                    $this->log('Failed to update last_login for user ' . $user->id, 'error');
+                    $this->Flash->success(__('Welcome back, {0}!', $current_user->name));
                 }
             } catch (\Exception $e) {
-                // Log error but still allow login - don't block user if last_login update fails
-                $this->log('Failed to update last_login for user ' . $user->id . ': ' . $e->getMessage(), 'error');
+                // Log error but still allow login - don't block user if database operations fail
+                $this->log('Error in post-login processing for user ' . $user->id . ': ' . $e->getMessage(), 'error');
             }
 
-            // redirect to dashboard after login success
+            // Redirect to dashboard after login success
             $redirect = $this->request->getQuery('redirect', [
                 'controller' => 'Dashboard',
                 'action' => 'index',
@@ -71,7 +86,7 @@ class UsersController extends AppController
             return $this->redirect($redirect);
         }
 
-        // display error if user submitted and authentication failed
+        // Display error if user submitted and authentication failed
         if ($this->request->is('post')) {
             $this->Flash->error(__('Invalid username or password'));
         }
