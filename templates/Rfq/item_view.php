@@ -160,7 +160,7 @@
     }
 
     .message.sent .message-content {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #667eea 0%, #bf81ff 100%);
         color: white;
         border-radius: 18px 18px 4px 18px;
     }
@@ -360,6 +360,20 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="info-label">Payment Terms : </div>
+                            <div>
+                                <ul>
+                                    <?php foreach ($payment_terms as $key => $pt) : $payment_term_ids[] = $key ?>
+                                        <li><?= $pt ?></li>
+                                    <?php endforeach; ?>
+                                    <input type="hidden" name="payment_terms" value="<?= implode(",", $payment_term_ids) ?>">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Buyer Remark -->
                     <div class="alert alert-info" role="alert">
                         <i class="fas fa-info-circle mr-2"></i>
@@ -373,104 +387,19 @@
                         <div class="chat-header d-flex align-items-center">
                             <i class="fas fa-comments text-primary mr-2 fa-lg"></i>
                             <h5 class="mb-0">Comments History</h5>
-                            <span class="badge badge-primary ml-2">5</span>
+                            <span class="badge badge-primary ml-2"><?= $comments_count ?></span>
                         </div>
 
-                        <div class="chat-messages">
-                            <!-- System Message -->
-                            <div class="chat-divider">
-                                <span><i class="far fa-clock mr-1"></i>TODAY</span>
-                            </div>
-
-                            <!-- Received Message (Buyer) -->
-                            <div class="message received">
-                                <div class="user-avatar buyer-avatar">B</div>
-                                <div class="message-content">
-                                    <div class="message-bubble">
-                                        <strong>swapnali (Buyer)</strong>
-                                        <p class="mb-1 mt-1">Please ensure the material is ISI certified. We need the delivery by 25th Feb without fail.</p>
-                                        <div class="message-meta">
-                                            <i class="far fa-clock mr-1"></i>10:30 AM
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Sent Message (Vendor) -->
-                            <div class="message sent">
-                                <div class="message-content">
-                                    <div class="message-bubble">
-                                        <strong>You (Vendor)</strong>
-                                        <p class="mb-1 mt-1">Yes, we can provide ISI certified products. Delivery by 25th Feb is confirmed.</p>
-                                        <div class="message-meta">
-                                            <i class="far fa-clock mr-1"></i>10:35 AM
-                                            <i class="fas fa-check-double ml-1 text-success" title="Read"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="user-avatar">V</div>
-                            </div>
-
-                            <!-- Received Message with Attachment -->
-                            <div class="message received">
-                                <div class="user-avatar buyer-avatar">B</div>
-                                <div class="message-content">
-                                    <div class="message-bubble">
-                                        <strong>swapnali (Buyer)</strong>
-                                        <p class="mb-1 mt-1">Here's the technical specification document for reference:</p>
-                                        <div class="bg-white bg-opacity-25 rounded p-2 mt-2">
-                                            <i class="fas fa-file-pdf text-danger mr-2"></i>
-                                            <small>Technical_Specs_Pump_Gasket.pdf</small>
-                                            <i class="fas fa-download ml-2 float-right"></i>
-                                        </div>
-                                        <div class="message-meta">
-                                            <i class="far fa-clock mr-1"></i>11:00 AM
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- System Message - Yesterday -->
-                            <div class="chat-divider mt-3">
-                                <span><i class="far fa-calendar mr-1"></i>YESTERDAY</span>
-                            </div>
-
-                            <!-- Received Message -->
-                            <div class="message received">
-                                <div class="user-avatar buyer-avatar">B</div>
-                                <div class="message-content">
-                                    <div class="message-bubble">
-                                        <strong>swapnali (Buyer)</strong>
-                                        <p class="mb-1 mt-1">What's the minimum order quantity for this item?</p>
-                                        <div class="message-meta">
-                                            <i class="far fa-clock mr-1"></i>3:15 PM
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Sent Message -->
-                            <div class="message sent">
-                                <div class="message-content">
-                                    <div class="message-bubble">
-                                        <strong>You (Vendor)</strong>
-                                        <p class="mb-1 mt-1">MOQ is 5 pieces, but we can offer bulk discount for orders above 20 pieces.</p>
-                                        <div class="message-meta">
-                                            <i class="far fa-clock mr-1"></i>4:30 PM
-                                            <i class="fas fa-check-double ml-1 text-success" title="Read"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="user-avatar">V</div>
-                            </div>
+                        <div class="chat-messages" id="chat_messages_div">
+                            <!-- loads via ajax call -->
                         </div>
 
                         <!-- Chat Input Area -->
                         <div class="chat-input-container">
                             <i class="fas fa-paperclip attachment-icon mr-2"></i>
-                            <input type="text" class="chat-input" placeholder="Type your message here...">
-                            <button class="btn btn-send ml-2">
-                                <i class="fas fa-paper-plane mr-1"></i>Send
+                            <input type="text" class="chat-input" placeholder="Type your message here..." id="comment_message">
+                            <button class="btn btn-send ml-2" id="comment_send_btn">
+                                <i class="fe fe-corner-down-right mr-1"></i>Send
                             </button>
                         </div>
                     </div>
@@ -623,4 +552,7 @@
     </div>
 </div>
 
+<script>
+    let load_chat_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'load-comments-for-vendor' , $single_rfq_footer_data->id]) ?>";
+</script>
 <?= $this->Html->script('portal/rfq_item_view.js') ?>

@@ -1,3 +1,7 @@
+<?php 
+    $session = $this->getRequest()->getSession();
+    $session_user_group = strtolower($session->read('Auth.user.group'));
+?>
 <div class="card border-0 shadow-sm p-4 mb-1">
     <div class="d-flex justify-content-between align-items-start mb-1">
         <h5 class="font-weight-bold">RFQ-<?= $rfq_header_data->rfq_number ?></h5>
@@ -52,9 +56,16 @@
                             <td><?= $rfd->quantity." ".$rfd->uom ?></td>
                             <td><?= date("d M, Y" ,strtotime($rfd->delivery_date)) ?></td>
                             <td>
-                                <a class = 'btn btn-link' href = '<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'item-view' , $rfd->id] ) ?>'>
-                                    <i class="fe fe-file"></i>
+                                <?php if($session_user_group == 'buyer' || $session_user_group == 'admin') : ?>
+                                <a class = 'btn btn-link' href = '<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'item-view-buyer' , $rfd->id] ) ?>'>
+                                    <i class="fe fe-eye" data-toggle="tooltip" data-placement="top" title="View Quotations"></i>
                                 </a>
+                                <?php endif;?>
+                                <?php if($session_user_group == 'vendor') : ?>
+                                <a class = 'btn btn-link' href = '<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'item-view' , $rfd->id] ) ?>'>
+                                    <i class="fe fe-edit" data-toggle="tooltip" data-placement="top" title="Add Quotations"></i>
+                                </a>
+                                <?php endif;?>
                             </td>
                         </tr>
                     <?php endforeach; ?>    

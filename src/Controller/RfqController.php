@@ -405,21 +405,174 @@ class RfqController extends AppController
 
     public function itemView($rfq_footer_id = null) {
         if(!empty($rfq_footer_id)) {
+            $session = $this->getRequest()->getSession();
+            $session_user_id = $session->read('Auth.user.id');
+
             $RfqHeaders = $this->fetchTable('RfqHeaders');
             $RfqFooters = $this->fetchTable('RfqFooters');
             $Categories = $this->fetchTable('Categories');
             $Users = $this->fetchTable('Users');
+            $SapPaymentTerms = $this->fetchTable('SapPaymentTerms');
+            $RfqItemComments = $this->fetchTable('RfqItemComments');
             
             $single_rfq_footer_data = $RfqFooters->get($rfq_footer_id);
             $rfq_header_data = $RfqHeaders->get($single_rfq_footer_data->rfq_header_id);
             $created_by_user_data = $Users->get($rfq_header_data->created_by_user_id);
             $category_data = $Categories->get($single_rfq_footer_data->category_id);
+            $payment_terms = $SapPaymentTerms->find('list' , ['keyField' => 'id' , 'valueField' => 'description'])->where(['is_active' => 1])->toArray();
 
-            $this->set(compact('rfq_header_data' , 'single_rfq_footer_data' , 'created_by_user_data' , 'category_data'));
+            $rfq_item_comments = $RfqItemComments->find()
+            ->select([
+                'RfqItemComments.id',
+                'RfqItemComments.buyer_user_id',
+                'RfqItemComments.vendor_user_id',
+                'RfqItemComments.sender_role',
+                'RfqItemComments.message',
+                'RfqItemComments.created',
+                'buyer_name'=>'BuyerUsers.name',
+                'vendor_name'=>'VendorUsers.name',
+            ])
+            ->join([
+                'BuyerUsers' => [
+                    'table' => 'users',
+                    'type' => 'inner',
+                    'conditions' => 'BuyerUsers.id = RfqItemComments.buyer_user_id'
+                ],
+                'VendorUsers' => [
+                    'table' => 'users',
+                    'type' => 'inner',
+                    'conditions' => 'VendorUsers.id = RfqItemComments.vendor_user_id'
+                ]
+            ])
+            ->where(['vendor_user_id' => $session_user_id , 'rfq_footer_id' =>$rfq_footer_id])
+            ->all();
+
+            $comments_data = [];
+            $comments_count = 0;
+
+            foreach($rfq_item_comments as $ric) {
+                $comments_count++;
+                $comments_data [date("Y-m-d" , strtotime($ric->created->format("Y-m-d H:i:s")))] [] = [
+                    'message_from' => $ric->sender_role,
+                    'message' => $ric->message,
+                    'buyer_name' => $ric->buyer_name,
+                    'vendor_name' => $ric->vendor_name,
+                    'message_time' => date("H:i a" , strtotime($ric->created->format("Y-m-d H:i:s"))),
+                ];
+            }
+
+
+            $this->set(compact('rfq_header_data' , 'single_rfq_footer_data' , 'created_by_user_data' , 'category_data' , 'payment_terms' , 'comments_data' , 'comments_count'));
 
         }
         else {
             exit("Rfq Item Data Not Found");
+        }
+    }
+
+    public function itemViewBuyer($rfq_footer_id = null) {
+        if(!empty($rfq_footer_id)) {
+            $RfqHeaders = $this->fetchTable('RfqHeaders');
+            $RfqFooters = $this->fetchTable('RfqFooters');
+            $Categories = $this->fetchTable('Categories');
+            $Users = $this->fetchTable('Users');
+            $SapPaymentTerms = $this->fetchTable('SapPaymentTerms');
+            
+            $single_rfq_footer_data = $RfqFooters->get($rfq_footer_id);
+            $rfq_header_data = $RfqHeaders->get($single_rfq_footer_data->rfq_header_id);
+            $created_by_user_data = $Users->get($rfq_header_data->created_by_user_id);
+            $category_data = $Categories->get($single_rfq_footer_data->category_id);
+            $payment_terms = $SapPaymentTerms->find('list' , ['keyField' => 'id' , 'valueField' => 'description'])->where(['is_active' => 1])->toArray();
+
+            $this->set(compact('rfq_header_data' , 'single_rfq_footer_data' , 'created_by_user_data' , 'category_data' , 'payment_terms'));
+
+        }
+        else {
+            exit("Rfq Item Data Not Found");
+        }
+    }
+
+    public function loadCommentsForVendor($rfq_footer_id = null) {
+
+        if ($this->request->is('post') && !empty($rfq_footer_id)) {
+            $session = $this->getRequest()->getSession();
+            $session_user_id = $session->read('Auth.user.id');
+            $session_user_group = strtolower($session->read('Auth.user.group'));
+
+            $request_data = $this->request->getData();
+
+            $RfqItemComments = $this->fetchTable('RfqItemComments');
+            $RfqHeaders = $this->fetchTable('RfqHeaders');
+            $RfqFooters = $this->fetchTable('RfqFooters');
+
+            $error = '';
+
+            if(!empty($request_data['comment_message'])) {
+                $rfq_footer_data = $RfqFooters->get($rfq_footer_id);
+
+                $rfq_header_data = $RfqHeaders->get($rfq_footer_data->rfq_header_id);
+
+                $new_rfq_item_comment = $RfqItemComments->newEmptyEntity();
+                $new_rfq_item_comment->rfq_footer_id = $rfq_footer_id;
+                $new_rfq_item_comment->buyer_user_id = $rfq_header_data->created_by_user_id;
+                $new_rfq_item_comment->vendor_user_id = $session_user_id;
+                $new_rfq_item_comment->sender_role = strtolower($session_user_group);
+                $new_rfq_item_comment->message = $request_data['comment_message'];
+
+                if($RfqItemComments->save($new_rfq_item_comment)) {
+
+                }
+                else {
+                    $error = 'RFQ Comment Not Saved';
+                }
+
+            }
+
+            $rfq_item_comments = $RfqItemComments->find()
+            ->select([
+                'RfqItemComments.id',
+                'RfqItemComments.buyer_user_id',
+                'RfqItemComments.vendor_user_id',
+                'RfqItemComments.sender_role',
+                'RfqItemComments.message',
+                'RfqItemComments.created',
+                'buyer_name'=>'BuyerUsers.name',
+                'vendor_name'=>'VendorUsers.name',
+            ])
+            ->join([
+                'BuyerUsers' => [
+                    'table' => 'users',
+                    'type' => 'inner',
+                    'conditions' => 'BuyerUsers.id = RfqItemComments.buyer_user_id'
+                ],
+                'VendorUsers' => [
+                    'table' => 'users',
+                    'type' => 'inner',
+                    'conditions' => 'VendorUsers.id = RfqItemComments.vendor_user_id'
+                ]
+            ])
+            ->where(['vendor_user_id' => $session_user_id , 'rfq_footer_id' =>$rfq_footer_id])
+            ->all();
+
+            $comments_data = [];
+            $comments_count = 0;
+
+            foreach($rfq_item_comments as $ric) {
+                $comments_count++;
+                $comments_data [date("Y-m-d" , strtotime($ric->created->format("Y-m-d H:i:s")))] [] = [
+                    'message_from' => $ric->sender_role,
+                    'message' => $ric->message,
+                    'buyer_name' => $ric->buyer_name,
+                    'vendor_name' => $ric->vendor_name,
+                    'message_time' => date("H:i a" , strtotime($ric->created->format("Y-m-d H:i:s"))),
+                ];
+            }
+
+            $this->set(compact('comments_data' , 'comments_count'));
+
+            $this->viewBuilder()->disableAutoLayout();
+            $this->render('ajax_vendor_chat');
+            return;
         }
     }
 
