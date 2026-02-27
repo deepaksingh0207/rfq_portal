@@ -563,7 +563,7 @@
                         <div class="col-4">
                             <div class="bg-light p-3 rounded">
                                 <small class="text-muted">Tax(GST)</small>
-                                <h6 class="mb-0 font-weight-bold.0" id="tax_h_tag">₹ <?= round($rfq_quote_revision_data->total_amount - $rfq_quote_revision_data->sub_total , 2) ?? '0.0' ?></h6>
+                                <h6 class="mb-0 font-weight-bold.0" id="tax_h_tag">₹ <?= !empty($rfq_quote_revision_data->total_amount) ? round($rfq_quote_revision_data->total_amount - $rfq_quote_revision_data->sub_total , 2) : '0.0' ?></h6>
                             </div>
                         </div>
                         <div class="col-4">

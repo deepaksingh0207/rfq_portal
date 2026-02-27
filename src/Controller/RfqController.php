@@ -424,7 +424,7 @@ class RfqController extends AppController
                 ->where(['vendor_user_id' => $session_user_id, 'buyer_user_id' => $rfq_header_data->created_by_user_id , 'rfq_footer_id' => $rfq_footer_id])
                 ->count();
 
-            $rfq_quote_data = $RfqQuotes->find()->where(['rfq_footer_id' => $rfq_footer_id])->first();
+            $rfq_quote_data = $RfqQuotes->find()->where(['rfq_footer_id' => $rfq_footer_id , 'vendor_user_id' => $session_user_id])->first();
             $rfq_quote_revision_data = null;
             if(!empty($rfq_quote_data->id)) {
                 $rfq_quote_revision_data = $RfqQuoteRevisions->find()->where(['rfq_quote_id' => $rfq_quote_data->id])->orderByDesc('id')->first();
