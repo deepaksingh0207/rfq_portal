@@ -321,8 +321,7 @@
                     <th width="40">
                         <input type="checkbox" id="selectAll">
                     </th>
-                    <th>RFQ No.</th>
-                    <th>Category</th>
+                    <th>Id</th>
                     <th>Vendor</th>
                     <th>Qty</th>
                     <th>Rate (₹)</th>
@@ -334,70 +333,28 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><input type="checkbox" class="quote-checkbox"></td>
-                    <td><span class="font-weight-bold">810000260114007</span></td>
-                    <td>SPM</td>
-                    <td>
-                        <span class="company-badge">
-                            <i class="fas fa-building mr-1"></i>suraj
-                        </span>
-                    </td>
-                    <td>12</td>
-                    <td class="price-highlight">₹99.00</td>
-                    <td>₹1,188.00</td>
-                    <td><span class="badge badge-success">3/2/26</span></td>
-                    <td>26-02-2026</td>
-                    <td><span class="badge badge-info">10%</span></td>
-                    <td>
-                        <button class="btn btn-view btn-sm" data-toggle="modal" data-target="#quotationModal" data-company="suraj">
-                            VIEW
-                        </button>
-                    </td>
-                </tr>
-                <tr class="table-active">
-                    <td><input type="checkbox" class="quote-checkbox" checked></td>
-                    <td><span class="font-weight-bold">810000260114007</span></td>
-                    <td>SPM</td>
-                    <td>
-                        <span class="company-badge" style="background:#e8f5e9; color:#28a745;">
-                            <i class="fas fa-star mr-1 text-warning"></i>FTSolutions
-                        </span>
-                        <span class="badge-lowest">LOWEST</span>
-                    </td>
-                    <td>12</td>
-                    <td class="price-highlight">₹97.00</td>
-                    <td>₹1,164.00</td>
-                    <td><span class="badge badge-warning">3/6/26</span></td>
-                    <td>26-02-2026</td>
-                    <td><span class="badge badge-info">₹50</span></td>
-                    <td>
-                        <button class="btn btn-view btn-sm" data-toggle="modal" data-target="#quotationModal" data-company="FTSolutions">
-                            <i class="fas fa-eye mr-1"></i>VIEW
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" class="quote-checkbox"></td>
-                    <td><span class="font-weight-bold">810000260114007</span></td>
-                    <td>SPM</td>
-                    <td>
-                        <span class="company-badge">
-                            <i class="fas fa-building mr-1"></i>TechCorp
-                        </span>
-                    </td>
-                    <td>12</td>
-                    <td>₹105.00</td>
-                    <td>₹1,260.00</td>
-                    <td><span class="badge badge-success">3/3/26</span></td>
-                    <td>25-02-2026</td>
-                    <td><span class="badge badge-info">5%</span></td>
-                    <td>
-                        <button class="btn btn-view btn-sm" data-toggle="modal" data-target="#quotationModal" data-company="TechCorp">
-                            <i class="fas fa-eye mr-1"></i>VIEW
-                        </button>
-                    </td>
-                </tr>
+                <?php foreach($rfq_quote_revisions_data as $rqrd) : ?>
+                    <tr>
+                        <td><input type="checkbox" class="quote-checkbox"></td>
+                        <td><span class="font-weight-bold"><?= $rqrd->id ?></span></td>
+                        <td>
+                            <span class="company-badge">
+                                <?= $rqrd->vendor_name ?>
+                            </span>
+                        </td>
+                        <td><?= $single_rfq_footer_data->quantity ?></td>
+                        <td class="price-highlight">₹<?= $rqrd->rate ?></td>
+                        <td>₹ <?= $rqrd->total_amount ?></td>
+                        <td><span><?= date("d M, Y" , strtotime($rqrd->delivery_date)) ?></span></td>
+                        <td><?= date("d M, Y H:i a" , strtotime($rqrd->response_date)) ?></td>
+                        <td><span><?= $rqrd->discount ?></span></td>
+                        <td>
+                            <a class="btn btn-view btn-sm" href="<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'view-quotation-details' , $single_rfq_footer_data->id , $rqrd->vendor_user_id , $rqrd->id]) ?>">
+                                VIEW
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
@@ -569,5 +526,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    let get_rfq_quotes_data_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'get-rfq-quotes-data']) ?>";
+</script>
 
 <?= $this->Html->script('portal/rfq_item_view_buyer.js') ?>

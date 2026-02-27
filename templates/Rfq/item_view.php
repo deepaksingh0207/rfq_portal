@@ -410,9 +410,23 @@
             <!-- Right Column - Quotation Form -->
             <div class="col-lg-6">
                 <div class="quotation-form">
-                    <h4 class="mb-1 text-success">
-                        <i class="fas fa-file-signature mr-2"></i>Your Quotation
-                    </h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h4 class="mb-1 text-success">
+                                <i class="fas fa-file-signature mr-2"></i>Quotation
+                            </h4>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-6" id="submitted_count">
+                                    Submitted Count : <?= $rfq_quote_data->latest_revision ?? 0 ?>
+                                </div>
+                                <div class="col-md-6" id="max_submission_count">
+                                    Max Submission Count : <?= $rfq_quote_data->max_revisions ?? 5 ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Quantity and Rate -->
                     <div class="price-input-group">
@@ -421,8 +435,8 @@
                                 <label class="font-weight-600">
                                     <i class="fas fa-sort-amount-up mr-1"></i>Quantity *
                                 </label>
-                                <input type="number" class="form-control" value="5" min="1" step="1" readonly>
-                                <small class="text-muted">Required quantity: 5 each</small>
+                                <input type="number" class="form-control" value="<?= round($single_rfq_footer_data->quantity) ?>" min="1" step="1" id="quantity" readonly>
+                                <small class="text-muted">Required quantity: <?= round($single_rfq_footer_data->quantity). " " . $single_rfq_footer_data->uom?></small>
                             </div>
                             <div class="col-md-6">
                                 <label class="font-weight-600">
@@ -432,7 +446,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">₹</span>
                                     </div>
-                                    <input type="number" class="form-control" placeholder="Enter price" step="0.01">
+                                    <input type="number" class="form-control" placeholder="Enter price" step="0.01" id="unit_price" value="<?= $rfq_quote_revision_data->unit_price ?? '' ?>">
                                 </div>
                             </div>
                         </div>
@@ -440,7 +454,7 @@
                             <div class="col-12">
                                 <div class="total-section d-flex justify-content-between align-items-center">
                                     <span class="font-weight-600">Line Total:</span>
-                                    <span class="h5 mb-0 font-weight-bold text-primary">₹ 0.00</span>
+                                    <span class="h5 mb-0 font-weight-bold text-primary">₹ <?= $rfq_quote_revision_data->line_total ?? '0.0' ?></span>
                                 </div>
                             </div>
                         </div>
@@ -451,7 +465,7 @@
                         <label class="font-weight-600">
                             <i class="fas fa-truck mr-1"></i>Proposed Delivery Date *
                         </label>
-                        <input type="date" class="form-control" value="<?= date("Y-m-d", strtotime($single_rfq_footer_data->delivery_date)) ?>">
+                        <input type="date" class="form-control" value="<?= !empty($rfq_quote_revision_data->delivery_date) ?  date("Y-m-d" , strtotime($rfq_quote_revision_data->delivery_date)) : date("Y-m-d", strtotime($single_rfq_footer_data->delivery_date)) ?>" id="proposed_delivery_date">
                     </div>
 
                     <!-- Additional Charges Card -->
@@ -469,7 +483,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">₹</span>
                                         </div>
-                                        <input type="number" class="form-control" placeholder="0.00" step="0.01" id="discount">
+                                        <input type="number" class="form-control" placeholder="0.00" step="0.01" id="discount" value="<?= $rfq_quote_revision_data->discount_amount ?? '' ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -478,27 +492,44 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">₹</span>
                                         </div>
-                                        <input type="number" class="form-control" placeholder="0.00" step="0.01" id="installation_charges">
+                                        <input type="number" class="form-control" placeholder="0.00" step="0.01" id="installation_charges" value="<?= $rfq_quote_revision_data->installation_charges ?? '' ?>">
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mt-1">
                                 <div class="col-md-6">
                                     <label>Freight Type</label>
-                                    <select class="custom-select">
-                                        <option value="">Select Freight</option>
-                                        <option value="paid">Paid by Vendor</option>
-                                        <option value="tobepaid">To be Paid by Buyer</option>
-                                        <option value="included">Included in Price</option>
+                                    <select class="custom-select" id="freight_type">
+                                        <option value="">Select Freight Type</option>
+                                        <option value="percentage" <?= (!empty($rfq_quote_revision_data->freight_type) &&$rfq_quote_revision_data->freight_type == "percentage") ? 'selected' : '' ?>>Percentage</option>
+                                        <option value="value" <?= (!empty($rfq_quote_revision_data->freight_type) &&$rfq_quote_revision_data->freight_type == "value") ? 'selected' : '' ?>>Value</option>
+                                        <option value="qty" <?= (!empty($rfq_quote_revision_data->freight_type) &&$rfq_quote_revision_data->freight_type) == "qty" ? 'selected' : '' ?>>Qty</option>
                                     </select>
                                 </div>
+
+                                <div class="col-md-6">
+                                    <label>Freight Value</label>
+                                    <input type="text" class="form-control" name="" placeholder="Enter Freight Value" id="freight_value" value="<?= $rfq_quote_revision_data->freight_value ?? '' ?>">
+                                </div>
+                            </div>
+
+                            <div class="row mt-1">
                                 <div class="col-md-6">
                                     <label>Tax Type</label>
                                     <select class="custom-select" id="tax_type">
                                         <option value="">Select Tax</option>
-                                        <option value="18">GST 18%</option>
-                                        <option value="28">GST 28%</option>
+                                        <option value="cgst_sgst" <?= (!empty($rfq_quote_revision_data->tax_type) &&$rfq_quote_revision_data->tax_type == "cgst_sgst") ? 'selected' : '' ?>>CGST + SGST</option>
+                                        <option value="igst" <?= (!empty($rfq_quote_revision_data->tax_type) &&$rfq_quote_revision_data->tax_type == "igst") ? 'selected' : '' ?>>IGST</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Tax Rate</label>
+                                    <select class="custom-select" id="tax_value">
+                                        <option value="">Select Taxt Rate(%)</option>
+                                        <option value="9" <?= (!empty($rfq_quote_revision_data->tax_value) &&$rfq_quote_revision_data->tax_value == "9") ? 'selected' : '' ?>>9%</option>
+                                        <option value="18" <?= (!empty($rfq_quote_revision_data->tax_value) &&$rfq_quote_revision_data->tax_value == "18") ? 'selected' : '' ?>>18%</option>
                                     </select>
                                 </div>
                             </div>
@@ -510,7 +541,7 @@
                         <label class="font-weight-600">
                             <i class="fas fa-shield-alt mr-1"></i>Warranty
                         </label>
-                        <input type="text" class="form-control" placeholder="e.g., 12 Months" value="">
+                        <input type="text" class="form-control" placeholder="e.g., 12 Months" value="<?= $rfq_quote_revision_data->warranty_terms ?? '' ?>" id="warranty">
                     </div>
 
                     <!-- Remark -->
@@ -518,32 +549,38 @@
                         <label class="font-weight-600">
                             <i class="fas fa-comment mr-1"></i>Remark
                         </label>
-                        <textarea class="form-control" rows="2" placeholder="Add your remark here..."></textarea>
+                        <textarea class="form-control" rows="2" placeholder="Add your remark here..." id="remark"><?= $rfq_quote_revision_data->vendor_remark ?? '' ?></textarea>
                     </div>
 
                     <!-- Summary Cards -->
                     <div class="row mt-4">
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="bg-light p-3 rounded">
                                 <small class="text-muted">Sub Total</small>
-                                <h6 class="mb-0 font-weight-bold">₹ 0.00</h6>
+                                <h6 class="mb-0 font-weight-bold" id="sub_total">₹ <?= $rfq_quote_revision_data->sub_total ?? '0.0' ?></h6>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
+                            <div class="bg-light p-3 rounded">
+                                <small class="text-muted">Tax(GST)</small>
+                                <h6 class="mb-0 font-weight-bold.0" id="tax_h_tag">₹ <?= round($rfq_quote_revision_data->total_amount - $rfq_quote_revision_data->sub_total , 2) ?? '0.0' ?></h6>
+                            </div>
+                        </div>
+                        <div class="col-4">
                             <div class="bg-light p-3 rounded">
                                 <small class="text-muted">Total Amount</small>
-                                <h6 class="mb-0 font-weight-bold text-success" id="total_amount_h_tag">₹ 0.00</h6>
+                                <h6 class="mb-0 font-weight-bold text-success" id="total_amount_h_tag">₹ <?= $rfq_quote_revision_data->total_amount ?? '0.0' ?></h6>
                             </div>
                         </div>
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="text-right mt-4">
-                        <button type="button" class="btn btn-cancel">
+                        <!-- <button type="button" class="btn btn-cancel">
                             <i class="fas fa-times mr-1"></i>Cancel
-                        </button>
-                        <button type="button" class="btn btn-save text-white">
-                            <i class="fas fa-save mr-1"></i>Save Quotation
+                        </button> -->
+                        <button type="button" class="btn btn-save text-white" id="save_quotation_btn">
+                            Save Quotation
                         </button>
                     </div>
                 </div>
@@ -554,5 +591,7 @@
 
 <script>
     let load_chat_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'load-comments-for-vendor' , $single_rfq_footer_data->id]) ?>";
+
+    let save_vendor_quoatation_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'save-vendor-quotation' , $single_rfq_footer_data->id]) ?>";
 </script>
 <?= $this->Html->script('portal/rfq_item_view.js') ?>

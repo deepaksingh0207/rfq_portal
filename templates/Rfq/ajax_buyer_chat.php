@@ -1,0 +1,1 @@
+<?= $this->element('buyer_chat_ui', ['comments_data' => $comments_data]) ?>
