@@ -648,7 +648,7 @@ class RfqController extends AppController
                 $result = $connection->transactional(
                     function () use ($rfq_footer_id, $RfqQuotes, $RfqQuoteRevisions, $RfqFooters, $request_data, $session_user_id) {
                         $rfq_footer_data = $RfqFooters->get($rfq_footer_id);
-                        $rfq_quote_data = $RfqQuotes->find()->where(['rfq_footer_id' => $rfq_footer_id])->first();
+                        $rfq_quote_data = $RfqQuotes->find()->where(['rfq_footer_id' => $rfq_footer_id , 'vendor_user_id' => $session_user_id] )->first();
                         if (!empty($rfq_quote_data->id)) {
                             
                         } else {
@@ -723,8 +723,8 @@ class RfqController extends AppController
                                 $revision_no = 1;
 
                                 if(!empty($last_rfq_quote_revision_data->id)) {
-                                    if($last_rfq_quote_revision_data < 5) {
-                                        $revision_no = $last_rfq_quote_revision_data + 1;
+                                    if($last_rfq_quote_revision_data->revision_no < 5) {
+                                        $revision_no = $last_rfq_quote_revision_data->revision_no + 1;
                                         $create_rfq_quote_revision_record = 1;
                                     }
                                 }
@@ -893,5 +893,17 @@ class RfqController extends AppController
             $this->render('ajax_buyer_chat');
             return;
         }
+    }
+
+    public function showQuotesComparison() {
+        $request_data = $this->request->getData();
+        dd($request_data);
+
+        $rfq_quotes_revisions_ids = explode( "," , $request_data['rfq_quotes_revisions_ids']);
+
+        $RfqQuotes = $this->fetchTable('RfqQuotes');
+        $RfqQuoteRevisions =  $this->fetchTable('RfqQuotesRevisions');
+        $RfqHeaders = $this->fetchTable('RfqHeaders');
+        $RfqFooters = $this->fetchTable('RfqFooters');
     }
 }

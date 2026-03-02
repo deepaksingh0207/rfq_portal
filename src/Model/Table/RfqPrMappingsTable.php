@@ -47,6 +47,10 @@ class RfqPrMappingsTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->belongsTo('RfqHeaders', [
+            'foreignKey' => 'rfq_header_id',
+            'joinType' => 'INNER',
+        ]);
         $this->belongsTo('RfqFooters', [
             'foreignKey' => 'rfq_footer_id',
             'joinType' => 'INNER',
@@ -61,6 +65,10 @@ class RfqPrMappingsTable extends Table
      */
     public function validationDefault(Validator $validator): Validator
     {
+        $validator
+            ->integer('rfq_header_id')
+            ->notEmptyString('rfq_header_id');
+
         $validator
             ->integer('rfq_footer_id')
             ->notEmptyString('rfq_footer_id');
@@ -98,6 +106,7 @@ class RfqPrMappingsTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
+        $rules->add($rules->existsIn(['rfq_header_id'], 'RfqHeaders'), ['errorField' => 'rfq_header_id']);
         $rules->add($rules->existsIn(['rfq_footer_id'], 'RfqFooters'), ['errorField' => 'rfq_footer_id']);
 
         return $rules;

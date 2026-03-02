@@ -9,6 +9,7 @@ use Cake\ORM\Entity;
  * RfqPrMapping Entity
  *
  * @property int $id
+ * @property int $rfq_header_id
  * @property int $rfq_footer_id
  * @property string $pr_number
  * @property string $pr_item_number
@@ -30,6 +31,7 @@ class RfqPrMapping extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
+        'rfq_header_id' => true,
         'rfq_footer_id' => true,
         'pr_number' => true,
         'pr_item_number' => true,

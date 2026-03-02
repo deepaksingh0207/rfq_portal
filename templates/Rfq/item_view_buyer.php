@@ -304,7 +304,11 @@
             <strong>Compare Quotes</strong>
             <span class="ml-2 text-muted">Select quotes from below to compare</span>
         </div>
-        <button class="btn btn-compare btn-sm">
+        <form action="<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'show-quotes-comparison']) ?>" method="post" id="showComparisonForm">
+            <input type="hidden" name="_csrfToken" value="<?= $this->request->getAttribute('csrfToken'); ?>">
+            <input type="hidden" name="rfq_quotes_revisions_ids" id="rfq_quotes_revisions_ids" value="">
+        </form>
+        <button class="btn btn-compare btn-sm" id = "compare_selected_quotes_btn">
             <i class="fas fa-chart-bar mr-2"></i>Compare Selected
         </button>
     </div>
@@ -319,7 +323,7 @@
             <thead>
                 <tr>
                     <th width="40">
-                        <input type="checkbox" id="selectAll">
+                        <input type="checkbox" id="quoteCheckboxSelectAll">
                     </th>
                     <th>Id</th>
                     <th>Vendor</th>
@@ -335,7 +339,7 @@
             <tbody>
                 <?php foreach($rfq_quote_revisions_data as $rqrd) : ?>
                     <tr>
-                        <td><input type="checkbox" class="quote-checkbox"></td>
+                        <td><input type="checkbox" class="quote-checkbox" value="<?= $rqrd->id ?>"></td>
                         <td><span class="font-weight-bold"><?= $rqrd->id ?></span></td>
                         <td>
                             <span class="company-badge">
