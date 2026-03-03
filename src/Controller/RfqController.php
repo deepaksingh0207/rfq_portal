@@ -897,13 +897,57 @@ class RfqController extends AppController
 
     public function showQuotesComparison() {
         $request_data = $this->request->getData();
-        dd($request_data);
+        // dd($request_data);
 
         $rfq_quotes_revisions_ids = explode( "," , $request_data['rfq_quotes_revisions_ids']);
 
         $RfqQuotes = $this->fetchTable('RfqQuotes');
-        $RfqQuoteRevisions =  $this->fetchTable('RfqQuotesRevisions');
+        $RfqQuoteRevisions =  $this->fetchTable('RfqQuoteRevisions');
         $RfqHeaders = $this->fetchTable('RfqHeaders');
         $RfqFooters = $this->fetchTable('RfqFooters');
+        $Users = $this->fetchTable('Users');
+
+        $rfq_quote_revision_data = $RfqQuoteRevisions->find()->where(['id IN ' => $rfq_quotes_revisions_ids])->all()->toList();
+
+        // dd($rfq_quote_revision_data);
+
+        $rfq_quote_data = $RfqQuotes->get($rfq_quote_revision_data[0]->rfq_quote_id);
+
+        $rfq_footer_data = $RfqFooters->get($rfq_quote_data->rfq_footer_id);
+
+        $rfq_header_data = $RfqHeaders->get($rfq_footer_data->rfq_header_id);
+
+        $data_for_comparison = [];
+
+        foreach($rfq_quote_revision_data as $rqrd) {
+            $rfq_quote = $RfqQuotes->get($rqrd->rfq_quote_id);
+            $user_data = $Users->find()->select(['id','name','email'])->where(['id' => $rfq_quote->vendor_user_id])->first();
+            $data_for_comparison [$rfq_quote->vendor_user_id] = [
+                'rfq_quote_revision_id' => $rqrd->id,
+                'vendor_name' => $user_data->name,
+                'vendor_email' => $user_data->email,
+                'unit_price'=> $rqrd->unit_price,
+                'line_total'=> $rqrd->line_total,
+                'delivery_date'=> $rqrd->delivery_date,
+                'discount_amount'=> $rqrd->discount_amount,
+                'installation_charges'=> $rqrd->installation_charges,
+                'freight_type'=> $rqrd->freight_type,
+                'freight_value'=> $rqrd->freight_value,
+                'tax_type'=> $rqrd->tax_type,
+                'tax_value'=> $rqrd->tax_value,
+                'warranty_terms'=> $rqrd->warranty_terms,
+                'vendor_remark'=> $rqrd->vendor_remark,
+                'sub_total'=> $rqrd->sub_total,
+                'total_amount'=> $rqrd->total_amount,
+            ];
+        }
+
+        $data_for_comparison = json_decode(json_encode($data_for_comparison));
+
+        $this->set(compact('rfq_quote_revision_data' , 'rfq_footer_data' , 'rfq_header_data' , 'data_for_comparison'));
+    }
+
+    public function rfqForApprovalList() {
+
     }
 }

@@ -74,7 +74,7 @@ $(document).ready(function () {
                     $("#addUserForm")[0].reset();
 
                     // Reload DataTable
-                    $("#usersTable").DataTable().ajax.reload(null, false);
+                    $("#users_list_table").DataTable().ajax.reload(null, false);
                 } else {
                     toastr.error(response.message);
                     let errors = "";

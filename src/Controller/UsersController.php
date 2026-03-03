@@ -63,10 +63,32 @@ class UsersController extends AppController
                 if ($usersTable->save($current_user)) {
                     // Store role-specific data in session if needed
                     $session = $this->request->getSession();
-                    $session->write("Auth.user" , $current_user);
+                    $session->write("Auth.user", $current_user);
                     $session->write('Auth.user.group', $current_user->user_group->name ?? 'Unknown');
 
                     $this->Flash->success(__('Welcome back, {0}!', $current_user->name));
+
+                    if (strtolower($current_user->user_group->name) == "admin" ||  strtolower($current_user->user_group->name) == "buyer") {
+                        // Redirect to dashboard after login success
+                        $redirect = $this->request->getQuery('redirect', [
+                            'controller' => 'purchase-requisitions',
+                            'action' => 'index',
+                        ]);
+                    } else if (strtolower($current_user->user_group->name) == "vendor") {
+                        // Redirect to dashboard after login success
+                        $redirect = $this->request->getQuery('redirect', [
+                            'controller' => 'rfq',
+                            'action' => 'index',
+                        ]);
+                    } else {
+                        // Redirect to dashboard after login success
+                        $redirect = $this->request->getQuery('redirect', [
+                            'controller' => 'Dashboard',
+                            'action' => 'index',
+                        ]);
+                    }
+
+                    return $this->redirect($redirect);
                 } else {
                     // Log error but still allow login
                     $this->log('Failed to update last_login for user ' . $user->id, 'error');
@@ -76,14 +98,6 @@ class UsersController extends AppController
                 // Log error but still allow login - don't block user if database operations fail
                 $this->log('Error in post-login processing for user ' . $user->id . ': ' . $e->getMessage(), 'error');
             }
-
-            // Redirect to dashboard after login success
-            $redirect = $this->request->getQuery('redirect', [
-                'controller' => 'Dashboard',
-                'action' => 'index',
-            ]);
-
-            return $this->redirect($redirect);
         }
 
         // Display error if user submitted and authentication failed
@@ -106,48 +120,59 @@ class UsersController extends AppController
     public function index()
     {
         $UserGroups = $this->fetchTable('UserGroups');
+        
         if ($this->request->isAjax()) {
             $Users = $this->fetchTable('Users');
             $Buyers = $this->fetchTable('Buyers');
             $Vendors = $this->fetchTable('Vendors');
             $Approvers = $this->fetchTable('Approvers');
-
+            
             $this->viewBuilder()->disableAutoLayout();
             $this->autoRender = false;
 
             // 1. Get DataTable parameters
             $params = $this->request->getQueryParams();
-            $limit = (int)$params['length'] ?? 10;
-            $offset = (int)$params['start'] ?? 0;
+            $limit = (int)($params['length'] ?? 10);
+            $offset = (int)($params['start'] ?? 0);
             $search = $params['search']['value'] ?? '';
-            $orderColumnIndex = $params['order'][0]['column'] ?? 0;
+            $orderColumnIndex = (int)($params['order'][0]['column'] ?? 0);
             $orderDirection = $params['order'][0]['dir'] ?? 'asc';
 
-            // 2. Build the base query - FIXED COALESCE with quoted string
-            $query = $Users->find()
-                ->select([
+            // 2. Column mapping for ordering
+            $columns = ['Users.id', 'Users.name', 'Users.email', 'UserGroups.name', 'Users.is_active'];
+            $orderBy = $columns[$orderColumnIndex] ?? 'Users.id';
+
+            // 3. Build the base query with all joins
+            $query = $Users->find();
+            $query->select([
                     'Users.id',
                     'Users.name',
                     'Users.email',
                     'group_name' => 'UserGroups.name',
                     'Users.is_active',
-                ]);
-
-            $query->join([
-                'UserGroups' => [
-                    'table' => 'user_groups',
-                    'type' => 'inner',
-                    'conditions' => 'Users.group_id = UserGroups.id'
-                ]
-            ]);
+                    // Get SAP code using CASE statement
+                    'sap_code' => $query->newExpr(
+                        "CASE 
+                            WHEN Buyers.sap_code IS NOT NULL THEN Buyers.sap_code
+                            WHEN Vendors.sap_code IS NOT NULL THEN Vendors.sap_code
+                            WHEN Approvers.sap_code IS NOT NULL THEN Approvers.sap_code
+                            ELSE 'N/A'
+                        END"
+                    )
+                ])
+                ->innerJoin(['UserGroups' => 'user_groups'], ['UserGroups.id = Users.group_id'])
+                ->leftJoin(['Buyers' => 'buyers'], ['Buyers.user_id = Users.id'])
+                ->leftJoin(['Vendors' => 'vendors'], ['Vendors.user_id = Users.id'])
+                ->leftJoin(['Approvers' => 'approvers'], ['Approvers.user_id = Users.id'])
+                ->groupBy(['Users.id']); // Group by user to avoid duplicates from multiple joins
 
             // 4. Handle Searching
             if (!empty($search)) {
                 $query->where([
                     'OR' => [
-                        'Users.username LIKE' => '%' . $search . '%',
+                        'Users.name LIKE' => '%' . $search . '%',
                         'Users.email LIKE' => '%' . $search . '%',
-                        'Groups.name LIKE' => '%' . $search . '%',
+                        'UserGroups.name LIKE' => '%' . $search . '%',
                         'Buyers.sap_code LIKE' => '%' . $search . '%',
                         'Vendors.sap_code LIKE' => '%' . $search . '%',
                         'Approvers.sap_code LIKE' => '%' . $search . '%'
@@ -155,44 +180,41 @@ class UsersController extends AppController
                 ]);
             }
 
-            // 5. Get Totals
+            // 5. Apply ordering
+            $query->orderBy([$orderBy => $orderDirection]);
+
+            // 6. Get total records count
             $totalRecords = $Users->find()->count();
 
-            // Clone query for filtered count
+            // 7. Get filtered records count
             $filteredQuery = clone $query;
             $filteredRecords = $filteredQuery->count();
 
-            // 7. Apply pagination and get data
+            // 8. Apply pagination and get data
             $data = $query
                 ->limit($limit)
                 ->offset($offset)
-                ->toArray();
+                ->all();
 
-            // 8. Format for DataTables
+            // 9. Format the data
             $formattedData = [];
             foreach ($data as $user) {
-                switch (strtolower($user->group_name)) {
-                    case "buyer":
-                        $user->sap_code = $Buyers->find()->where(['user_id', $user->id])->first()->sap_code ?? 'N/A';
-                        break;
-                    case "vendor":
-                        $user->sap_code = $Vendors->find()->where(['user_id', $user->id])->first()->sap_code ?? 'N/A';
-                        break;
-                    case "approver":
-                        $user->sap_code = $Approvers->find()->where(['user_id', $user->id])->first()->sap_code ?? 'N/A';
-                        break;
-                    default:
-                        $user->sap_code = 'N/A';
-                        break;
-                }
+                $formattedData[] = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'group_name' => $user->group_name,
+                    'is_active' => $user->is_active,
+                    'sap_code' => $user->sap_code
+                ];
             }
 
-            // 9. Prepare JSON response
+            // 10. Prepare JSON response
             $result = [
                 "draw" => intval($params['draw']),
                 "recordsTotal" => $totalRecords,
                 "recordsFiltered" => $filteredRecords,
-                "data" => $data
+                "data" => $formattedData
             ];
 
             return $this->response
@@ -202,9 +224,7 @@ class UsersController extends AppController
 
         // For non-AJAX requests, render the view
         $this->set('title', 'Users Management');
-
         $groups = $UserGroups->find('list')->toArray();
-
         $this->set(compact('groups'));
     }
 
@@ -237,10 +257,10 @@ class UsersController extends AppController
         $user = $Users->patchEntity($user, $data);
 
         if ($new_user = $Users->save($user)) {
-            switch($data['group_id']) {
-                case 2 :
+            switch ($data['group_id']) {
+                case 2:
                     $buyer = $Buyers->find()->where(['sap_code' => $data['sap_code']])->first();
-                    if(empty($buyer->id)) {
+                    if (empty($buyer->id)) {
                         $new_buyer = $Buyers->newEmptyEntity();
                         $new_buyer->user_id = $new_user->id;
                         $new_buyer->sap_code = $data['sap_code'];
@@ -248,11 +268,11 @@ class UsersController extends AppController
                         $new_buyer->buyer_email = $data['email'];
                         $Buyers->save($new_buyer);
                     }
-                break;
+                    break;
 
-                case 3 :
+                case 3:
                     $vendor = $Vendors->find()->where(['sap_code' => $data['sap_code']])->first();
-                    if(empty($vendor->id)) {
+                    if (empty($vendor->id)) {
                         $new_vendor = $Vendors->newEmptyEntity();
                         $new_vendor->user_id = $new_user->id;
                         $new_vendor->sap_code = $data['sap_code'];
@@ -260,11 +280,11 @@ class UsersController extends AppController
                         $new_vendor->vendor_email = $data['email'];
                         $Vendors->save($new_vendor);
                     }
-                break;
+                    break;
 
-                case 4 :
+                case 4:
                     $approver = $Approvers->find()->where(['sap_code' => $data['sap_code']])->first();
-                    if(empty($approver->id)) {
+                    if (empty($approver->id)) {
                         $new_approver = $Approvers->newEmptyEntity();
                         $new_approver->user_id = $new_user->id;
                         $new_approver->sap_code = $data['sap_code'];
@@ -272,8 +292,7 @@ class UsersController extends AppController
                         $new_approver->approver_email = $data['email'];
                         $Approvers->save($new_approver);
                     }
-                break;
-
+                    break;
             }
             return $this->response->withType('application/json')
                 ->withStringBody(json_encode([
@@ -294,10 +313,9 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $user_id = $this->request->getData('user_id', null);
             $status = ($this->request->getData('status', null));
-            if($status == 'true') {
+            if ($status == 'true') {
                 $status = 1;
-            }
-            else {
+            } else {
                 $status = 0;
             }
 
