@@ -11,7 +11,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $rfq_selected_quote_id
  * @property int $level_no
- * @property int $approver_id
+ * @property int $approver_user_id
  * @property string|null $status
  * @property string|null $remark
  * @property \Cake\I18n\DateTime|null $action_date
@@ -34,7 +34,7 @@ class RfqApproval extends Entity
     protected array $_accessible = [
         'rfq_selected_quote_id' => true,
         'level_no' => true,
-        'approver_id' => true,
+        'approver_user_id' => true,
         'status' => true,
         'remark' => true,
         'action_date' => true,

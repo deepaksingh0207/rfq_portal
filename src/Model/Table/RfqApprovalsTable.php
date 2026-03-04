@@ -12,7 +12,6 @@ use Cake\Validation\Validator;
  * RfqApprovals Model
  *
  * @property \App\Model\Table\RfqSelectedQuotesTable&\Cake\ORM\Association\BelongsTo $RfqSelectedQuotes
- * @property \App\Model\Table\ApproversTable&\Cake\ORM\Association\BelongsTo $Approvers
  *
  * @method \App\Model\Entity\RfqApproval newEmptyEntity()
  * @method \App\Model\Entity\RfqApproval newEntity(array $data, array $options = [])
@@ -52,10 +51,6 @@ class RfqApprovalsTable extends Table
             'foreignKey' => 'rfq_selected_quote_id',
             'joinType' => 'INNER',
         ]);
-        $this->belongsTo('Approvers', [
-            'foreignKey' => 'approver_id',
-            'joinType' => 'INNER',
-        ]);
     }
 
     /**
@@ -76,8 +71,9 @@ class RfqApprovalsTable extends Table
             ->notEmptyString('level_no');
 
         $validator
-            ->integer('approver_id')
-            ->notEmptyString('approver_id');
+            ->integer('approver_user_id')
+            ->requirePresence('approver_user_id', 'create')
+            ->notEmptyString('approver_user_id');
 
         $validator
             ->scalar('status')
@@ -105,7 +101,6 @@ class RfqApprovalsTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn(['rfq_selected_quote_id'], 'RfqSelectedQuotes'), ['errorField' => 'rfq_selected_quote_id']);
-        $rules->add($rules->existsIn(['approver_id'], 'Approvers'), ['errorField' => 'approver_id']);
 
         return $rules;
     }

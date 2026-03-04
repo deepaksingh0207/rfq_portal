@@ -283,7 +283,12 @@ class RfqController extends AppController
                         foreach ($request_data['items'] as $item) {
                             if (!empty($item['rfq_footer_id'])) {
                                 $rfq_footer = $RfqFooters->get($item['rfq_footer_id']);
-                                $uploads["files"] = json_decode($rfq_footer->specification_attachment, true);
+                                if(!empty($rfq_footer->specification_attachment)) {
+                                    $uploads["files"] = json_decode($rfq_footer->specification_attachment, true);
+                                }
+                                else {
+                                    $uploads["files"] = array();
+                                }
                             } else {
                                 $rfq_footer = $RfqFooters->newEmptyEntity();
                                 $rfq_footer->rfq_header_id = $rfq_header_id;
@@ -418,7 +423,7 @@ class RfqController extends AppController
             $rfq_header_data = $RfqHeaders->get($single_rfq_footer_data->rfq_header_id);
             $created_by_user_data = $Users->get($rfq_header_data->created_by_user_id);
             $category_data = $Categories->get($single_rfq_footer_data->category_id);
-            $payment_terms = $SapPaymentTerms->find('list', ['keyField' => 'id', 'valueField' => 'description'])->where(['is_active' => 1])->toArray();
+            $payment_terms = $SapPaymentTerms->find('list', keyField : 'id' , valueField : 'description')->where(['is_active' => 1])->toArray();
 
             $comments_count = $RfqItemComments->find()
                 ->where(['vendor_user_id' => $session_user_id, 'buyer_user_id' => $rfq_header_data->created_by_user_id , 'rfq_footer_id' => $rfq_footer_id])
@@ -451,7 +456,7 @@ class RfqController extends AppController
             $rfq_header_data = $RfqHeaders->get($single_rfq_footer_data->rfq_header_id);
             $created_by_user_data = $Users->get($rfq_header_data->created_by_user_id);
             $category_data = $Categories->get($single_rfq_footer_data->category_id);
-            $payment_terms = $SapPaymentTerms->find('list', ['keyField' => 'id', 'valueField' => 'description'])->where(['is_active' => 1])->toArray();
+            $payment_terms = $SapPaymentTerms->find('list', keyField : 'id', valueField : 'description')->where(['is_active' => 1])->toArray();
 
             $rfq_quote_revisions_data = $RfqQuotes->find()
             ->select([
@@ -801,7 +806,7 @@ class RfqController extends AppController
             $rfq_quote_data = $RfqQuotes->find()->where(['rfq_footer_id' => $rfq_footer_id , 'vendor_user_id' => $vendor_user_id])->first();
             $rfq_quote_revisions_data = $RfqQuoteRevisions->find()->where(['rfq_quote_id' => $rfq_quote_data->id])->orderByDesc('id')->all();
 
-            $payment_terms = $SapPaymentTerms->find('list', ['keyField' => 'id', 'valueField' => 'description'])->where(['is_active' => 1])->toArray();
+            $payment_terms = $SapPaymentTerms->find('list', keyField : 'id', valueField : 'description')->where(['is_active' => 1])->toArray();
 
             $comments_count = $RfqItemComments->find()->where(['vendor_user_id' => $vendor_user_id, 'buyer_user_id' => $session_user_id , 'rfq_footer_id' => $rfq_footer_id])->count();
 
@@ -906,6 +911,7 @@ class RfqController extends AppController
         $RfqHeaders = $this->fetchTable('RfqHeaders');
         $RfqFooters = $this->fetchTable('RfqFooters');
         $Users = $this->fetchTable('Users');
+        $RfqSelectedQuotes = $this->fetchTable('RfqSelectedQuotes');
 
         $rfq_quote_revision_data = $RfqQuoteRevisions->find()->where(['id IN ' => $rfq_quotes_revisions_ids])->all()->toList();
 
@@ -921,6 +927,7 @@ class RfqController extends AppController
 
         foreach($rfq_quote_revision_data as $rqrd) {
             $rfq_quote = $RfqQuotes->get($rqrd->rfq_quote_id);
+            $rfq_selected_quote_count = $RfqSelectedQuotes->find()->where(['rfq_footer_id' => $rfq_quote->rfq_footer_id])->count();
             $user_data = $Users->find()->select(['id','name','email'])->where(['id' => $rfq_quote->vendor_user_id])->first();
             $data_for_comparison [$rfq_quote->vendor_user_id] = [
                 'rfq_quote_revision_id' => $rqrd->id,
@@ -939,6 +946,7 @@ class RfqController extends AppController
                 'vendor_remark'=> $rqrd->vendor_remark,
                 'sub_total'=> $rqrd->sub_total,
                 'total_amount'=> $rqrd->total_amount,
+                'rfq_selected_quote_count' => $rfq_selected_quote_count,
             ];
         }
 
@@ -947,7 +955,312 @@ class RfqController extends AppController
         $this->set(compact('rfq_quote_revision_data' , 'rfq_footer_data' , 'rfq_header_data' , 'data_for_comparison'));
     }
 
-    public function rfqForApprovalList() {
+    public function sendQuoteForApproval() {
+        if($this->request->is('post')) {
+            $request_data = $this->request->getData();
+            $session = $this->request->getSession();
+            $session_user_id = $session->read('Auth.user.id');
 
+            $RfqQuotes = $this->fetchTable('RfqQuotes');
+            $RfqQuoteRevisions = $this->fetchTable('RfqQuoteRevisions');
+            $RfqSelectedQuotes = $this->fetchTable('RfqSelectedQuotes');
+            $RfqApprovals = $this->fetchTable('RfqApprovals');
+            $RfqFooters = $this->fetchTable('RfqFooters');
+
+            if(!empty($request_data['rfq_quote_revision_id'])) {
+                $rfq_quote_revision_data = $RfqQuoteRevisions->get($request_data['rfq_quote_revision_id']);
+                $rfq_quote_data = $RfqQuotes->get($rfq_quote_revision_data->rfq_quote_id);
+                
+                $rfq_selected_quote_data = $RfqSelectedQuotes->find()->where(['rfq_footer_id' => $rfq_quote_data->rfq_footer_id , 'rfq_quote_revision_id' => $request_data['rfq_quote_revision_id']])->first();
+
+                if(empty($rfq_selected_quote_data->id)) {
+                    $new_rfq_selected_quote_data = $RfqSelectedQuotes->newEmptyEntity();
+                    $new_rfq_selected_quote_data->rfq_footer_id = $rfq_quote_data->rfq_footer_id;
+                    $new_rfq_selected_quote_data->rfq_quote_revision_id = $request_data['rfq_quote_revision_id'];
+                    $new_rfq_selected_quote_data->selected_by = $session_user_id;
+                    $new_rfq_selected_quote_data->selected_at = date("Y-m-d H:i:s");
+                    $new_rfq_selected_quote_data->approval_status = "PENDING";
+                    if($RfqSelectedQuotes->save($new_rfq_selected_quote_data)) {
+                        return $this->response->withType('application/json')->withStringBody(json_encode(['status' => 1 , 'message' => 'The Selected Quote is Sent for approval']));
+                    }
+                    else {
+                        return $this->response->withType('application/json')->withStringBody(json_encode(['status' => 0 , 'message' => 'Error Occurred While Submitting Quote For Approval']));
+                    }
+                }
+                else {
+                    return $this->response->withType('application/json')->withStringBody(json_encode(['status' => 0 , 'message' => 'The Selected Quote is already sent for Approval']));
+                }
+            }
+            else {
+                return $this->response->withType('application/json')->withStringBody(json_encode(['status' => 0 , 'message' => 'Quote Id Not Found For Sending Approval']));
+            }
+        }
+        else {
+            exit("Exit Called");
+        }
+    }
+
+    public function rfqForApprovalList() {
+        $RfqSelectedQuotes = $this->fetchTable('RfqSelectedQuotes');
+
+        if ($this->request->isAjax()) {
+            $params = $this->request->getQueryParams();
+            $limit = (int)$params['length'] ?? 10;
+            $offset = (int)$params['start'] ?? 0;
+            $search = $params['search']['value'] ?? '';
+            $orderColumnIndex = $params['order'][0]['column'] ?? 0;
+            $orderDirection = $params['order'][0]['dir'] ?? 'asc';
+
+            $query = $RfqSelectedQuotes->find();
+            $query->select([
+                'rfq_selected_quote_id' => 'RfqSelectedQuotes.id',
+                'rfq_quote_revision_id' => 'RfqSelectedQuotes.rfq_quote_revision_id',
+                'rfq_number' => 'RfqHeaders.rfq_number',
+                'category_name' => 'Categories.name',
+                'material_code' => 'RfqFooters.material_code',
+                'material_description' => 'RfqFooters.material_description',
+                'quantity' => 'RfqFooters.quantity',
+                'uom' => 'RfqFooters.uom',
+                'status' => 'RfqSelectedQuotes.approval_status',
+                'approval_stage' => 'RfqApprovals.level_no',
+                'delivery_date' => 'RfqFooters.delivery_date',
+            ]);
+
+            $query->join([
+                'RfqFooters' => [
+                    'table' => 'rfq_footers',
+                    'type' => 'inner',
+                    'conditions' => 'RfqFooters.id = RfqSelectedQuotes.rfq_footer_id',
+                ],
+                'RfqHeaders' => [
+                    'table' => 'rfq_headers',
+                    'type' => 'inner',
+                    'conditions' => 'RfqHeaders.id = RfqFooters.rfq_header_id',
+                ],
+                'Categories' => [
+                    'table' => 'categories',
+                    'type' => 'inner',
+                    'conditions' => 'RfqFooters.category_id = Categories.id',
+                ],
+                'RfqApprovals' => [
+                    'table' => 'rfq_approvals',
+                    'type' => 'left',
+                    'conditions' => 'RfqApprovals.rfq_selected_quote_id = RfqSelectedQuotes.id',
+                ]
+            ]);
+
+            $query->groupBy('RfqSelectedQuotes.id');
+
+            $totalRecords = $RfqSelectedQuotes->find()->count();
+            $filteredRecords = $RfqSelectedQuotes->find()->count();
+
+            $data = $query->limit($limit)->offset($offset)->toArray();
+
+            $result = [
+                "draw" => intval($params['draw']),
+                "recordsTotal" => $totalRecords,
+                "recordsFiltered" => $filteredRecords,
+                "data" => $data
+            ];
+
+            return $this->response->withType('application/json')->withStringBody(json_encode($result));
+        }
+    }
+
+    public function getDataForRfqModal(){
+        if($this->request->is('get')) {
+            $rfq_quote_revision_id = $this->request->getQuery('rfq_quote_revision_id');
+            $rfq_selected_quote_id = $this->request->getQuery('rfq_selected_quote_id');
+
+            $RfqQuoteRevisions = $this->fetchTable('RfqQuoteRevisions');
+            $RfqQuotes = $this->fetchTable('RfqQuotes');
+            $RfqFooters = $this->fetchTable('RfqFooters');
+            $RfqHeaders = $this->fetchTable('RfqHeaders');
+            $RfqApprovals = $this->fetchTable('RfqApprovals');
+            $CategoryApproverMappings = $this->fetchTable('CategoryApproverMappings');
+            $Users = $this->fetchTable('Users');
+            $Categories = $this->fetchTable('Categories');
+
+            $rfq_quote_revision_data = $RfqQuoteRevisions->get($rfq_quote_revision_id);
+            $rfq_quote_data = $RfqQuotes->get($rfq_quote_revision_data->rfq_quote_id);
+            $rfq_footer_data = $RfqFooters->get($rfq_quote_data->rfq_footer_id);
+            $rfq_footer_data->delivery_date = date("d M, Y" , strtotime($rfq_footer_data->delivery_date->format("Y-m-d")));
+            $rfq_header_data = $RfqHeaders->get($rfq_footer_data->rfq_header_id);
+            $category_data = $Categories->get($rfq_footer_data->category_id);
+
+            $approver_user_ids = $CategoryApproverMappings->find()->select('approver_user_id')->where(['category_id' => $rfq_footer_data->category_id])->all()->extract("approver_user_id")->toArray();
+
+            $query = $CategoryApproverMappings->find();
+
+            $rfq_approvals_data = $query
+            ->select([
+                'approver_user_id' => 'Users.id',
+                'approver_name' => 'Users.name',
+                'approver_email' => 'Users.email',
+                // Corrected Case Logic for CakePHP 5
+                'status' => $query->newExpr()
+                    ->case()
+                    ->when($query->newExpr()->isNull('RfqApprovals.status'))
+                    ->then('PENDING')
+                    ->else($query->identifier('RfqApprovals.status')),
+                    
+                'level_no' => 'RfqApprovals.level_no',
+                'remark' => 'RfqApprovals.remark',
+            ])
+            ->join([
+                'Users' => [
+                    'table' => 'users',
+                    'type' => 'INNER',
+                    'conditions' => 'Users.id = CategoryApproverMappings.approver_user_id'
+                ],
+                'RfqApprovals' => [
+                    'table' => 'rfq_approvals',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        'RfqApprovals.approver_user_id = CategoryApproverMappings.approver_user_id',
+                        'RfqApprovals.rfq_selected_quote_id' => $rfq_selected_quote_id
+                    ]
+                ]
+            ])
+            ->where([
+                'CategoryApproverMappings.category_id' => $rfq_footer_data->category_id
+            ])
+            ->all()
+            ->toArray();
+
+            // if(empty($rfq_approvals_data)) {
+
+            //     $users_data = $Users->find()
+            //     ->select([
+            //         'approver_name' => 'Users.name',
+            //         'approver_email' => 'Users.email',
+            //     ])
+            //     ->join([
+            //         'CategoryApproverMapping' => [
+            //             'table' => 'category_approver_mappings',
+            //             'type' => 'inner',
+            //             'conditions' => 'Users.id = CategoryApproverMapping.approver_user_id'
+            //         ],
+            //     ])
+            //     ->where([
+            //         'Users.id IN ' => $approver_user_ids,
+            //     ])
+            //     ->all()->toList();
+    
+            //     foreach($users_data as $user) {
+            //         $user->status = 'PENDING';
+            //         $rfq_approvals_data [] = $user;
+            //     }
+            // }
+
+            return $this->response->withType('application/json')->withStringBody(json_encode([
+                'status' => 1,
+                'rfq_quote_revision_data' => $rfq_quote_revision_data,
+                'rfq_quote_data' => $rfq_quote_data,
+                'rfq_footer_data' => $rfq_footer_data,
+                'rfq_header_data' => $rfq_header_data,
+                'rfq_approvals_data' => $rfq_approvals_data,
+                'category_data' => $category_data,
+            ]));
+        }
+        else {
+            exit("Exit Called");
+        }
+    }
+
+    public function updateQuoteStatus() {
+        if($this->request->is('post')) {
+            $rfq_quote_revision_id = $this->request->getData('rfq_quote_revision_id');
+            $rfq_selected_quote_id = $this->request->getData('rfq_selected_quote_id');
+            $status = $this->request->getData('status');
+            $rfq_modal_approver_remark = $this->request->getData('rfq_modal_approver_remark');
+
+
+            $session = $this->request->getSession();
+            $session_user_id = $session->read('Auth.user.id');
+
+            $RfqApprovals = $this->fetchTable('RfqApprovals');
+            $CategoryApproverMappings = $this->fetchTable('CategoryApproverMappings');
+            $RfqQuoteRevisions = $this->fetchTable('RfqQuoteRevisions');
+            $RfqQuotes = $this->fetchTable('RfqQuotes');
+            $RfqFooters = $this->fetchTable('RfqFooters');
+            $RfqSelectedQuotes = $this->fetchTable('RfqSelectedQuotes');
+
+            $rfq_quote_revision_data = $RfqQuoteRevisions->get($rfq_quote_revision_id);
+            $rfq_quote_data = $RfqQuotes->get($rfq_quote_revision_data->rfq_quote_id);
+            $rfq_footer_data = $RfqFooters->get($rfq_quote_data->rfq_footer_id);
+
+            $rfq_approvals_data = $RfqApprovals->find()->where(['rfq_selected_quote_id' => $rfq_selected_quote_id , 'approver_user_id' => $session_user_id])->first();
+
+            $rfq_approvals_count = $RfqApprovals->find()->where(['rfq_selected_quote_id' => $rfq_selected_quote_id])->count();
+
+            if(empty($rfq_approvals_data->id)) {
+                $new_rfq_approvals_data = $RfqApprovals->newEmptyEntity();
+                $new_rfq_approvals_data->rfq_selected_quote_id = $rfq_selected_quote_id;
+                $new_rfq_approvals_data->approver_user_id = $session_user_id;
+                $new_rfq_approvals_data->level_no = $rfq_approvals_count + 1;
+                $new_rfq_approvals_data->status = $status;
+                $new_rfq_approvals_data->remark = $rfq_modal_approver_remark;
+                $new_rfq_approvals_data->action_date = date("Y-m-d");
+
+                if($RfqApprovals->save($new_rfq_approvals_data)) {
+                    
+                }
+                else {
+                    return $this->response->withType('application/json')->withStringBody(json_encode([
+                        'status' => 0,
+                        'message' => "Status Not Updated",
+                    ]));
+                }
+            }
+            else {
+                $rfq_approvals_data->status = $status;
+
+                if(!empty($rfq_modal_approver_remark)) {
+                    $rfq_approvals_data->remark = $rfq_modal_approver_remark;
+                }
+
+                if($RfqApprovals->save($rfq_approvals_data)) {
+                }
+                else {
+                    return $this->response->withType('application/json')->withStringBody(json_encode([
+                        'status' => 0,
+                        'message' => "Status Not Updated",
+                    ]));
+                }
+            }
+
+            $accepted_rfq_approvals_count = $RfqApprovals->find()->where(['rfq_selected_quote_id' => $rfq_selected_quote_id , 'status' => 'ACCEPTED'])->count();
+
+            $rejected_rfq_approvals_count = $RfqApprovals->find()->where(['rfq_selected_quote_id' => $rfq_selected_quote_id , 'status' => 'REJECTED'])->count();
+
+            $category_approver_mappings_count = $CategoryApproverMappings->find()->where(['category_id' => $rfq_footer_data->category_id])->count();
+
+            $approval_status = "PENDING";
+
+            if($accepted_rfq_approvals_count == $category_approver_mappings_count) {
+                $approval_status = "APPROVED";
+            }
+
+            if($rejected_rfq_approvals_count) {
+                $approval_status = "REJECTED";
+            }
+
+            $rfq_selected_quote_data = $RfqSelectedQuotes->get($rfq_selected_quote_id);
+            $rfq_selected_quote_data->approval_status = $approval_status;
+
+            if($RfqSelectedQuotes->save($rfq_selected_quote_data)) {
+                return $this->response->withType('application/json')->withStringBody(json_encode([
+                    'status' => 1,
+                    'message' => "Status Updated Successfully",
+                ]));
+            }
+            else {
+                return $this->response->withType('application/json')->withStringBody(json_encode([
+                    'status' => 0,
+                    'message' => "Status Not Updated",
+                ]));
+            }
+        }
     }
 }

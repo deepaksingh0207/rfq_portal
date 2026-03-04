@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Routing\Router;
+
 class PurchaseRequisitionsController extends AppController
 {
     public function index() {
@@ -44,11 +46,14 @@ class PurchaseRequisitionsController extends AppController
                 'RfqPrMappings' => [
                     'table' => 'rfq_pr_mappings',
                     'type' => 'left',
-                    'conditions' => 'PrHeaders.pr_number = RfqPrMappings.pr_number'
+                    'conditions' => [
+                        'PrHeaders.pr_number = RfqPrMappings.pr_number',
+                        'PrFooters.item_number = RfqPrMappings.pr_item_number' 
+                    ]
                 ]
             ]);
 
-            $where_conditions [] = ['RfqPrMappings.pr_number IS NULl'];
+            $where_conditions [] = ['RfqPrMappings.pr_item_number IS NULl'];
 
             $query->where($where_conditions);
 
@@ -87,61 +92,101 @@ class PurchaseRequisitionsController extends AppController
                 $PrFooters = $this->fetchTable('PrFooters');
                 $RfqPrMappings = $this->fetchTable('RfqPrMappings');
 
-                $rfq_header_id = null;
+                $pr_data = [];
 
                 foreach($request_data['pr_data'] as $item) {
-                    $pr_header_data = $PrHeaders->find()->where(['pr_number' => $item['pr_number']])->first();
-                    $pr_footer_data = $PrFooters->find()->where(['pr_header_id' => $pr_header_data->id , 'item_number' => $item['item_number'] , 'material_code' => $item['material_code']])->first();
+                    $pr_data [$item['material_code']] ['pr_number'] [] = $item['pr_number'];
+                    $pr_data [$item['material_code']] ['item_number'] [] = $item['item_number'];
+                    $pr_data [$item['material_code']] ['material_code'] = $item['material_code'];
+                    $pr_data [$item['material_code']] ['material_description'] = $item['material_description']; 
+                    $pr_data [$item['material_code']] ['quantity'] [] = ($item['quantity']); 
+                    $pr_data [$item['material_code']] ['uom'] = $item['uom']; 
+                }
 
-                    $rfq_pr_mapping_for_header = $RfqPrMappings->find()->where(['rfq_header_id' => $rfq_header_data->id])->first();
+                // dd($pr_data);
 
-                    $rfq_pr_mapping_for_footer = $RfqPrMappings->find()->where(['pr_number' => $item['pr_number'] , 'item_number' => $item['item_number'] , 'material_code' => $item['material_code']])->first();
-
-                    if(empty($rfq_pr_mapping_for_footer->id)) {
-                        
-                        if(empty($rfq_pr_mapping_for_header->rfq_header_id)) {
-                            $rfq_header_data = $RfqHeaders->newEmptyEntity();
-                        }
-                        else {
-                            $rfq_header_data = $RfqHeaders->find()->where(['id' => $rfq_pr_mapping_for_header->rfq_header_id])->first();
-                        }
-
-                        $rfq_header_data->rfq_number = time();
-                        $rfq_header_data->pr_type = 'pr_based';
-                        $rfq_header_data->purchasing_group = $pr_header_data->purchasing_group; 
-                        $rfq_header_data->company_code = $pr_header_data->company_code; 
-                        $rfq_header_data->plant = $pr_header_data->plant;
-                        $rfq_header_data->currency = 'INR';
-                        $rfq_header_data->status = 'DRAFT';
-                        $rfq_header_data->created_by_user_id = $session_user_id;
-
-                        if($RfqHeaders->save($rfq_header_data)) {
-                            $rfq_header_id = $rfq_header_data->id;
-                            $rfq_footer_data = $RfqFooters->newEmptyEntity();
-                            $rfq_footer_data->rfq_header_id = $rfq_header_data->id;
-                            $rfq_footer_data->item_no = $item['item_number'];
-                            $rfq_footer_data->material_code = $item['material_code'];
-                            $rfq_footer_data->material_description = $item['material_description'];
-                            $rfq_footer_data->quantity = $item['quantity'];
-                            $rfq_footer_data->uom = $item['uom'];
-                            $rfq_footer_data->plant = $pr_footer_data->plant;
-    
-                            if($RfqFooters->save($rfq_footer_data)) {
-                                $rfq_pr_mapping_data = $RfqPrMappings->newEmptyEntity();
-                                $rfq_pr_mapping_data->rfq_header_id = $rfq_header_data->id;
-                                $rfq_pr_mapping_data->rfq_footer_id = $rfq_footer_data->id;
-                                $rfq_pr_mapping_data->pr_number = $item['pr_number'];
-                                $rfq_pr_mapping_data->item_number = $item['item_number'];
-                                $rfq_pr_mapping_data->material_code = $item['material_code'];
-                                $rfq_pr_mapping_data->mapped_quantity = $item['quantity'];
-                                $RfqPrMappings->save($rfq_pr_mapping_data);
+                $connection = $RfqHeaders->getConnection();
+                $result = $connection->transactional(
+                    function() use ($RfqHeaders,$RfqFooters,$PrHeaders,$PrFooters,$RfqPrMappings,$request_data,$session_user_id,$pr_data) {
+                        $rfq_header_id = null;        
+                        foreach($pr_data as $item) {
+                            $pr_header_data = $PrHeaders->find()->where(['pr_number' => $item['pr_number'][0]])->first();
+                            $pr_footer_data = $PrFooters->find()->where(['pr_header_id' => $pr_header_data->id , 'item_number' => $item['item_number'][0] , 'material_code' => $item['material_code']])->first();
+        
+                            $rfq_pr_mapping_for_header = $RfqPrMappings->find()->where(['pr_number' => $item['pr_number'][0]])->first();
+        
+                            $rfq_pr_mapping_for_footer = $RfqPrMappings->find()->where(['pr_number' => $item['pr_number'][0] , 'pr_item_number' => $item['item_number'][0] , 'material_code' => $item['material_code']])->first();
+        
+                            if(empty($rfq_pr_mapping_for_footer->id)) {
+                                
+                                if(empty($rfq_pr_mapping_for_header->rfq_header_id)) {
+                                    $rfq_header_data = $RfqHeaders->newEmptyEntity();
+                                }
+                                else {
+                                    $rfq_header_data = $RfqHeaders->find()->where(['id' => $rfq_pr_mapping_for_header->rfq_header_id])->first();
+                                }
+        
+                                $rfq_header_data->rfq_number = time();
+                                $rfq_header_data->rfq_type = 'pr_based';
+                                $rfq_header_data->purchasing_group = $pr_header_data->purchasing_group; 
+                                $rfq_header_data->company_code = $pr_header_data->company_code; 
+                                $rfq_header_data->plant = $pr_header_data->plant;
+                                $rfq_header_data->currency = 'INR';
+                                $rfq_header_data->status = 'DRAFT';
+                                $rfq_header_data->created_by_user_id = $session_user_id;
+        
+                                if($RfqHeaders->save($rfq_header_data)) {
+                                    $rfq_header_id = $rfq_header_data->id;
+                                    
+                                    $rfq_footer_data = $RfqFooters->find()->where(['rfq_header_id' => $rfq_header_data->id , 'item_no' => $item['item_number'][0] , 'material_code' => $item['material_code']])->first();
+        
+                                    if(empty($rfq_footer_data->id)) {
+                                        $rfq_footer_data = $RfqFooters->newEmptyEntity();
+                                    }
+        
+                                    $rfq_footer_data->rfq_header_id = $rfq_header_data->id;
+                                    $rfq_footer_data->item_no = $item['item_number'][0];
+                                    $rfq_footer_data->material_code = $item['material_code'];
+                                    $rfq_footer_data->part_name = $item['material_description'];
+                                    $rfq_footer_data->material_description = $item['material_description'];
+                                    $rfq_footer_data->quantity = array_sum($item['quantity']);
+                                    $rfq_footer_data->uom = $item['uom'];
+                                    $rfq_footer_data->plant = $pr_footer_data->plant;
+            
+                                    if($RfqFooters->save($rfq_footer_data)) {
+                                        foreach($item['item_number'] as $key => $item_no) {
+                                            $rfq_pr_mapping_data = $RfqPrMappings->find()
+                                            ->where([
+                                                'rfq_header_id' => $rfq_header_data->id , 
+                                                'rfq_footer_id' => $rfq_footer_data->id , 
+                                                'pr_number' => $item['pr_number'][$key] , 
+                                                'pr_item_number' => $item_no
+                                            ])->first();
+            
+                                            if(empty($rfq_pr_mapping_data->id)) {
+                                                $rfq_pr_mapping_data = $RfqPrMappings->newEmptyEntity();
+                                            }
+            
+                                            $rfq_pr_mapping_data->rfq_header_id = $rfq_header_data->id;
+                                            $rfq_pr_mapping_data->rfq_footer_id = $rfq_footer_data->id;
+                                            $rfq_pr_mapping_data->pr_number = $item['pr_number'][$key];
+                                            $rfq_pr_mapping_data->pr_item_number = $item_no;
+                                            $rfq_pr_mapping_data->material_code = $item['material_code'];
+                                            $rfq_pr_mapping_data->mapped_quantity = $item['quantity'][$key];
+                                            
+                                            $RfqPrMappings->save($rfq_pr_mapping_data);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
-                }
+                );
 
-                if(!empty($rfq_header_id)) {
-                    return $this->response->withType('application/json')->withStringBody(json_encode(['status' => 1 , 'redirect_url' => $this->Url->build(['controller' => 'rfq' , 'action' => 'edit' , $rfq_header_id])]));
+                if($result !== false) {
+                    $first_key = array_key_first($pr_data);                    
+                    $rfq_pr_mapping_for_header = $RfqPrMappings->find()->where(['pr_number' => $pr_data[$first_key]['pr_number'][0]])->first();
+                    return $this->response->withType('application/json')->withStringBody(json_encode(['status' => 1 , 'request_data' => $request_data , 'pr_data' => $pr_data , 'redirect_url' => Router::url(['controller' => 'rfq' , 'action' => 'edit' , $rfq_pr_mapping_for_header->rfq_header_id])]));
                 }
                 else {
                     return $this->response->withType('application/json')->withStringBody(json_encode(['status' => 0 , 'message' => "Error Occurred While Creating RFQ. Please contact support"]));

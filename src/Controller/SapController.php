@@ -77,12 +77,13 @@ class SapController extends AppController
                     foreach ($request as $sap_pr_data) {
                         if (
                             !empty($sap_pr_data['BANFN']) &&
-                            !empty($sap_pr_data['BSART']) &&
-                            !empty($sap_pr_data['BSTYP']) &&
-                            !empty($sap_pr_data['FRGKZ']) &&
-                            !empty($sap_pr_data['FRGZU']) &&
-                            !empty($sap_pr_data['FRGST']) &&
-                            !empty($sap_pr_data['FRGGR'])
+                            !empty($sap_pr_data['BSART']) 
+                            // &&
+                            // !empty($sap_pr_data['BSTYP']) &&
+                            // !empty($sap_pr_data['FRGKZ']) &&
+                            // !empty($sap_pr_data['FRGZU']) &&
+                            // !empty($sap_pr_data['FRGST']) &&
+                            // !empty($sap_pr_data['FRGGR'])
                         ) {
                             $pr_header_data = $PrHeaders->find()->where(['pr_number' => $sap_pr_data['BANFN']])->first();
                             if (!empty($pr_header_data->id)) {

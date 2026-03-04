@@ -80,6 +80,12 @@ class UsersController extends AppController
                             'controller' => 'rfq',
                             'action' => 'index',
                         ]);
+                    } else if (strtolower($current_user->user_group->name) == "approver") {
+                        // Redirect to dashboard after login success
+                        $redirect = $this->request->getQuery('redirect', [
+                            'controller' => 'rfq',
+                            'action' => 'rfq-for-approval-list',
+                        ]);
                     } else {
                         // Redirect to dashboard after login success
                         $redirect = $this->request->getQuery('redirect', [
@@ -151,7 +157,7 @@ class UsersController extends AppController
                     'group_name' => 'UserGroups.name',
                     'Users.is_active',
                     // Get SAP code using CASE statement
-                    'sap_code' => $query->newExpr(
+                    'sap_code' => $query->expr(
                         "CASE 
                             WHEN Buyers.sap_code IS NOT NULL THEN Buyers.sap_code
                             WHEN Vendors.sap_code IS NOT NULL THEN Vendors.sap_code

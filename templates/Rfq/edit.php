@@ -110,7 +110,7 @@ foreach ($categories as $key => $category_name) {
         </div>
         <div class="col-md-3">
             <div class="input-group">
-                <input type="text" class="form-control drgpicker" id="quotation_deadline" placeholder="Select Quotation Deadline" value = "<?= date("Y-m-d" , strtotime($rfq_header_data->quotation_deadline)) ?>">
+                <input type="text" class="form-control drgpicker" id="quotation_deadline" placeholder="Select Quotation Deadline" value = "<?= !empty($rfq_header_data->quotation_deadline) ? date("Y-m-d" , strtotime($rfq_header_data->quotation_deadline)) : date("Y-m-d") ?>">
                 <div class="input-group-append">
                     <div class="input-group-text" id="button-addon-date"><span class="fe fe-calendar fe-16"></span></div>
                 </div>
@@ -154,7 +154,7 @@ foreach ($categories as $key => $category_name) {
                                         <div class="col-md-4 form-group">
                                             <label class="font-weight-bold custom-label" for="<?= $count ?>-category_id">Category<span class="text-danger">*</span></label>
                                             <select name="items[<?= $count ?>][category_id]" id="<?= $count ?>-category_id" class="form-control input-field shadow-sm dropdown1" data-id="<?= $count ?>" data-rfq-footer-id = "<?= $rfd->id ?>" required>
-                                                <option>Select Category</option>
+                                                <option value="" disabled>Select Category</option>
                                                 <?php foreach ($categories as $key => $category_name)  : ?>
                                                     <option value="<?= $key ?>" <?= ($key == $rfd->category_id) ? 'selected' : '' ?>><?= $category_name ?></option>
                                                 <?php endforeach; ?>
@@ -164,7 +164,7 @@ foreach ($categories as $key => $category_name) {
                                             <label class="font-weight-bold mb-2 custom-label" for="<?= $count ?>-material_code">
                                                 Material Code<span class="text-danger">*</span>
                                             </label>
-                                            <input type="text" name="items[<?= $count ?>][material_code]" id="<?= $count ?>-material_code" class="form-control input-field shadow-sm" placeholder="Enter Material Code Here" value="<?= $rfd->material_code ?>" required>
+                                            <input type="text" name="items[<?= $count ?>][material_code]" id="<?= $count ?>-material_code" class="form-control input-field shadow-sm" placeholder="Enter Material Code Here" value="<?= ltrim($rfd->material_code , '0') ?>" required>
                                         </div>
                                         <div class="col-md-4 form-group">
                                             <label class="font-weight-bold mb-2 custom-label" for="<?= $count ?>-seller">
@@ -216,7 +216,7 @@ foreach ($categories as $key => $category_name) {
                                             <label for="<?= $count ?>-delivery_date" class="font-weight-bold mb-2 custom-label">
                                                 Delivery Date<span class="text-danger">*</span>
                                             </label>
-                                            <input type="date" name="items[<?= $count ?>][delivery_date]" id="<?= $count ?>-delivery_date" class="form-control input-field shadow-sm" value="<?= date("Y-m-d" ,strtotime($rfd->delivery_date)) ?>" required>
+                                            <input type="date" name="items[<?= $count ?>][delivery_date]" id="<?= $count ?>-delivery_date" class="form-control input-field shadow-sm" value="<?= !empty($rfd->delivery_date) ? date("Y-m-d" ,strtotime($rfd->delivery_date)) : "" ?>" required>
                                         </div>
 
                                         <div class="col-md-4 form-group">

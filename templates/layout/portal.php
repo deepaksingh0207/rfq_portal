@@ -130,6 +130,7 @@
 </head>
 <?php
     $currentController = strtolower($this->request->getParam('controller'));
+    $currentAction = strtolower($this->request->getParam('action'));
     $session = $this->getRequest()->getSession();
     $session_user_name = $session->read('Auth.user.name');
     $session_user_group = strtolower($session->read('Auth.user.group'));
@@ -202,9 +203,18 @@
                     <?php endif; ?>
                     <?php if(in_array($session_user_group , ['admin' , 'buyer' , 'vendor'])) : ?>
                     <li class="nav-item <?= $currentController == 'rfq' ? 'active' : '' ?>">
-                        <a href="<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'index']) ?>" class="nav-link <?= $currentController == 'rfq' ? 'link-active' : '' ?>">
+                        <a href="<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'index']) ?>" class="nav-link <?= ($currentController == 'rfq' && $currentAction == 'index') ? 'link-active' : '' ?>">
                             <i class="fe fe-calendar fe-16"></i>
                             <span class="ml-3 item-text">RFQs</span>
+                        </a>
+                    </li>
+                    <?php endif; ?>
+
+                    <?php if(in_array($session_user_group , ['admin' , 'approver'])) : ?>
+                    <li class="nav-item <?= $currentController == 'rfq' ? 'active' : '' ?>">
+                        <a href="<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'rfq-for-approval-list']) ?>" class="nav-link <?= ($currentController == 'rfq' && $currentAction == 'rfqforapprovallist') ? 'link-active' : '' ?>">
+                            <i class="fe fe-server fe-16"></i>
+                            <span class="ml-3 item-text">RFQ Approval</span>
                         </a>
                     </li>
                     <?php endif; ?>
@@ -220,9 +230,7 @@
                     </li>
                     <li class="nav-item <?= $currentController == 'CategoryApproverMappings' ? 'active' : '' ?>">
                         <a href="<?= $this->Url->build(['controller' => 'category-approver-mappings' , 'action' => 'index']) ?>" class="nav-link <?= $currentController == 'category-approver-mappings' ? 'link-active' : '' ?>">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-3" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5zM0 11.5A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
-                            </svg>
+                            <i class="fe fe-sliders fe-16"></i>
                             <span class="ml-3 item-text">Approver Mapping</span>
                         </a>
                     </li>

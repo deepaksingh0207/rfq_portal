@@ -10,8 +10,8 @@ class CategoryApproverMappingsController extends AppController
     {
         $Categories = $this->fetchTable('Categories');
         $Users = $this->fetchTable('Users');
-        $categories_list = $Categories->find('list', ['keyField' => 'id', 'valueField' => 'name'])->all()->toArray();
-        $approver_users_list = $Users->find('list', ['keyField' => 'id', 'valueField' => 'name'])->where(['group_id' => 4])->all()->toArray();
+        $categories_list = $Categories->find('list', keyField : 'id', valueField : 'name')->all()->toArray();
+        $approver_users_list = $Users->find('list', keyField : 'id', valueField : 'name')->where(['group_id' => 4])->all()->toArray();
 
         if ($this->request->isAjax()) {
             // 1. Get DataTable parameters

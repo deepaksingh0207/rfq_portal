@@ -20,8 +20,8 @@ class DashboardController extends AppController
         $Buyers = $this->fetchTable('Buyers');
         $Plants = $this->fetchTable('Plants');
 
-        $buyer_list = $Buyers->find()->all()->combine('buyer_code', 'first_name');
-        $plant_list = $Plants->find()->all()->combine('plant_code', 'plant_name');
+        $buyer_list = $Buyers->find('list' , keyField : 'sap_code' , valueField : 'buyer_name')->all()->toArray();
+        $plant_list = $Plants->find('list' , keyField : 'plant_code' , valueField : 'plant_name')->all()->toArray();
 
         
         // dd($rfqStatus);

@@ -62,6 +62,11 @@ foreach($data_for_comparison as $user_id => $dfc) {
         $class = "class = 'selected-column'";
     }
 
+    $disabled = '';
+    if($dfc->rfq_selected_quote_count) {
+        $disabled = 'disabled';
+    }
+
     $th_html .= '<th style="min-width: 200px;" colspan="1" '.$class.' >
         <div class="text-left">
             <span class="vendor-title">'.$dfc->vendor_name.'</span><br>
@@ -87,7 +92,7 @@ foreach($data_for_comparison as $user_id => $dfc) {
 
     $delivery_date_tr_html .= "<td $class >".date('d M, Y' , strtotime($dfc->delivery_date))."</td>";
 
-    $actions_tr_html .= "<td $class ><input type='checkbox' class='quotes-checkbox' value='$dfc->rfq_quote_revision_id'></td>";
+    $actions_tr_html .= "<td $class ><input type='checkbox' class='quotes-checkbox' value='$dfc->rfq_quote_revision_id' $disabled></td>";
 
     $incr++;
 }
@@ -192,10 +197,13 @@ foreach($data_for_comparison as $user_id => $dfc) {
         </table>
     </div>
 
-    <div class="d-flex justify-content-end mt-4">
-        <button class="btn btn-outline-primary mr-2">Resubmit Quote</button>
-        <button class="btn btn-primary">Send For Approval</button>
+    <div class="d-flex justify-content-end mt-1 mr-5">
+        <button class="btn btn-outline-primary mr-2" <?= $disabled ?>>Resubmit Quote</button>
+        <button class="btn btn-primary" id="send_for_approval_btn" <?= $disabled ?>>Send For Approval</button>
     </div>
 </div>
 
+<script>
+    let send_quote_for_approval_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'send-quote-for-approval']) ?>";
+</script>
 <?= $this->Html->script('portal/rfq_show_quotes_comparison.js') ?>

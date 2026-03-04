@@ -136,7 +136,9 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if(response.status) {
-                    window.location.url = response.redirect_url;
+                    $("#confirm_rfq_creation_modal").modal("hide");
+                    toastr.success("RFQ Created Successfully");
+                    window.location.href = response.redirect_url;
                 }
                 else {
                     toastr.error(response.message);
