@@ -87,6 +87,13 @@
         border: none;
         white-space: nowrap;
         vertical-align: middle;
+        font-size: 0.75rem!important;
+        padding: 0.25rem;
+    }
+
+    .table tbody td {
+        font-size: 0.75rem!important;
+        padding: 0.25rem!important;
     }
 </style>
 

@@ -1,12 +1,17 @@
 <style>
     #purchase_requisitions_table thead th {
         font-size: 0.75rem;
-        padding: 5px;
+        padding: 0.25rem;
+        background-color: #004a80;
+        color: white;
+        border: none;
+        white-space: nowrap;
+        vertical-align: middle;
     }
 
     #purchase_requisitions_table tbody td {
         font-size: 0.75rem;
-        padding: 5px !important;
+        padding: 0.25rem !important;
     }
 </style>
 <div class="container-fluid mt-4">

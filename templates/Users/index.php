@@ -38,7 +38,7 @@
     #users_list_table thead th {
         border-bottom: 3px solid #004a80 !important;
         /* Thicker blue line under header */
-        background-color: #0056b3;
+        background-color: #004a80;
         /* Matching your image header color */
         color: white;
         vertical-align: middle;
@@ -182,4 +182,4 @@
     let add_user_url = "<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>";
 </script>
 
-<?= $this->Html->script('portal/users_index?time='.time()); ?>
+<?= $this->Html->script('portal/users_index.js?time='.time()); ?>
