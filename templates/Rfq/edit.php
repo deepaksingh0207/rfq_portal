@@ -264,4 +264,4 @@ foreach ($categories as $key => $category_name) {
     let categories_option_html = "<?= $categories_option_html ?>";
     let get_vendor_by_cateogry_url = "<?= $this->Url->build(['controller' => 'rfq', 'action' => 'getVendorByCategory']); ?>"
 </script>
-<?= $this->Html->script("portal/rfq_details_edit.js") ?>
+<?= $this->Html->script("portal/rfq_details_edit.js?time=".time()) ?>

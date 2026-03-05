@@ -67,10 +67,15 @@ foreach($data_for_comparison as $user_id => $dfc) {
         $disabled = 'disabled';
     }
 
-    $th_html .= '<th style="min-width: 200px;" colspan="1" '.$class.' >
+    $th_html .= '<th style="min-width: 200px;" colspan="1" '.$class.' id="vendor_th_'.$dfc->vendor_user_id.'" >
         <div class="text-left">
             <span class="vendor-title">'.$dfc->vendor_name.'</span><br>
             <small>Email : '.$dfc->vendor_email.'</small>
+        </div>
+        <div class="text-right">
+            <button class="btn btn-secondary text-white prev-quote" data-toggle="tooltip" data-placement="top" title="Previous Quotes" data-rfq-quote-id = "'.$dfc->rfq_quote_id.'" data-vendor-user-id = "'.$dfc->vendor_user_id.'" data-rfq-quote-revision-id = "'.$dfc->rfq_quote_revision_id.'" >
+                <i class="fe fe-plus" id="prev_quote_icon_tag_'.$dfc->vendor_user_id.'"></i>
+            </button>
         </div>
     </th>'; 
 
@@ -152,44 +157,44 @@ foreach($data_for_comparison as $user_id => $dfc) {
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr id="quotes_tr">
                     <td></td>
                     <?= $quotes_tr_html ?>
 
                 </tr>
-                <tr>
+                <tr id="quantity_tr">
                     <td class="sticky-col text-left font-weight-bold">Quantity</td>
                     <?= $quantity_tr_html ?>
                 </tr>
-                <tr>
+                <tr id="unit_price_tr">
                     <td class="sticky-col text-left font-weight-bold">Rate per Unit</td>
                     <?= $rate_per_unit_tr_html ?>
                 </tr>
-                <tr>
+                <tr id="sub_total_tr">
                     <td class="sticky-col text-left font-weight-bold">Sub Total</td>
                     <?= $sub_total_tr_html ?>
                 </tr>
-                <tr>
+                <tr id="discount_tr">
                     <td class="sticky-col text-left font-weight-bold">Discount</td>
                     <?= $discount_tr_html ?>
                 </tr>
-                <tr>
+                <tr id="freight_tr">
                     <td class="sticky-col text-left font-weight-bold">Freight</td>
                     <?= $freight_tr_html ?>
                 </tr>
-                <tr>
+                <tr id="tax_tr">
                     <td class="sticky-col text-left font-weight-bold">Tax</td>
                     <?= $tax_tr_html ?>
                 </tr>
-                <tr>
+                <tr id="total_tr">
                     <td class="sticky-col text-left font-weight-bold">Total</td>
                     <?= $total_tr_html ?>
                 </tr>
-                <tr>
+                <tr id="delivery_date_tr">
                     <td class="sticky-col text-left font-weight-bold">Delivery Date</td>
                     <?= $delivery_date_tr_html ?>
                 </tr>
-                <tr>
+                <tr id="actions_tr">
                     <td class="sticky-col text-left action-cell font-weight-bold">Actions</td>
                     <?= $actions_tr_html ?>
                 </tr>
@@ -205,5 +210,6 @@ foreach($data_for_comparison as $user_id => $dfc) {
 
 <script>
     let send_quote_for_approval_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'send-quote-for-approval']) ?>";
+    let get_rfq_quote_histroy_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'get-rfq-quote-history']) ?>";
 </script>
-<?= $this->Html->script('portal/rfq_show_quotes_comparison.js') ?>
+<?= $this->Html->script('portal/rfq_show_quotes_comparison.js?time='.time()) ?>

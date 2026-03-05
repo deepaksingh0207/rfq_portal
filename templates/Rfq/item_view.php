@@ -594,4 +594,4 @@
 
     let save_vendor_quoatation_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'save-vendor-quotation' , $single_rfq_footer_data->id]) ?>";
 </script>
-<?= $this->Html->script('portal/rfq_item_view.js') ?>
+<?= $this->Html->script('portal/rfq_item_view.js?time='.time()) ?>

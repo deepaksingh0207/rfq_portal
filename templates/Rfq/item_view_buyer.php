@@ -535,4 +535,4 @@
     let get_rfq_quotes_data_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'get-rfq-quotes-data']) ?>";
 </script>
 
-<?= $this->Html->script('portal/rfq_item_view_buyer.js') ?>
+<?= $this->Html->script('portal/rfq_item_view_buyer.js?time='.time()) ?>

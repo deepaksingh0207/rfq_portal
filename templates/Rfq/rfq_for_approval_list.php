@@ -310,4 +310,4 @@
     let session_user_id = "<?= $session_user_id ?>";
 </script>
 
-<?= $this->Html->script("portal/rfq_for_approval_list.js") ?>
+<?= $this->Html->script("portal/rfq_for_approval_list.js?time=".time()) ?>

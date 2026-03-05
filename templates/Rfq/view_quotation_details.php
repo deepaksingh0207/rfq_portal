@@ -336,4 +336,4 @@
     let load_chat_url = "<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'load-comments-for-buyer' , $rfq_footer_data->id , $vendor_user_id]) ?>";
 </script>
 
-<?= $this->Html->script('portal/rfq_view_quotation_details.js') ?>
+<?= $this->Html->script('portal/rfq_view_quotation_details.js?time='.time()) ?>

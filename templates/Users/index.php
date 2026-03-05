@@ -182,4 +182,4 @@
     let add_user_url = "<?= $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>";
 </script>
 
-<?= $this->Html->script('portal/users_index'); ?>
+<?= $this->Html->script('portal/users_index?time='.time()); ?>

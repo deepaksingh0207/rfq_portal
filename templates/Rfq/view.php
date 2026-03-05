@@ -5,9 +5,11 @@
 <div class="card border-0 shadow-sm p-4 mb-1">
     <div class="d-flex justify-content-between align-items-start mb-1">
         <h5 class="font-weight-bold">RFQ-<?= $rfq_header_data->rfq_number ?></h5>
+        <?php if(in_array(strtolower($session_user_group) , ['admin' , 'buyer'])): ?>
         <button class="btn btn-outline-primary btn-sm px-3 shadow-none" style="color: #004a80; border-color: #004a80;">
-            <i class="fas fa-copy mr-1"></i> Copy
+            Copy
         </button>
+        <?php endif ?>
     </div>
 
     <div class="row">

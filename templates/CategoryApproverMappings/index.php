@@ -91,4 +91,4 @@
     let add_mapping_url = "<?= $this->Url->build(['controller' => 'category-approver-mappings' , 'action' => 'add-mapping']) ?>";
 </script>
 
-<?= $this->Html->script('portal/category_approver_mappings_index.js') ?>
+<?= $this->Html->script('portal/category_approver_mappings_index.js?time='.time()) ?>

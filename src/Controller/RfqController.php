@@ -930,7 +930,9 @@ class RfqController extends AppController
             $rfq_selected_quote_count = $RfqSelectedQuotes->find()->where(['rfq_footer_id' => $rfq_quote->rfq_footer_id])->count();
             $user_data = $Users->find()->select(['id','name','email'])->where(['id' => $rfq_quote->vendor_user_id])->first();
             $data_for_comparison [$rfq_quote->vendor_user_id] = [
+                'rfq_quote_id' => $rqrd->rfq_quote_id,
                 'rfq_quote_revision_id' => $rqrd->id,
+                'vendor_user_id' => $rfq_quote->vendor_user_id,
                 'vendor_name' => $user_data->name,
                 'vendor_email' => $user_data->email,
                 'unit_price'=> $rqrd->unit_price,
@@ -1261,6 +1263,37 @@ class RfqController extends AppController
                     'message' => "Status Not Updated",
                 ]));
             }
+        }
+    }
+
+    public function getRfqQuoteHistory() {
+        if($this->request->is('post')) {
+            $rfq_quote_revision_id = $this->request->getData('rfq_quote_revision_id');
+            $rfq_quote_id = $this->request->getData('rfq_quote_id');
+            $vendor_user_id = $this->request->getData('vendor_user_id');
+
+            $RfqQuotes = $this->fetchTable('RfqQuotes');
+            $RfqQuoteRevisions = $this->fetchTable('RfqQuoteRevisions');
+            $RfqFooters = $this->fetchTable('RfqFooters');
+
+            $rfq_quote_revision_data = $RfqQuoteRevisions->find()->where(['rfq_quote_id' => $rfq_quote_id , 'id != ' => $rfq_quote_revision_id])->all();
+
+            foreach($rfq_quote_revision_data as $rqrd) {
+                $rqrd->delivery_date = date("d M , Y" , strtotime($rqrd->delivery_date->format("Y-m-d")));
+            }
+
+            $rfq_quote_data = $RfqQuotes->get($rfq_quote_id);
+
+            $rfq_footer_data = $RfqFooters->get($rfq_quote_data->rfq_footer_id);
+
+            return $this->response->withType('application/json')->withStringBody(json_encode([
+                'status' => 1,
+                'rfq_quote_revision_data' => $rfq_quote_revision_data,
+                'rfq_footer_data' => $rfq_footer_data,
+            ]));
+        }
+        else {
+            exit("Exit Called");
         }
     }
 }

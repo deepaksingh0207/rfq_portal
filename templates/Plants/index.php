@@ -107,4 +107,4 @@
     let plant_edit_url = "<?= $this->Url->build(['controller' => 'plants' , 'action' => 'edit']) ?>";
 </script>
 
-<?= $this->Html->script('portal/plants_index'); ?>
+<?= $this->Html->script('portal/plants_index?time='.time()); ?>

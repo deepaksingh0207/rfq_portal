@@ -647,4 +647,4 @@
 <?= $this->Html->script('apexcharts.min.js') ?>
 <?= $this->Html->script('apexcharts.custom.js') ?>
 <?= $this->Html->script("echarts.min.js") ?>
-<?= $this->Html->script('portal/dashboard_index.js') ?>
+<?= $this->Html->script('portal/dashboard_index.js?time='.time()) ?>

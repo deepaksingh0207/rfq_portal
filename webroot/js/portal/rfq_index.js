@@ -43,10 +43,10 @@ $(document).ready(function () {
                             href = '';
                             btn_class = 'btn btn-link text-muted'
                         }
-                        html += `<a class = '${btn_class}' target = "_blank" ${href} ${disabled} ${tooltip}><i class="fe fe-edit-2"></i></a>`
+                        html += `<a class = '${btn_class}' ${href} ${disabled} ${tooltip}><i class="fe fe-edit-2"></i></a>`
                     }
 
-                    html += `<a class = 'btn btn-link' target = "_blank" href = '${view_rfq_url}/${row.id}'><i class="fe fe-eye"></i></a>`;
+                    html += `<a class = 'btn btn-link' href = '${view_rfq_url}/${row.id}'><i class="fe fe-eye"></i></a>`;
 
                     if(session_user_group != "vendor") {
                         html += `<a class = 'btn btn-link' href = '${view_rfq_url}/${row.id}'><i class="fe fe-file"></i></a>`

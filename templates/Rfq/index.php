@@ -158,9 +158,11 @@
                 <option value="CLOSED">CLOSED</option>
             </select>
         </div>
+        <?php if(in_array(strtolower($session_user_group) , ['admin' , 'buyer'])): ?>
         <div class="col-md-6 text-right">
             <a class="btn btn-add-rfq px-4 py-2" href="<?= $this->Url->build(['controller' => 'rfq', 'action' => 'add']) ?>">ADD RFQ</a>
         </div>
+        <?php endif ?>
     </div>
 
     <div class="table-responsive shadow-sm bg-white">
@@ -1071,4 +1073,4 @@
     let session_user_group = "<?= $session_user_group ?>";
 </script>
 
-<?= $this->Html->script('portal/rfq_index.js') ?>
+<?= $this->Html->script('portal/rfq_index.js?time='.time()) ?>

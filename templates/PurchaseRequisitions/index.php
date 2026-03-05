@@ -80,4 +80,4 @@
     let create_rfq_from_pr_url = "<?= $this->Url->build(['controller' => 'purchase-requisitions' , 'action' => 'create-rfq-from-pr']) ?>";
 </script>
 
-<?= $this->Html->script('portal/purchase_requisitions_index.js') ?>
+<?= $this->Html->script('portal/purchase_requisitions_index.js?time='.time()) ?>
