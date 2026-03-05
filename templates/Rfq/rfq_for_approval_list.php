@@ -177,7 +177,7 @@
                     <div>
                         <span class="font-weight-bold mr-3" id="rfq_modal_item_no">260113001</span>
                         <span class="mr-3" id="rfq_modal_rfq_category">RM - NUTS</span>
-                        <span class="badge badge-pill badge-warning text-dark px-3 py-1" style="background:#fff3cd;" id="rfq_modal_rfq_status">UNDER_APPROVAL</span>
+                        <!-- <span class="badge badge-pill badge-warning text-dark px-3 py-1" style="background:#fff3cd;" id="rfq_modal_rfq_status">UNDER_APPROVAL</span> -->
                     </div>
                     <div class="mt-2 mt-sm-0">
                         <span class="text-secondary mr-2" id="rfq_modal_delivery_date">Delivery: 1/24/26</span>

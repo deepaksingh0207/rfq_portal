@@ -1098,9 +1098,9 @@ class RfqController extends AppController
                 'approver_name' => 'Users.name',
                 'approver_email' => 'Users.email',
                 // Corrected Case Logic for CakePHP 5
-                'status' => $query->newExpr()
+                'status' => $query->expr()
                     ->case()
-                    ->when($query->newExpr()->isNull('RfqApprovals.status'))
+                    ->when($query->expr()->isNull('RfqApprovals.status'))
                     ->then('PENDING')
                     ->else($query->identifier('RfqApprovals.status')),
                     

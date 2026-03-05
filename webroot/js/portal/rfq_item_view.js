@@ -48,7 +48,7 @@ $(document).ready(function () {
 
         if(freight_type == 'qty') {
             value_after_applying_freight = (quantity * freight_value);
-            value_after_applying_freight = parseFloat($value_after_applying_freight);
+            value_after_applying_freight = parseFloat(value_after_applying_freight);
         }
 
         sub_total += value_after_applying_freight;

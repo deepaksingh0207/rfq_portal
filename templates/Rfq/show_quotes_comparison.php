@@ -198,7 +198,7 @@ foreach($data_for_comparison as $user_id => $dfc) {
     </div>
 
     <div class="d-flex justify-content-end mt-1 mr-5">
-        <button class="btn btn-outline-primary mr-2" <?= $disabled ?>>Resubmit Quote</button>
+        <!-- <button class="btn btn-outline-primary mr-2" <?= $disabled ?>>Resubmit Quote</button> -->
         <button class="btn btn-primary" id="send_for_approval_btn" <?= $disabled ?>>Send For Approval</button>
     </div>
 </div>

@@ -33,7 +33,17 @@ $(document).ready(function () {
                     let html = '';
 
                     if(session_user_group != "vendor") {
-                        html += `<a class = 'btn btn-link' target = "_blank" href = '${edit_rfq_url}/${row.id}'><i class="fe fe-edit-2"></i></a>`
+                        let disabled = '';
+                        let tooltip = ''
+                        let href = `href='${edit_rfq_url}/${row.id}'`;
+                        let btn_class = 'btn btn-link';
+                        if(row.status == 'PUBLISHED') {
+                            disabled = 'disabled';
+                            tooltip = 'data-toggle="tooltip" data-placement="top" title="Edit is Disabled"';
+                            href = '';
+                            btn_class = 'btn btn-link text-muted'
+                        }
+                        html += `<a class = '${btn_class}' target = "_blank" ${href} ${disabled} ${tooltip}><i class="fe fe-edit-2"></i></a>`
                     }
 
                     html += `<a class = 'btn btn-link' target = "_blank" href = '${view_rfq_url}/${row.id}'><i class="fe fe-eye"></i></a>`;
