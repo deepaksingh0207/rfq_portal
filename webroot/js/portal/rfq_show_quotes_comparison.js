@@ -67,56 +67,56 @@ $(document).ready(function () {
                        $.each(response.rfq_quote_revision_data, function (key, row) { 
                             old_quote_count++;
                             quotes_tr_html += `
-                                <td class='old-quote-td'>Old Quote</td>
+                                <td class='old-quote-td-${vendor_user_id}'>Old Quote</td>
                             `;
 
                             qty_tr_html += `
-                                <td class='old-quote-td'>${response.rfq_footer_data.quantity}</td>
+                                <td class='old-quote-td-${vendor_user_id}'>${response.rfq_footer_data.quantity}</td>
                             `;
 
                             rate_tr_html += `
-                                <td class='old-quote-td'>${row.unit_price}</td>
+                                <td class='old-quote-td-${vendor_user_id}'>${row.unit_price}</td>
                             `;
 
                             sub_total_tr_html += `
-                                <td class='old-quote-td'>${row.line_total}</td>
+                                <td class='old-quote-td-${vendor_user_id}'>${row.line_total}</td>
                             `;
 
                             discount_tr_html += `
-                                <td class='old-quote-td'>${row.discount_amount}</td>
+                                <td class='old-quote-td-${vendor_user_id}'>${row.discount_amount}</td>
                             `;
 
                             freight_tr_html += `
-                                <td class='old-quote-td'>${row.freight_value}</td>
+                                <td class='old-quote-td-${vendor_user_id}'>${row.freight_value}</td>
                             `;
 
                             tax_tr_html += `
-                                <td class='old-quote-td'>${row.tax_value}</td>
+                                <td class='old-quote-td-${vendor_user_id}'>${row.tax_value}</td>
                             `;
 
                             total_amount_tr_html += `
-                                <td class='old-quote-td'>${row.total_amount}</td>
+                                <td class='old-quote-td-${vendor_user_id}'>${row.total_amount}</td>
                             `;
 
                             delivery_date_tr_html += `
-                                <td class='old-quote-td'>${row.delivery_date}</td>
+                                <td class='old-quote-td-${vendor_user_id}'>${row.delivery_date}</td>
                             `;
 
                             actions_tr_html += `
-                                <td class='old-quote-td'></td>
+                                <td class='old-quote-td-${vendor_user_id}'></td>
                             `;
                         });
 
-                        $('#quotes_tr').append(quotes_tr_html);
-                        $('#quantity_tr').append(qty_tr_html);
-                        $('#unit_price_tr').append(rate_tr_html);
-                        $('#sub_total_tr').append(sub_total_tr_html);
-                        $('#discount_tr').append(discount_tr_html);
-                        $('#freight_tr').append(freight_tr_html);
-                        $('#tax_tr').append(tax_tr_html);
-                        $('#total_tr').append(total_amount_tr_html);
-                        $('#delivery_date_tr').append(delivery_date_tr_html);
-                        $('#actions_tr').append(actions_tr_html);
+                        $('#quotes_tr .quote-td-'+vendor_user_id).after(quotes_tr_html);
+                        $('#quantity_tr .quantity-td-'+vendor_user_id).after(qty_tr_html);
+                        $('#unit_price_tr .rate-td-'+vendor_user_id).after(rate_tr_html);
+                        $('#sub_total_tr .sub-total-td-'+vendor_user_id).after(sub_total_tr_html);
+                        $('#discount_tr .discount-td-'+vendor_user_id).after(discount_tr_html);
+                        $('#freight_tr .freight-td-'+vendor_user_id).after(freight_tr_html);
+                        $('#tax_tr .tax-td-'+vendor_user_id).after(tax_tr_html);
+                        $('#total_tr .total-amount-td-'+vendor_user_id).after(total_amount_tr_html);
+                        $('#delivery_date_tr .delivery-date-td-'+vendor_user_id).after(delivery_date_tr_html);
+                        $('#actions_tr .actions-td-'+vendor_user_id).after(actions_tr_html);
 
                         $('#vendor_th_'+vendor_user_id).attr('colspan' , (old_quote_count + 1));
                     }
@@ -127,7 +127,7 @@ $(document).ready(function () {
             $('#prev_quote_icon_tag_'+vendor_user_id).addClass('fe-plus');
             $('#prev_quote_icon_tag_'+vendor_user_id).removeClass('fe-minus');
 
-            $('.old-quote-td').remove();
+            $('.old-quote-td-'+vendor_user_id).remove();
             $('#vendor_th_'+vendor_user_id).attr('colspan' , 1);
         }
 

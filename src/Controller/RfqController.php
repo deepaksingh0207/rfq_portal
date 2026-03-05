@@ -132,6 +132,8 @@ class RfqController extends AppController
             $filteredQuery = clone $query;
             $filteredRecords = $filteredQuery->count();
 
+            $sql = $query->sql();
+
             // 7. Apply pagination and get data
             $data = $query
                 ->limit($limit)
@@ -143,7 +145,9 @@ class RfqController extends AppController
                 "draw" => intval($params['draw']),
                 "recordsTotal" => $totalRecords,
                 "recordsFiltered" => $filteredRecords,
-                "data" => $data
+                "data" => $data,
+                'sql' => $sql,
+                'where_conditions' => $where_conditions,
             ];
 
             return $this->response->withType('application/json')->withStringBody(json_encode($result));
@@ -1186,6 +1190,7 @@ class RfqController extends AppController
             $RfqQuoteRevisions = $this->fetchTable('RfqQuoteRevisions');
             $RfqQuotes = $this->fetchTable('RfqQuotes');
             $RfqFooters = $this->fetchTable('RfqFooters');
+            $RfqHeaders = $this->fetchTable('RfqHeaders');
             $RfqSelectedQuotes = $this->fetchTable('RfqSelectedQuotes');
 
             $rfq_quote_revision_data = $RfqQuoteRevisions->get($rfq_quote_revision_id);
@@ -1252,6 +1257,19 @@ class RfqController extends AppController
             $rfq_selected_quote_data->approval_status = $approval_status;
 
             if($RfqSelectedQuotes->save($rfq_selected_quote_data)) {
+                if($rfq_selected_quote_data->approval_status == "APPROVED") {
+                    $rfq_footer_data = $RfqFooters->get($rfq_selected_quote_data->rfq_footer_id);
+                    if(!empty($rfq_footer_data->rfq_header_id)) {
+                        $rfq_header_data = $RfqHeaders->get($rfq_footer_data->rfq_header_id);
+                        if(!empty($rfq_header_data->id)) {
+                            $rfq_header_data->status = "CLOSED";
+                            if($RfqHeaders->save($rfq_header_data)) {
+        
+                            }
+                        }
+                    }
+                }
+                
                 return $this->response->withType('application/json')->withStringBody(json_encode([
                     'status' => 1,
                     'message' => "Status Updated Successfully",

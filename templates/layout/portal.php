@@ -202,8 +202,8 @@
                     </li>
                     <?php endif; ?>
                     <?php if(in_array($session_user_group , ['admin' , 'buyer' , 'vendor'])) : ?>
-                    <li class="nav-item <?= $currentController == 'rfq' ? 'active' : '' ?>">
-                        <a href="<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'index']) ?>" class="nav-link <?= ($currentController == 'rfq' && $currentAction == 'index') ? 'link-active' : '' ?>">
+                    <li class="nav-item <?= ($currentController == 'rfq' && $currentAction != 'rfqforapprovallist') ? 'active' : '' ?>">
+                        <a href="<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'index']) ?>" class="nav-link <?= ($currentController == 'rfq' && $currentAction != 'rfqforapprovallist') ? 'link-active' : '' ?>">
                             <i class="fe fe-calendar fe-16"></i>
                             <span class="ml-3 item-text">RFQs</span>
                         </a>
@@ -211,7 +211,7 @@
                     <?php endif; ?>
 
                     <?php if(in_array($session_user_group , ['admin' , 'approver'])) : ?>
-                    <li class="nav-item <?= $currentController == 'rfq' ? 'active' : '' ?>">
+                    <li class="nav-item <?= ($currentController == 'rfq' && $currentAction == 'rfqforapprovallist') ? 'active' : '' ?>">
                         <a href="<?= $this->Url->build(['controller' => 'rfq' , 'action' => 'rfq-for-approval-list']) ?>" class="nav-link <?= ($currentController == 'rfq' && $currentAction == 'rfqforapprovallist') ? 'link-active' : '' ?>">
                             <i class="fe fe-server fe-16"></i>
                             <span class="ml-3 item-text">RFQ Approval</span>

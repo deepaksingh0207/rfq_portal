@@ -35,6 +35,10 @@
     .container-fluid {
         padding: 0px!important;
     }
+
+    .text-muted {
+        color:#00356b!important;
+    }
 </style>
 
 <?php 
@@ -59,7 +63,7 @@ sort($unit_price_arr);
 foreach($data_for_comparison as $user_id => $dfc) {
     $class = '';
     if($unit_price_arr[0] == $dfc->unit_price) {
-        $class = "class = 'selected-column'";
+        $class = "selected-column";
     }
 
     $disabled = '';
@@ -67,37 +71,39 @@ foreach($data_for_comparison as $user_id => $dfc) {
         $disabled = 'disabled';
     }
 
-    $th_html .= '<th style="min-width: 200px;" colspan="1" '.$class.' id="vendor_th_'.$dfc->vendor_user_id.'" >
-        <div class="text-left">
-            <span class="vendor-title">'.$dfc->vendor_name.'</span><br>
-            <small>Email : '.$dfc->vendor_email.'</small>
-        </div>
-        <div class="text-right">
-            <button class="btn btn-secondary text-white prev-quote" data-toggle="tooltip" data-placement="top" title="Previous Quotes" data-rfq-quote-id = "'.$dfc->rfq_quote_id.'" data-vendor-user-id = "'.$dfc->vendor_user_id.'" data-rfq-quote-revision-id = "'.$dfc->rfq_quote_revision_id.'" >
-                <i class="fe fe-plus" id="prev_quote_icon_tag_'.$dfc->vendor_user_id.'"></i>
-            </button>
+    $th_html .= '<th style="min-width: 90px;" colspan="1" class = "'.$class.'" id="vendor_th_'.$dfc->vendor_user_id.'" >
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="text-left">
+                <span class="vendor-title">'.$dfc->vendor_name.'</span><br>
+                <small>Email : '.$dfc->vendor_email.'</small>
+            </div>
+            <div class="text-right">
+                <button class="btn btn-secondary text-white prev-quote" data-toggle="tooltip" data-placement="top" title="Previous Quotes" data-rfq-quote-id = "'.$dfc->rfq_quote_id.'" data-vendor-user-id = "'.$dfc->vendor_user_id.'" data-rfq-quote-revision-id = "'.$dfc->rfq_quote_revision_id.'" >
+                    <i class="fe fe-plus" id="prev_quote_icon_tag_'.$dfc->vendor_user_id.'"></i>
+                </button>
+            </div>
         </div>
     </th>'; 
 
-    $quotes_tr_html .= '<td '.$class.'>Quote #'.$incr.'</td>';
+    $quotes_tr_html .= '<td class = "quote-td-'.$dfc->vendor_user_id.' '.$class.'">Quote #'.$incr.'</td>';
 
-    $quantity_tr_html .= "<td $class >$rfq_footer_data->quantity</td>";
+    $quantity_tr_html .= "<td class = 'quantity-td-".$dfc->vendor_user_id."  $class' >$rfq_footer_data->quantity</td>";
 
-    $rate_per_unit_tr_html .= "<td $class >$dfc->unit_price</td>";
+    $rate_per_unit_tr_html .= "<td class = 'rate-td-".$dfc->vendor_user_id." $class' >$dfc->unit_price</td>";
 
-    $sub_total_tr_html .= "<td $class >$dfc->line_total</td>";
+    $sub_total_tr_html .= "<td class = 'sub-total-td-".$dfc->vendor_user_id." $class' >$dfc->line_total</td>";
     
-    $discount_tr_html .= "<td $class >$dfc->discount_amount</td>";
+    $discount_tr_html .= "<td class = 'discount-td-".$dfc->vendor_user_id." $class' >$dfc->discount_amount</td>";
     
-    $freight_tr_html .= "<td $class >$dfc->freight_value</td>";
+    $freight_tr_html .= "<td class = 'freight-td-".$dfc->vendor_user_id." $class' >$dfc->freight_value</td>";
 
-    $tax_tr_html .= "<td $class >$dfc->tax_value</td>";
+    $tax_tr_html .= "<td class = 'tax-td-".$dfc->vendor_user_id." $class' >$dfc->tax_value</td>";
 
-    $total_tr_html .= "<td $class >$dfc->total_amount</td>";
+    $total_tr_html .= "<td class = 'total-amount-td-".$dfc->vendor_user_id." $class' >$dfc->total_amount</td>";
 
-    $delivery_date_tr_html .= "<td $class >".date('d M, Y' , strtotime($dfc->delivery_date))."</td>";
+    $delivery_date_tr_html .= "<td class = 'delivery-date-td-".$dfc->vendor_user_id." $class' >".date('d M, Y' , strtotime($dfc->delivery_date))."</td>";
 
-    $actions_tr_html .= "<td $class ><input type='checkbox' class='quotes-checkbox' value='$dfc->rfq_quote_revision_id' $disabled></td>";
+    $actions_tr_html .= "<td class = 'actions-td-".$dfc->vendor_user_id." $class' ><input type='checkbox' class='quotes-checkbox' value='$dfc->rfq_quote_revision_id' $disabled></td>";
 
     $incr++;
 }
@@ -152,7 +158,7 @@ foreach($data_for_comparison as $user_id => $dfc) {
         <table class="table table-bordered bg-white text-center">
             <thead>
                 <tr>
-                    <th class="sticky-col text-left" style="min-width: 200px; color:black">Item Details</th>
+                    <th class="sticky-col text-left" style="min-width: 90px; color:black">Item Details</th>
                     <?= $th_html ?>
                 </tr>
             </thead>
