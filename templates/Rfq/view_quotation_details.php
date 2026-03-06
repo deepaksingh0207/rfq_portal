@@ -28,6 +28,9 @@
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         padding: 5px 15px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     .quotation-header h2 {
@@ -46,6 +49,9 @@
 
     .quotation-body {
         padding: 10px;
+        max-height: 520px;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .info-card {

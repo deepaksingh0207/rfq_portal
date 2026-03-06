@@ -5,30 +5,25 @@
         border: none;
     }
 
-    /* Make the select box and search bar rounded (Pill style) */
     .custom-select-pill,
     .pill-search {
         border-radius: 50px !important;
         padding-left: 15px;
         border: 1px solid #dee2e6;
         height: 38px;
-        /* Standard Bootstrap height */
     }
 
-    /* Remove the default focus glow for a cleaner look */
     .custom-select-pill:focus,
     .pill-search:focus {
         box-shadow: none;
         border-color: #ced4da;
     }
 
-    /* Optional: Add a slight background color to the label area if desired */
     .custom-pill-group .input-group-text {
         font-size: 0.9rem;
         color: #495057;
     }
 
-    /* 1. Add thicker borders to the table and cells */
     #users_list_table {
         border: 2px solid #dee2e6 !important;
         /* Thicker outer border */
@@ -37,36 +32,35 @@
 
     #users_list_table thead th {
         border-bottom: 3px solid #004a80 !important;
-        /* Thicker blue line under header */
         background-color: #004a80;
-        /* Matching your image header color */
-        color: white;
-        vertical-align: middle;
-        padding: 2px 10px;
+        padding: 5px 10px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     #users_list_table td {
         border: 1px solid #ebedef !important;
-        /* Defined cell borders */
         vertical-align: middle;
-        padding: 2px 10px;
+        padding: 5px 10px;
         font-size: 12px;
     }
 
-    /* 2. Fix the alignment specifically for the Toggle column */
     #users_list_table td:last-child,
     #users_list_table th:last-child {
         text-align: center;
         width: 120px;
-        /* Constrain the toggle column width */
     }
 
-    /* Change the font size of the text inside the toggle */
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
     .toggle.btn {
         font-size: 12px !important;
     }
 
-    /* Ensure the labels inside align correctly */
     .toggle-on,
     .toggle-off {
         font-size: 12px !important;
@@ -104,19 +98,21 @@
             </button>
         </div>
     </div>
-</div>
-<div class="table-responsive shadow-sm bg-white border-main-container">
-    <table class="table table-hover mb-0" id="users_list_table" style="width:100%">
-        <thead>
-            <tr>
-                <th>SAP Code</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Group</th>
-                <th class="text-center">Active</th>
-            </tr>
-        </thead>
-    </table>
+    <div class="row">
+        <div class="table-responsive shadow-sm bg-white border-main-container">
+            <table class="table table-hover mb-0" id="users_list_table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>SAP Code</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Group</th>
+                        <th class="text-center">Active</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- Add User Modal -->

@@ -3,7 +3,7 @@ $(document).ready(function () {
     $("#responsesTable").DataTable({
         pageLength: 10,
         ordering: false,
-        searching: true,
+        searching: false,
         lengthChange: false,
         info: true,
     });

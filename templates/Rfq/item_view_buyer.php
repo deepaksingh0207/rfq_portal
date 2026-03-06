@@ -11,7 +11,7 @@
         border-radius: 15px;
         padding: 10px 15px;
         color: white;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
     }
 
@@ -31,8 +31,8 @@
     .item-summary-card {
         background: white;
         border-radius: 20px;
-        padding: 20px;
-        margin-bottom: 10px;
+        padding: 10px;
+        margin-bottom: 5px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         border: 1px solid #e9ecef;
     }
@@ -56,7 +56,7 @@
     .stat-card {
         background: white;
         border-radius: 15px;
-        padding: 20px;
+        padding: 10px;
         text-align: center;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         transition: transform 0.3s ease;
@@ -98,8 +98,11 @@
     .table-container {
         background: white;
         border-radius: 20px;
-        padding: 20px;
+        padding: 10px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .table thead th {
@@ -111,6 +114,9 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
         padding: 5px 10px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     .table tbody td {
@@ -158,7 +164,7 @@
         background: white;
         border: 2px solid #667eea;
         color: #667eea;
-        padding: 10px 30px;
+        padding: 5px 10px;
         border-radius: 30px;
         font-weight: 600;
         transition: all 0.3s ease;
@@ -174,7 +180,7 @@
         background: #fff3e0;
         border-radius: 15px;
         padding: 5px 10px;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         border-left: 4px solid #ff9800;
     }
 
@@ -203,22 +209,6 @@
     }
 </style>
 <div class="main-container">
-    <!-- RFQ Header Card -->
-    <!-- <div class="rfq-header-card d-flex justify-content-between align-items-center">
-        <div>
-            <div class="d-flex align-items-center mb-2">
-                <span class="rfq-badge mr-3"><i class="fas fa-hashtag"></i>RFQ #260114007</span>
-                <span class="rfq-badge"><i class="far fa-clock"></i>Closes: 5 Mar 2026</span>
-            </div>
-            <h3 class="mb-1">PUMP WATER GASKET</h3>
-            <p class="mb-0 opacity-75"><i class="fas fa-user mr-2"></i>Buyer: swapnali | Category: SPM</p>
-        </div>
-        <div class="text-right">
-            <div class="rfq-badge mb-2"><i class="fas fa-box"></i>12 Units</div>
-            <div class="rfq-badge"><i class="fas fa-calendar"></i>Required: 5 Mar 2026</div>
-        </div>
-    </div> -->
-
     <!-- Item Details Summary -->
     <div class="item-summary-card">
         <h6 class="mb-1">RFQ - <?= $rfq_header_data->rfq_number ?> Item <?= !empty($single_rfq_footer_data->item_no) ? "#".$single_rfq_footer_data->item_no : "" ?> Specifications</h6>
@@ -269,34 +259,6 @@
         </div>
     </div>
 
-    <!-- Stats Cards -->
-    <!-- <div class="row mb-1">
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-value">3</div>
-                <div class="stat-label">Total Responses</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-value">₹97.00</div>
-                <div class="stat-label">Lowest Price</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-value">2 Mar</div>
-                <div class="stat-label">Earliest Delivery</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-value">₹50.00</div>
-                <div class="stat-label">Highest Discount</div>
-            </div>
-        </div>
-    </div> -->
-
     <!-- Compare Section -->
     <div class="compare-section d-flex justify-content-between align-items-center">
         <div>
@@ -315,8 +277,8 @@
 
     <!-- Main Table -->
     <div class="table-container">
-        <div class="d-flex justify-content-between align-items-center mb-1">
-            <h5 class="mb-0"><i class="fas fa-list mr-2 text-primary"></i>Quotations Received</h5>
+        <div class="d-flex justify-content-between align-items-center mb-0">
+            <h6 class="mb-0">Quotations Received</h6>
         </div>
 
         <table class="table table-hover" id="responsesTable">

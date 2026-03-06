@@ -126,6 +126,16 @@
         .main-content {
             padding : 0.5rem !important;
         }
+
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+        .navbar {
+            padding: 0rem 1.2rem;
+        }
     </style>
 </head>
 <?php

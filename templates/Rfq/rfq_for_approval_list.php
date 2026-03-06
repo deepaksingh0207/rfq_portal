@@ -84,16 +84,21 @@
     .table thead th {
         background-color: #004a80;
         color: white;
-        border: none;
-        white-space: nowrap;
-        vertical-align: middle;
         font-size: 0.75rem!important;
         padding: 0.25rem;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     .table tbody td {
         font-size: 0.75rem!important;
         padding: 0.25rem!important;
+    }
+
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
     }
 </style>
 
@@ -138,7 +143,7 @@
     </div>
 
     <!-- Table Section -->
-    <div class="table-section">
+    <div class="table-section table-responsive">
         <table class="table table-bordered table-hover" id="rfq_for_approval_list_table">
             <thead>
                 <tr>

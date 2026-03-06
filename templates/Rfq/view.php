@@ -2,6 +2,28 @@
     $session = $this->getRequest()->getSession();
     $session_user_group = strtolower($session->read('Auth.user.group'));
 ?>
+<style>
+    .table thead th {
+        border-bottom: 3px solid #004a80 !important;
+        background-color: #004a80;
+        padding: 5px 10px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .table tbody td {
+        border: 1px solid #ebedef !important;
+        vertical-align: middle;
+        padding: 0.25rem!important;
+        font-size: 12px;
+    }
+
+    .table-responsive {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+</style>
 <div class="card border-0 shadow-sm p-4 mb-1">
     <div class="d-flex justify-content-between align-items-start mb-1">
         <h5 class="font-weight-bold">RFQ-<?= $rfq_header_data->rfq_number ?></h5>
@@ -37,7 +59,7 @@
     <div class="row">
         <div class="table-responsive shadow-sm rounded border">
             <table class="table table-hover mb-0">
-                <thead style="background-color: #004a80; color: white;">
+                <thead>
                     <tr>
                         <th class="border-0">Category</th>
                         <th class="border-0">Item No</th>

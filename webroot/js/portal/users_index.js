@@ -3,6 +3,7 @@ $(document).ready(function () {
         processing: true,
         serverSide: true,
         searching: true,
+        ordering:false,
         dom: "rtip",
         pageLength: 10,
         ajax: {

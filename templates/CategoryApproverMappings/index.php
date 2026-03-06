@@ -4,14 +4,19 @@
         padding: 0.25rem;
         background-color: #004a80;
         color: white;
-        border: none;
-        white-space: nowrap;
-        vertical-align: middle;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     #category_approval_mappings_table tbody td {
         font-size: 0.75rem;
         padding: 0.25rem !important;
+    }
+
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
     }
 </style>
 <div class="container-fluid mt-4">

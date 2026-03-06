@@ -11,6 +11,9 @@
         padding: 2px 15px;
         border-radius: 15px 15px 0 0;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     .rfq-content {
@@ -18,6 +21,9 @@
         border-radius: 0 0 15px 15px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         padding: 5px;
+        max-height: 580px;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .item-details-card {
