@@ -800,12 +800,14 @@ class RfqController extends AppController
             $session_user_id = $session->read('Auth.user.id');
             $Users = $this->fetchTable('Users');
             $RfqFooters = $this->fetchTable('RfqFooters');
+            $RfqHeaders = $this->fetchTable('RfqHeaders');
             $RfqQuotes = $this->fetchTable('RfqQuotes');
             $RfqQuoteRevisions = $this->fetchTable('RfqQuoteRevisions');
             $SapPaymentTerms = $this->fetchTable('SapPaymentTerms');
             $RfqItemComments = $this->fetchTable('RfqItemComments');
             
             $rfq_footer_data = $RfqFooters->get($rfq_footer_id);
+            $rfq_header_data = $RfqHeaders->get($rfq_footer_data->rfq_header_id);
             $user_data = $Users->find()->select(['id','name' ,'email'])->where(['id' => $vendor_user_id])->first();
             $rfq_quote_data = $RfqQuotes->find()->where(['rfq_footer_id' => $rfq_footer_id , 'vendor_user_id' => $vendor_user_id])->first();
             $rfq_quote_revisions_data = $RfqQuoteRevisions->find()->where(['rfq_quote_id' => $rfq_quote_data->id])->orderByDesc('id')->all();
@@ -814,7 +816,7 @@ class RfqController extends AppController
 
             $comments_count = $RfqItemComments->find()->where(['vendor_user_id' => $vendor_user_id, 'buyer_user_id' => $session_user_id , 'rfq_footer_id' => $rfq_footer_id])->count();
 
-            $this->set(compact('rfq_footer_data' , 'user_data' , 'rfq_quote_data' , 'rfq_quote_revisions_data' , 'payment_terms' , 'vendor_user_id' , 'comments_count'));
+            $this->set(compact('rfq_header_data','rfq_footer_data' , 'user_data' , 'rfq_quote_data' , 'rfq_quote_revisions_data' , 'payment_terms' , 'vendor_user_id' , 'comments_count'));
             
         }
         else {

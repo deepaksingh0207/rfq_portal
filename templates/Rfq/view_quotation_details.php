@@ -238,8 +238,8 @@
             <div>
                 <h4>Quotation Details</h4>
                 <div class="">
-                    <span class="rfq-badge mr-2">RFQ #260114007</span>
-                    <span class="rfq-badge">FTSolutions</span>
+                    <span class="rfq-badge mr-2">RFQ #<?= $rfq_header_data->rfq_number ?></span>
+                    <!-- <span class="rfq-badge">FTSolutions</span> -->
                 </div>
             </div>
             <div class="text-right">
