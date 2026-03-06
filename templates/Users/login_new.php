@@ -1851,7 +1851,7 @@
                 </div>
             </div>
             <h1 class="login-title">Welcome back</h1>
-            <p class="login-subtitle">Sign in to access your procurement dashboard</p>
+            <!-- <p class="login-subtitle">Sign in to access your procurement dashboard</p> -->
             <form action="<?= $this->Url->build(['controller' => 'users', 'action' => 'login']) ?>" method="POST">
               <input type="hidden" name="_csrfToken" value="<?= h($this->request->getAttribute('csrfToken')) ?>">
                 <div class="form-group">
