@@ -174,4 +174,29 @@ class SapController extends AppController
 
         return $this->response->withType('application/json')->withStringBody(json_encode($response));
     }
+
+    public function pushPurchaseOrder() {
+        $this->writeToLogFile("-----------------" . date('Y-m-d H:i:s') . "--------------------");
+        $this->writeToLogFile("pushPurchaseOrder() start");
+
+        $request = $this->request->getData();
+        $this->writeToLogFile("Request Received is - \n" . json_encode($request));
+
+        if (empty($request)) {
+            return $this->response->withStringBody(json_encode(['status' => 0, 'message' => 'Empty payload']));
+        }
+
+        if( !empty($request['RFQ_NUMBER']) && !empty($request['PO_NUMBER']) ) {
+            $RfqHeaders = $this->fetchTable('RfqHeaders');
+            
+        }
+
+        $response = $request;
+
+        $this->writeToLogFile("Response - \n" . json_encode($response));
+        $this->writeToLogFile("pushPurchaseOrder() end");
+        $this->writeToLogFile("-----------------" . date('Y-m-d H:i:s') . "--------------------");
+
+        return $this->response->withType('application/json')->withStringBody(json_encode($response));
+    }
 }
